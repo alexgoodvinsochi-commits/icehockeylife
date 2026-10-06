@@ -14,7 +14,7 @@ const browser = await chromium.launch();
 const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true, locale: 'ru-RU',
   userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1' });
 await ctx.route('http://site.test/**', async (route) => {
-  let file = path.join('dist', decodeURIComponent(new URL(route.request().url()).pathname));
+  let file = path.join(process.env.DIST || 'dist', decodeURIComponent(new URL(route.request().url()).pathname));
   try { if ((await stat(file)).isDirectory()) file = path.join(file, 'index.html'); } catch {}
   try { await route.fulfill({ body: await readFile(file), contentType: TYPES[path.extname(file)] }); } catch { await route.fulfill({ status: 404 }); }
 });
@@ -54,7 +54,21 @@ await page.keyboard.press('Escape');
 await page.waitForTimeout(500);
 const y1 = await page.evaluate(() => scrollY);
 check('closing a bio after #zapis keeps the scroll', Math.abs(y1 - y0) < 40, `${y0} → ${y1}`);
+
+// 1c. a bio reopens at its top (name and photo), not where it was left
+await page.locator('[data-sheet-open="trener-azimov"]').first().click();
+await page.waitForTimeout(400);
+await page.locator('#trener-azimov .bio__panel').evaluate((p) => (p.scrollTop = 600));
+await page.keyboard.press('Escape');
+await page.waitForTimeout(400);
+await page.locator('[data-sheet-open="trener-azimov"]').first().click();
+await page.waitForTimeout(400);
+check('a bio reopens at its top', (await page.locator('#trener-azimov .bio__panel').evaluate((p) => p.scrollTop)) === 0);
+await page.keyboard.press('Escape');
+await page.waitForTimeout(400);
 await page.evaluate(() => scrollTo(0, 0));
+await page.waitForTimeout(300);
+check('header «Записаться» steps aside while the hero button is on screen', await page.evaluate(() => document.documentElement.classList.contains('hdr-cta-off')));
 
 // 2. menu opens and a link closes it and jumps
 await page.locator('.hdr__burger').click();
@@ -141,7 +155,14 @@ await page.locator('[data-lb-next]').click();
 await page.waitForTimeout(300);
 check('lightbox next', (await page.locator('[data-lb-count]').innerText()).startsWith('2 /'));
 await page.screenshot({ path: `${out}/lightbox.png` });
+await page.goBack();
+await page.waitForTimeout(400);
+check('Back closes the photo and stays on the page', !(await page.locator('dialog[data-lightbox-dialog]').evaluate((d) => d.open)) && page.url().startsWith('http://site.test/'), page.url());
+await page.locator('a[data-lightbox]').first().click();
+await page.waitForTimeout(400);
 await page.locator('[data-lb-close]').click();
+await page.waitForTimeout(400);
+check('× closes the photo', !(await page.locator('dialog[data-lightbox-dialog]').evaluate((d) => d.open)));
 
 // 5. video facade loads the VK iframe only on click
 check('no VK iframe before click', (await page.locator('[data-video] iframe').count()) === 0);
@@ -159,7 +180,7 @@ const earlyVisible = await p2.locator('.hero__price [data-until]').isVisible();
 const lateVisible = await p2.locator('.hero__price [data-from]').isVisible();
 check('after 8 Nov the early price hides', !earlyVisible && lateVisible);
 check('after 8 Nov the countdown hides', !(await p2.locator('[data-countdown]').isVisible()));
-const faqEarly = await p2.locator('.faq__item[data-until]').isVisible();
+const faqEarly = await p2.locator('.faq__item[data-until]', { hasText: 'скидки' }).isVisible();
 const faqLate = await p2.locator('.faq__item[data-from]').count() === 1 && !(await p2.locator('.faq__item[data-from]').evaluate((d) => d.hidden));
 check('after 8 Nov the FAQ answer has no early price', !faqEarly && faqLate);
 check('after 8 Nov the fine print has no early price', !(await p2.locator('.price__fine [data-until]').evaluate((e) => !e.hidden)));
@@ -170,6 +191,18 @@ await p4.addInitScript(() => { const T = new Date('2027-01-11T12:00:00+03:00').g
 await p4.goto('http://site.test/', { waitUntil: 'networkidle' });
 check('after the camp the hero CTA hides', !(await p4.locator('.hero__cta').isVisible()) && (await p4.locator('.hero__over').isVisible()));
 check('after the camp the form gives way to a note', !(await p4.locator('form[data-lead]').evaluate((f) => !f.hidden)) && !(await p4.locator('.signup__over').evaluate((e) => e.hidden)));
+check('after the camp no prices or sign-up steps beside the note', !(await p4.locator('.signup__facts').isVisible()) && !(await p4.locator('.signup__lead').innerText()).includes('Заполните'));
+
+// 6c. Android reloads the tab while the parent is in WhatsApp: the question comes into view
+const p5 = await ctx.newPage();
+await p5.goto('http://site.test/', { waitUntil: 'networkidle' });
+await p5.evaluate(() => { sessionStorage.setItem('ihl-wa-pending', '1'); scrollTo(0, document.body.scrollHeight); });
+await p5.waitForTimeout(300);
+await p5.reload({ waitUntil: 'networkidle' });
+await p5.waitForTimeout(500);
+const backBox = await p5.locator('[data-lead-back]').boundingBox();
+check('after a reload «Сообщение ушло?» is on screen', !!backBox && backBox.y >= 0 && backBox.y + backBox.height <= 844, JSON.stringify(backBox));
+await p5.close();
 
 // 7. legal pages: separate documents, header leads back to the home page
 const p3 = await ctx.newPage();

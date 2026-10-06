@@ -6,7 +6,7 @@ const TYPES = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 
 const browser = await chromium.launch();
 const ctx = await browser.newContext({ viewport: { width: 1200, height: 630 }, deviceScaleFactor: 1 });
 await ctx.route('http://site.test/**', async (route) => {
-  let file = path.join('dist', decodeURIComponent(new URL(route.request().url()).pathname));
+  let file = path.join(process.env.DIST || 'dist', decodeURIComponent(new URL(route.request().url()).pathname));
   try { if ((await stat(file)).isDirectory()) file = path.join(file, 'index.html'); } catch {}
   try { await route.fulfill({ body: await readFile(file), contentType: TYPES[path.extname(file)] }); } catch { await route.fulfill({ status: 404 }); }
 });

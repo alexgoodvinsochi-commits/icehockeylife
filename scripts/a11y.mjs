@@ -9,7 +9,7 @@ const browser = await chromium.launch();
 for (const [w, h] of [[390, 844], [1440, 900]]) {
   const ctx = await browser.newContext({ viewport: { width: w, height: h } });
   await ctx.route('http://site.test/**', async (route) => {
-    let file = path.join('dist', decodeURIComponent(new URL(route.request().url()).pathname));
+    let file = path.join(process.env.DIST || 'dist', decodeURIComponent(new URL(route.request().url()).pathname));
     try { if ((await stat(file)).isDirectory()) file = path.join(file, 'index.html'); } catch {}
     try { await route.fulfill({ body: await readFile(file), contentType: TYPES[path.extname(file)] }); } catch { await route.fulfill({ status: 404 }); }
   });

@@ -21,7 +21,7 @@ const TYPES = {
 };
 
 async function serveDist(context) {
-  const root = path.resolve('dist');
+  const root = path.resolve(process.env.DIST || 'dist');
   await context.route('http://site.test/**', async (route) => {
     const url = new URL(route.request().url());
     let rel = decodeURIComponent(url.pathname);
