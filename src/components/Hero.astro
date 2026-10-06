@@ -69,7 +69,8 @@ import { t } from '../lib/typo';
   .hero { position: relative; padding-block: clamp(16px, 3vw, 40px) clamp(40px, 6vw, 96px); overflow: clip; }
   .hero__ice { display: grid; grid-template-columns: minmax(0, 11fr) minmax(0, 10fr); gap: clamp(12px, 3vw, 48px); align-items: center; }
 
-  .hero__title { font-size: clamp(2.9rem, 1.5rem + 4vw, 5.9rem); color: var(--c-blue-deep); max-width: 15ch; }
+  /* em, not ch: the width of «0» differs between Sofia and its fallback, and the H1 must wrap the same in both */
+  .hero__title { font-size: clamp(2.9rem, 1.5rem + 4vw, 5.9rem); color: var(--c-blue-deep); max-width: 6.6em; }
 
   .hero__dates { display: flex; align-items: flex-end; gap: clamp(12px, 1.4vw, 20px); margin-top: clamp(16px, 2.2vw, 30px); }
   .hero__days {

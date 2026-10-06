@@ -7,24 +7,25 @@
   font-style: normal;
   font-display: swap;
 }
-/* Arial (Roboto on Android, approximately) tuned to Golos metrics, so the swap does not move the text */
+/* Arial (Roboto on Android, approximately) tuned to Golos metrics, so the swap does not move the text
+   (width measured on the page's Russian paragraphs: Golos / Arial = 1.0518; ascent 0.98 and descent 0.22 em) */
 @font-face {
   font-family: 'IHL Golos fallback';
   src: local('Arial'), local('Roboto');
-  size-adjust: 108.5687%;
-  ascent-override: 90.2654%;
-  descent-override: 20.2637%;
+  size-adjust: 105.18%;
+  ascent-override: 93.17%;
+  descent-override: 20.92%;
   line-gap-override: 0%;
 }
 
 /* the same for the extra-condensed display face: without it the H1 falls back to a wide sans and rewraps
-   (metrics measured from ihl-sofia-xc.woff2 the way Astro measures Golos) */
+   (width measured on the page's own Russian headings: Sofia / Arial Bold = 0.6306; ascent 0.9 and descent 0.3 em) */
 @font-face {
   font-family: 'IHL Sofia XC fallback';
   src: local('Arial'), local('Roboto');
-  size-adjust: 65.0515%;
-  ascent-override: 138.352%;
-  descent-override: 46.1173%;
+  size-adjust: 63.06%;
+  ascent-override: 142.72%;
+  descent-override: 47.57%;
   line-gap-override: 0%;
 }
 
