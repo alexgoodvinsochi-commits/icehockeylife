@@ -97,12 +97,12 @@ ul[role='list'], ol[role='list'] { list-style: none; padding: 0; }
    ("auto" in contain-intrinsic-size remembers the real height once a section has been drawn).
    Their height is a guess until then, so before any jump to an anchor scripts/anchors.ts adds .cv-all
    and the browser measures the whole page once — otherwise the jump would land off target. */
-main > section:not(.hero):not(.facts) {
+main > section:not(.hero) {
   content-visibility: auto;
   contain-intrinsic-size: auto 1400px;
 }
 .ftr { content-visibility: auto; contain-intrinsic-size: auto 1000px; }
-html.cv-all main > section:not(.hero):not(.facts), html.cv-all .ftr { content-visibility: visible; }
+html.cv-all main > section:not(.hero), html.cv-all .ftr { content-visibility: visible; }
 
 /* phone-only and computer-only bits (an SMS link makes no sense on a computer); html.is-phone comes from Base.astro */
 html:not(.is-phone) .only-touch { display: none !important; }

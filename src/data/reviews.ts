@@ -1,5 +1,5 @@
-// Parent reviews from the 25 screenshots published on icehockeylife.ru: VK comments, messenger messages, stories
-// and one post. Transcribed in two passes per slide and checked against the screenshots (6 Oct 2026). One slide
+// Parent reviews from the 25 screenshots published on icehockeylife.ru: VK comments, messenger messages, stories,
+// one comment and one post in another social network, and one text set over a photo with no visible source (Сава). Transcribed in two passes per slide and checked against the screenshots (6 Oct 2026). One slide
 // repeated another (Иван) and is kept once; one slide held two comments (Кушнарёва, Голуб) and gives two reviews.
 //
 // Editing rules. Reviews.astro sums them up for visitors, so keep them true:
@@ -129,8 +129,8 @@ export const reviews: Review[] = [
   },
   {
     text: 'Не описать словами доброту и подход тренеров к детям. Глядя на вас, ещё больше хочется заниматься хоккеем и развиваться в этом спорте. Спасибо.',
-    by: 'Из сторис родителя',
-    note: 'о Дмитрии Стулове',
+    by: 'Родители участника',
+    note: 'Сторис · о Дмитрии Стулове',
   },
   {
     text: 'Малой каждый день спрашивает, когда сборы уже! Очень тренер ему нравится! И многому его научил!',
@@ -154,8 +154,8 @@ export const reviews: Review[] = [
   },
   {
     text: 'Спасибо вам за IceHockeyLife. Мы обещаем вернуться. Спасибо за тренерский состав, это величайший труд — собрать таких профессионалов.',
-    by: 'Из сторис родителя',
-    note: 'о тренерском составе',
+    by: 'Родители участника',
+    note: 'Сторис · о тренерском составе',
   },
   {
     text: 'Спасибо Вам огромное за всё! Было круто! Дети в восторге! И родители тоже!',
