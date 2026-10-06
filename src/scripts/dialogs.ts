@@ -39,7 +39,20 @@ export function initDialogs() {
     const closer = t.closest<HTMLElement>('[data-sheet-close]');
     if (closer) {
       const d = closer.closest('dialog') as HTMLDialogElement | null;
-      if (d) closeFromUi(d);
+      if (!d) return;
+      const href = closer.getAttribute('href');
+      if (href?.startsWith('#')) {
+        // an in-page link inside a sheet: close first, then scroll once the page is scrollable again
+        e.preventDefault();
+        d.close();
+        document.documentElement.classList.remove('has-dialog');
+        requestAnimationFrame(() => {
+          document.querySelector(href)?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+          history.replaceState(history.state, '', href);
+        });
+        return;
+      }
+      closeFromUi(d);
     }
   });
 

@@ -39,6 +39,8 @@ const nav = [
   const sections = links
     .map((a) => document.querySelector<HTMLElement>(a.getAttribute('href')!))
     .filter((s): s is HTMLElement => !!s);
+  // every top-level section is watched, so passing a section that is not in the menu clears the highlight
+  const watched = [...document.querySelectorAll<HTMLElement>('main > section, footer')];
   if ('IntersectionObserver' in window && sections.length) {
     const io = new IntersectionObserver(
       (entries) => {
@@ -49,7 +51,7 @@ const nav = [
       },
       { rootMargin: '-45% 0px -50% 0px' },
     );
-    sections.forEach((s) => io.observe(s));
+    watched.forEach((s) => io.observe(s));
   }
 </script>
 

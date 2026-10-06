@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import type { Person } from '../data/staff';
+import { t } from '../lib/typo';
 
 type Props = { person: Person; portrait: ImageMetadata };
 const { person, portrait } = Astro.props;
@@ -15,22 +16,22 @@ const [surname, ...rest] = person.name.split(' ');
         <Image src={portrait} alt="" widths={[240, 480]} sizes="240px" loading="lazy" />
       </div>
       <div class="bio__id">
-        <p class="label bio__role">{person.role}</p>
+        <p class="label bio__role">{t(person.role)}</p>
         <h3 class="bio__name" id={`bio-${person.slug}-name`}>
           <span class="display">{surname}</span>
           <span class="bio__given">{rest.join(' ')}</span>
         </h3>
-        {person.born && <p class="bio__born">{/^\d{4}$/.test(person.born) ? `${person.born} г. р.` : `Дата рождения: ${person.born}`}</p>}
+        {person.born && <p class="bio__born">{t(/^\d{4}$/.test(person.born) ? `${person.born} г. р.` : `Дата рождения: ${person.born}`)}</p>}
       </div>
     </header>
     <div class="bio__body">
       {
         person.bio?.map((s) => (
           <section class="bio__sec">
-            <h4 class="label">{s.title}</h4>
+            <h4 class="label">{t(s.title)}</h4>
             <ul role="list">
               {s.items.map((it) => (
-                <li>{it}</li>
+                <li>{t(it)}</li>
               ))}
             </ul>
           </section>

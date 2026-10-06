@@ -54,7 +54,7 @@ const hours = [...Array(camp.hoursIce).fill('ice'), ...Array(camp.hoursOffIce).f
       </div>
     </div>
 
-    <ul class="prog__photos" role="list">
+    <ul class="prog__photos" role="list" tabindex="0" aria-label="Фотографии занятий вне льда">
       <li>
         <Image src={tps} alt="Бросковая зона: тренажёр для бросков" widths={[400, 700]} sizes="(min-width: 900px) 30vw, 80vw" loading="lazy" />
         <span>Бросковая зона</span>
