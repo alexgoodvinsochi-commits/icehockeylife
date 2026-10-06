@@ -64,11 +64,12 @@ import { withPhones } from '../lib/rich';
   .faq__a { padding: 0 0 26px 42px; max-width: 62ch; color: var(--c-ink-2); }
   .faq__a > * + * { margin-top: .75em; }
   .faq__a :global(a) { color: var(--c-ink); font-weight: 600; }
-  .faq__link a { color: var(--c-blue-line) !important; }
+  .faq__link a { color: var(--c-blue-line) !important; padding-block: 10px; }
 
   @media (max-width: 860px) {
     .faq__grid { grid-template-columns: 1fr; }
     .faq__side { position: static; }
-    .faq__a { padding-left: 0; }
+    .faq__item summary { grid-template-columns: 18px 1fr; gap: 12px; }
+    .faq__a { padding-left: 30px; }
   }
 </style>

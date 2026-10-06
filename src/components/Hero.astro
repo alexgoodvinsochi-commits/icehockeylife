@@ -22,7 +22,7 @@ import { t } from '../lib/typo';
       <div class="hero__price" data-until={camp.overAfter}>
         <p data-until={camp.price.earlyUntil}>
           <b class="num">{rub(camp.price.early)}</b>
-          <span>{t(`первым ${camp.price.earlySeats} участникам, которые забронируют место до ${camp.price.earlyUntilHuman} включительно. С ${camp.price.regularFromHuman} —`)} <span class="nowrap">{rub(camp.price.regular)}</span></span>
+          <span>{t(`первым ${camp.price.earlySeats} участникам, которые забронируют место до ${camp.price.earlyUntilHuman} включительно. С ${camp.price.regularFromHuman} —`)} <span class="nowrap">{rub(camp.price.regular)}</span>.</span>
         </p>
         <p data-from={regularFrom} hidden>
           <b class="num">{rub(camp.price.regular)}</b>
@@ -36,7 +36,7 @@ import { t } from '../lib/typo';
       <div class="hero__cta" data-until={camp.overAfter}>
         <a class="btn btn--red" href="#zapis">Записаться</a>
         <p class="hero__call">
-          {t('или позвоните Олегу, координатору:')}
+          {t(`или позвоните ${contacts.coordinator.dat}, координатору:`)}
           <a class="nowrap" href={`tel:${contacts.coordinator.tel}`}>{contacts.coordinator.phone}</a>
         </p>
       </div>
@@ -97,7 +97,7 @@ import { t } from '../lib/typo';
 
   .hero__art { position: relative; align-self: stretch; min-height: clamp(320px, 42vw, 640px); }
   .hero__circle { position: absolute; width: 112%; left: -4%; top: 50%; translate: 0 -50%; }
-  .hero__skater { position: absolute; left: 50%; top: 50%; translate: -48% -50%; width: 112%; max-width: none; height: auto; }
+  .hero__skater { position: absolute; left: 50%; top: 50%; translate: -50% -50%; width: 104%; max-width: none; height: auto; }
 
   @media (max-width: 980px) {
     .hero__ice { grid-template-columns: 1fr; gap: 0; }
@@ -110,6 +110,7 @@ import { t } from '../lib/typo';
     .hero__skater { width: 86%; translate: -40% -56%; z-index: 2; }
     .hero__dates { position: relative; z-index: 1; margin-top: -11%; }
     .hero__hash-b { display: none; } /* would cross the month line below */
+    .hero__circle path { display: none; } /* the inner L-marks: the skater covers one pair, the other floats */
   }
   /* phones and tablets: a flatter art box so the price and the button fit the first screen (Safari on a phone: ≈714 px) */
   @media (max-width: 980px) {

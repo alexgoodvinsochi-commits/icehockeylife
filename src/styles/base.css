@@ -37,7 +37,11 @@ button, input, select, textarea { font: inherit; color: inherit; }
 button { cursor: pointer; }
 a { color: inherit; text-underline-offset: .18em; text-decoration-thickness: 1px; }
 a:hover { text-decoration-thickness: 2px; }
-p, li { text-wrap: pretty; } /* no auto hyphenation: it breaks surnames and club names */
+p, li, .card__fact { text-wrap: pretty; }
+
+/* section heads with a side note: the H2 on the left, the note on the right, first lines on one baseline */
+.sec-head { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); column-gap: clamp(24px, 5vw, 80px); row-gap: 20px; align-items: baseline; }
+@media (max-width: 860px) { .sec-head { grid-template-columns: minmax(0, 1fr); } } /* no auto hyphenation: it breaks surnames and club names */
 h1, h2, h3, h4 { text-wrap: balance; font-weight: inherit; }
 strong, b { font-weight: 600; }
 ul[role='list'], ol[role='list'] { list-style: none; padding: 0; }

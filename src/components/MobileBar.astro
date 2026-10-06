@@ -4,7 +4,7 @@ import { camp, contacts } from '../data/camp';
 
 <div class="mbar" data-mbar aria-hidden="true" inert>
   <a class="mbar__call" href={`tel:${contacts.coordinator.tel}`}>
-    <b>Позвонить Олегу</b>
+    <b>Позвонить {contacts.coordinator.dat}</b>
     <span class="nowrap">{contacts.coordinator.phone}</span>
   </a>
   <a class="mbar__cta" href="#zapis" data-until={camp.overAfter}>Записаться</a>
@@ -15,18 +15,32 @@ import { camp, contacts } from '../data/camp';
   const bar = document.querySelector<HTMLElement>('[data-mbar]');
   const hero = document.querySelector('#top');
   const form = document.querySelector('#zapis');
+  const heroBtn = document.querySelector('.hero__cta .btn');
+  const root = document.documentElement;
   if (bar && hero && form && 'IntersectionObserver' in window) {
     let pastHero = false;
     let formVisible = false;
+    let heroBtnVisible = false;
     const sync = () => {
       const show = pastHero && !formVisible;
       bar.classList.toggle('is-on', show);
       bar.toggleAttribute('inert', !show);
       bar.setAttribute('aria-hidden', String(!show));
-      document.documentElement.classList.toggle('has-mbar', show);
+      root.classList.toggle('has-mbar', show);
+      // the header keeps its button whenever it is the only one on screen, e.g. the hero button below Safari's bars
+      root.classList.toggle('hdr-cta-off', show || heroBtnVisible || formVisible);
     };
     new IntersectionObserver(([e]) => { pastHero = !e.isIntersecting; sync(); }).observe(hero);
     new IntersectionObserver(([e]) => { formVisible = e.isIntersecting; sync(); }, { threshold: 0.15 }).observe(form);
+    if (heroBtn) new IntersectionObserver(([e]) => { heroBtnVisible = e.isIntersecting; sync(); }).observe(heroBtn);
+
+    let lastY = scrollY;
+    addEventListener('scroll', () => {
+      const y = scrollY;
+      if (Math.abs(y - lastY) < 6) return;
+      root.classList.toggle('scroll-down', y > lastY && y > 120);
+      lastY = y;
+    }, { passive: true });
   }
 </script>
 

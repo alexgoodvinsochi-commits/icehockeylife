@@ -25,6 +25,12 @@ const split = (p: Person) => {
   const [surname, ...given] = p.name.split(' ');
   return { surname, given: given.join(' ') };
 };
+// the phone grid hides first names: a shared surname (the two Крейдиковых) shows its initial there
+const surnames = [...coaches, ...specialists].map((p) => split(p).surname);
+const ini = (p: Person) => {
+  const n = split(p);
+  return surnames.filter((s) => s === n.surname).length > 1 ? `${n.given[0]}.` : '';
+};
 ---
 
 <section class="team section" id="trenery" aria-labelledby="team-title">
@@ -63,13 +69,13 @@ const split = (p: Person) => {
                   <Image src={portrait(p.photo)} alt="" widths={[320, 520, 640]} sizes="(min-width: 900px) 30vw, 92vw" loading="lazy" />
                 </span>
                 <span class="card__body">
-                  <span class="card__role">{t(p.role)}</span>
                   <span class="card__name">
                     <b class="display">{n.surname}</b>
                     <span>{n.given}</span>
                   </span>
+                  <span class="card__role">{t(p.roleShort ?? p.role)}</span>
                   {p.highlight && <span class="card__fact">{t(p.highlight)}</span>}
-                  <span class="card__more">{more(p)}</span>
+                  <span class="card__more">{t(more(p))}</span>
                 </span>
               </button>
             </li>
@@ -95,13 +101,13 @@ const split = (p: Person) => {
                   <Image src={portrait(p.photo)} alt="" widths={[240, 400]} sizes="(min-width: 1100px) 22vw, (min-width: 640px) 30vw, 46vw" loading="lazy" />
                 </span>
                 <span class="card__body">
-                  <span class="card__role">{t(p.role)}</span>
                   <span class="card__name">
-                    <b class="display">{n.surname}</b>
+                    <b class="display">{n.surname}{ini(p) && <span class="card__ini">{` ${ini(p)}`}</span>}</b>
                     <span>{n.given}</span>
                   </span>
+                  <span class="card__role">{t(p.roleShort ?? p.role)}</span>
                   {p.highlight && <span class="card__fact">{t(p.highlight)}</span>}
-                  {p.bio && <span class="card__more">{more(p)}</span>}
+                  {p.bio && <span class="card__more">{t(more(p))}</span>}
                 </span>
               </Tag>
             </li>
@@ -122,13 +128,13 @@ const split = (p: Person) => {
                   <Image src={portrait(p.photo)} alt="" widths={[240, 400]} sizes="(min-width: 1100px) 18vw, (min-width: 640px) 30vw, 46vw" loading="lazy" />
                 </span>
                 <span class="card__body">
-                  <span class="card__role">{t(p.role)}</span>
                   <span class="card__name">
-                    <b class="display">{n.surname}</b>
+                    <b class="display">{n.surname}{ini(p) && <span class="card__ini">{` ${ini(p)}`}</span>}</b>
                     <span>{n.given}</span>
                   </span>
+                  <span class="card__role">{t(p.roleShort ?? p.role)}</span>
                   {p.highlight && <span class="card__fact">{t(p.highlight)}</span>}
-                  <span class="card__more">{more(p)}</span>
+                  <span class="card__more">{t(more(p))}</span>
                 </span>
               </button>
             </li>
@@ -136,7 +142,7 @@ const split = (p: Person) => {
         })
       }
     </ul>
-    <p class="team__note">{t(`Состав тренеров на смену ${camp.datesHuman} года подтвердит координатор.`)}</p>
+    <p class="team__note" data-until={camp.overAfter}>{t(`Состав тренеров на смену ${camp.datesHuman} года подтвердит координатор.`)}</p>
   </div>
 
   {
@@ -169,10 +175,11 @@ const split = (p: Person) => {
   /* source crops differ: --zoom brings every head in the 3 × 3 roster to the same size (staff.ts) */
   .team__grid--row .card__photo img { transform: scale(var(--zoom, 1)); transform-origin: 50% 8.5%; }
   .card__body { display: grid; align-content: start; gap: 6px; padding-top: 14px; }
-  .card__role { font-size: var(--fs-small); font-weight: 600; color: var(--c-red-line); line-height: 1.3; }
+  .card__role { font-size: var(--fs-small); font-weight: 600; color: var(--c-red-line); line-height: 1.3; margin-top: 2px; }
   .card__name { display: grid; }
   .card__name b { font-size: clamp(1.9rem, 1.5rem + 1.2vw, 2.6rem); line-height: .95; color: var(--c-ink); }
-  .card__name span { font-size: var(--fs-small); color: var(--c-ink-2); margin-top: 2px; }
+  .card__name > span { font-size: var(--fs-small); color: var(--c-ink-2); margin-top: 2px; }
+  .card__ini { display: none; }
   .card__fact { font-size: var(--fs-small); color: var(--c-ink-2); line-height: 1.4; margin-top: 4px; }
   .card__more {
     margin-top: 6px; font-weight: 600; font-size: var(--fs-small); color: var(--c-blue-line);
@@ -218,7 +225,18 @@ const split = (p: Person) => {
     .team__grid--row, .team__grid--spec { grid-template-columns: repeat(3, 1fr); gap: 20px 12px; }
     .team__grid--row .card, .card--spec { grid-template-columns: none; grid-template-rows: auto 1fr; gap: 0; }
     .team__grid .card__body { padding-top: 8px; gap: 2px; }
-    .team__grid .card__fact, .team__grid .card__name span, .team__grid .card__more { display: none; }
+    .team__grid .card__fact, .team__grid .card__name > span, .team__grid .card__more { display: none; }
+    .team__grid .card__ini { display: inline; }
+    /* the cards with a bio carry a small «+» on the photo: the two without one read as plain cards */
+    .team__grid button.card .card__photo { position: relative; }
+    .team__grid button.card .card__photo::after {
+      content: ''; position: absolute; right: 6px; bottom: 6px; width: 24px; height: 24px; border-radius: 50%;
+      background:
+        linear-gradient(var(--c-blue-deep), var(--c-blue-deep)) center / 10px 2px no-repeat,
+        linear-gradient(var(--c-blue-deep), var(--c-blue-deep)) center / 2px 10px no-repeat,
+        var(--c-board);
+      box-shadow: 0 1px 3px rgb(11 30 63 / .3);
+    }
     .team__grid .card__name b { font-size: 1.3rem; }
     .team__grid .card__role { font-size: .78rem; }
     .letter__text { font-size: var(--fs-body); }

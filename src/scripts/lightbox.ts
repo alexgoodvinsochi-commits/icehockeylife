@@ -35,16 +35,30 @@ export function initLightbox() {
     }
   };
 
+  // a history entry of its own, as for the bio sheets (dialogs.ts): the phone's Back closes the photo
+  // instead of leaving the site or jumping the page to an earlier anchor
+  const open = (n: number) => {
+    show(n);
+    dialog.showModal();
+    document.documentElement.classList.add('has-dialog');
+    if (location.hash) history.replaceState(history.state, '', location.pathname + location.search);
+    history.pushState({ lightbox: 1 }, '');
+  };
   links.forEach((a, n) =>
     a.addEventListener('click', (e) => {
       e.preventDefault();
-      show(n);
-      dialog.showModal();
-      document.documentElement.classList.add('has-dialog');
+      open(n);
     }),
   );
 
-  const close = () => dialog.close();
+  const close = () => (history.state?.lightbox ? history.back() : dialog.close());
+  addEventListener('popstate', () => {
+    if (dialog.open) dialog.close();
+  });
+  dialog.addEventListener('cancel', (e) => {
+    e.preventDefault();
+    close();
+  });
   dialog.addEventListener('close', () => document.documentElement.classList.remove('has-dialog'));
   dialog.querySelector('[data-lb-prev]')?.addEventListener('click', () => show(i - 1));
   dialog.querySelector('[data-lb-next]')?.addEventListener('click', () => show(i + 1));

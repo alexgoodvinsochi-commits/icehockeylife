@@ -1,6 +1,7 @@
 ---
 import { contacts, camp } from '../data/camp';
-import { operator, operatorLine } from '../data/legal';
+import { operator, operatorLine, missing } from '../data/legal';
+const showOperator = !['name', 'inn', 'ogrnip'].some((k) => missing.includes(k));
 import { metrikaOn } from '../lib/seo';
 import { rich } from '../lib/rich';
 import vitokin from '../assets/brand/vitokin.svg?raw';
@@ -47,7 +48,7 @@ const year = new Date().getFullYear();
     </div>
 
     <div class="ftr__legal">
-      <p set:html={rich(operatorLine)} />
+      {showOperator && <p set:html={rich(operatorLine)} />}
       {operator.hours && <p>Режим работы: {operator.hours}</p>}
       <p>© 2023–{year} Ice Hockey Life (Айс Хоккей Лайф). Сведения на сайте носят информационный характер и не являются публичной офертой.</p>
       <p class="ftr__docs">
@@ -68,7 +69,7 @@ const year = new Date().getFullYear();
   .ftr__phone span { color: rgb(255 255 255 / .7); }
   .ftr__phone:hover b { color: var(--c-kick); }
   .ftr__social { display: grid; gap: 10px; padding-top: 40px; }
-  .ftr__social a { font-family: var(--f-display); font-weight: 800; font-size: 1.6rem; text-transform: uppercase; text-decoration: none; letter-spacing: .02em; }
+  .ftr__social a { font-family: var(--f-display); font-weight: 800; font-size: 1.6rem; text-transform: uppercase; text-decoration: none; letter-spacing: .02em; padding-block: 6px; }
   .ftr__social a:hover { color: var(--c-crease); }
   .ftr__social sup { font-size: .55em; vertical-align: super; }
   /* the crest is a 68 KB traced path: kept out of the HTML as one cached file, coloured through a mask */
@@ -84,17 +85,22 @@ const year = new Date().getFullYear();
     background: var(--c-board); color: var(--c-ink); border-radius: var(--r-s) var(--r-s) 0 0;
     border-bottom: 10px solid var(--c-kick); overflow: hidden;
   }
-  .ftr__board { padding: 18px 22px 22px; display: grid; gap: 10px; align-content: start; min-height: 132px; }
+  .ftr__board { padding: 18px 22px 22px; display: grid; grid-template-rows: auto 1fr; gap: 14px; min-height: 132px; }
   .ftr__board + .ftr__board { border-left: 1px solid var(--c-hair); }
   .ftr__pnote { color: var(--c-ink-3); font-size: .8rem; line-height: 1.3; }
-  .ftr__plogo { width: min(100%, 190px); fill: var(--c-ink); }
-  .ftr__plogo--vitokin { width: min(100%, 210px); padding-top: 18px; }
-  .ftr__board--slogan { align-content: center; background: var(--c-red-line); color: #fff; border-radius: 0 var(--r-s) 0 0; }
+  .ftr__plogo { align-self: end; fill: var(--c-ink); line-height: 0; }
+  .ftr__plogo :global(svg) { display: block; width: auto; max-width: 100%; height: 88px; }
+  .ftr__plogo--vitokin :global(svg) { width: min(100%, 230px); height: auto; margin-bottom: 8px; }
+  .ftr__board--slogan { grid-template-rows: none; align-content: center; background: var(--c-red-line); color: #fff; border-radius: 0 var(--r-s) 0 0; }
   .ftr__board--slogan p { font-size: clamp(1.8rem, 1.2rem + 2.4vw, 3.4rem); }
 
   .ftr__legal { display: grid; gap: 8px; margin-top: 40px; font-size: .875rem; color: rgb(255 255 255 / .62); }
   .ftr__legal a { color: rgb(255 255 255 / .85); }
   .ftr__docs { display: flex; flex-wrap: wrap; gap: 6px 22px; }
+  @media (max-width: 760px) {
+    .ftr__docs { gap: 0 22px; }
+    .ftr__docs a, .ftr__docs button { padding-block: 11px; }
+  }
   .ftr__docs button { border: 0; background: none; padding: 0; color: rgb(255 255 255 / .85); text-decoration: underline; font: inherit; cursor: pointer; }
   .ftr__legal :global(mark.todo) { background: rgb(242 226 125 / .9); color: var(--c-ink); padding: 0 .2em; border-radius: 3px; }
 
@@ -104,5 +110,7 @@ const year = new Date().getFullYear();
     .ftr__social { padding-top: 0; }
     .ftr__boards { grid-template-columns: 1fr 1fr; }
     .ftr__board--slogan { grid-column: 1 / -1; border-left: 0 !important; border-top: 1px solid var(--c-hair); border-radius: 0; }
+    .ftr__plogo :global(svg) { height: 66px; }
+    .ftr__plogo--vitokin :global(svg) { width: min(100%, 172px); height: auto; margin-bottom: 6px; }
   }
 </style>

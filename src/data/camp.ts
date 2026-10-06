@@ -19,7 +19,8 @@ export const camp = {
   days: 'Семь дней',
   city: 'Сочи',
   place: 'Сириус',
-  arena: 'Ледовый дворец «Большой»',
+  // the venue's own name (ГБУ КК «Дворец спорта «Большой»»); «ЛД «Большой»» is the announcement's short form
+  arena: 'Дворец спорта «Большой»',
   arenaShort: 'ЛД «Большой»',
 
   hoursIce: 9,
@@ -40,7 +41,7 @@ export const camp = {
     goalieDiscount: true,
   },
 
-  gifts: ['Форма для ОФП', 'Фирменные джерси', 'Шапки', 'Подарки от Ice Hockey Life'],
+  gifts: ['Форма для ОФП', 'Фирменные джерси', 'Шапка', 'Подарки от Ice Hockey Life'],
 
   hotel: {
     name: 'Сочи Парк Отель',
@@ -55,9 +56,9 @@ export const rub = (n: number) => `${String(n).replace(/\B(?=(\d{3})+(?!\d))/g, 
 export const regularFrom = new Date(Date.parse(camp.price.earlyUntil) + 1000).toISOString();
 
 export const contacts = {
-  // remit: whom to call about what, the same everywhere the two numbers appear
-  coordinator: { name: 'Олег', role: 'координатор сборов', remit: 'запись, оплата, проживание', phone: '+7 938 457-89-82', tel: '+79384578982' },
-  headCoach: { name: 'Максим Сергеевич', role: 'главный тренер', remit: 'программа, возраст и уровень', phone: '+7 938 438-91-63', tel: '+79384389163' },
+  // remit: whom to call about what, the same everywhere the two numbers appear; dat: «позвонить Олегу»
+  coordinator: { name: 'Олег', dat: 'Олегу', role: 'координатор сборов', remit: 'запись по телефону, оплата, проживание', phone: '+7 938 457-89-82', tel: '+79384578982' },
+  headCoach: { name: 'Максим Сергеевич', dat: 'Максиму Сергеевичу', role: 'главный тренер', remit: 'заявки с сайта, программа, возраст и уровень', phone: '+7 938 438-91-63', tel: '+79384389163' },
   whatsapp: '79384389163',
   telegram: 'https://t.me/icehockeylife',
   vk: 'https://vk.com/icehockeyliferu',

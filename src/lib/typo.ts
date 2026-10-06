@@ -22,7 +22,16 @@ export function t(text: string): string {
       .replace(/(\d)\s(\d{3})\s?₽/g, '$1\u00a0$2\u00a0₽')
       .replace(/(\d+–\d+)\s(?=[а-яё])/g, '$1\u00a0')
       // the brand never splits across lines
-      .replace(/Ice Hockey Life/g, 'Ice\u00a0Hockey\u00a0Life');
+      .replace(/Ice Hockey Life/g, 'Ice\u00a0Hockey\u00a0Life')
+      // short prepositions Typograf leaves at line ends; a first name stays with the surname
+      .replace(/(^|[\s«(])(вне|для|без|при|под|над|про)\s/gi, '$1$2\u00a0')
+      .replace(/(^|[\s«(])(Алексей|Анна|Богдан|Валерий|Дмитрий|Егор|Илья|Инна|Максим|Наталья|Никита|Николай|Олег|Павел|Роберт|Ростислав|Рустам|Светлана|Степан|Татьяна)\s(?=[А-ЯЁ])/g, '$1$2\u00a0');
+    // no break after the hyphen of «отеле-партнёре» or «U-14», or the dash of «5–6» (U+2060 word joiner: invisible
+    // in both faces); web and e-mail addresses keep their exact characters
+    out = out
+      .split(/(https?:\/\/\S+|[\w.+-]+@[\w-]+(?:\.[\w-]+)+)/)
+      .map((part, i) => (i % 2 ? part : part.replace(/([a-zа-яё])-(?=[a-zа-яё\d])/gi, '$1-\u2060').replace(/(\d)–(?=\d)/g, '$1–\u2060')))
+      .join('');
     cache.set(text, out);
   }
   return out;

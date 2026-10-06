@@ -9,7 +9,7 @@ const FIRST = 3;
 
 <section class="rev section" id="otzyvy" aria-labelledby="rev-title">
   <div class="wrap">
-    <div class="rev__head">
+    <div class="rev__head sec-head">
       <h2 class="rev__title display" id="rev-title">{t('Что пишут родители')}</h2>
       <p class="rev__note">{t(`${reviews.length} отзывов из комментариев, постов, сообщений и сторис родителей. Мы убрали эмодзи и лишние «!», исправили опечатки и пунктуацию, упоминания аккаунтов заменили названием сборов и именем тренера.`)}</p>
     </div>
@@ -49,7 +49,6 @@ const FIRST = 3;
 
 <style>
   .rev { background: var(--c-board); }
-  .rev__head { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 20px clamp(24px, 5vw, 80px); align-items: end; }
   .rev__title { font-size: var(--fs-h2s); color: var(--c-blue-deep); }
   .rev__note { color: var(--c-ink-2); max-width: 44ch; }
 
@@ -74,6 +73,5 @@ const FIRST = 3;
   @media (hover: hover) { .rev__more:hover { background: var(--c-ink); color: #fff; } }
 
   @media (max-width: 860px) {
-    .rev__head { grid-template-columns: 1fr; }
   }
 </style>

@@ -3,10 +3,13 @@ import { camp, rub, regularFrom } from '../data/camp';
 import { withPhones } from '../lib/rich';
 
 // one place where a parent can compare the camp with others: the facts, nothing else
+// every value ends with a full stop, so the link after it reads as a link, not as the last word
+const stop = (s: string) => (/[.!?…]$/.test(s) ? s : `${s}.`);
 type Row = { k: string; v: string; link?: { href: string; label: string }; until?: string; from?: string };
 const rows: Row[] = [
-  { k: 'Даты', v: `${camp.datesHuman} года, семь дней. Точное расписание пришлём за 2 недели до сборов` },
-  { k: 'Где', v: 'Ледовый дворец «Большой», Сириус (Сочи) — хоккейная арена Олимпиады-2014' },
+  { k: 'Даты', v: `${camp.datesHuman} года, семь дней. Точное расписание пришлём за 2 недели до сборов`, until: camp.overAfter },
+  { k: 'Даты', v: `${camp.datesHuman} года, семь дней`, from: camp.overAfter },
+  { k: 'Где', v: `${camp.arena}, Сириус (Сочи) — хоккейная арена Олимпиады-2014` },
   {
     k: 'Формат',
     v: 'Без проживания: ребёнок живёт с вами. На тренировки его привозят и забирают родители, а между тренировками можно оставить на дневное пребывание с питанием (за доплату)',
@@ -46,13 +49,8 @@ const rows: Row[] = [
           <div class="facts__row" data-until={r.until} data-from={r.from} hidden={!!r.from}>
             <dt>{r.k}</dt>
             <dd>
-              <Fragment set:html={withPhones(r.v)} />
-              {r.link && (
-                <>
-                  {' '}
-                  <a href={r.link.href}>{r.link.label}</a>
-                </>
-              )}
+              <Fragment set:html={withPhones(stop(r.v))} />
+              {r.link && <a class="facts__more" href={r.link.href}>{r.link.label}</a>}
             </dd>
           </div>
         ))
@@ -70,8 +68,15 @@ const rows: Row[] = [
   .facts__row dt { font-weight: 600; color: var(--c-ink); }
   .facts__row dd { margin: 0; color: var(--c-ink-2); }
   .facts__row a { color: var(--c-blue-line); font-weight: 600; }
+  .facts__row dd :global(a[href^='tel:']) { color: var(--c-ink); font-weight: 600; }
   .facts__row dd > a { white-space: nowrap; }
+  .facts__more { display: table; margin-top: 4px; padding-block: 4px; }
 
+  @media (min-width: 901px) {
+    .facts__list { display: block; columns: 2; column-gap: clamp(20px, 3vw, 48px); }
+    .facts__row { break-inside: avoid; }
+    .facts__title { position: sticky; top: calc(var(--header-h) + 24px); }
+  }
   @media (max-width: 900px) {
     .facts__grid { grid-template-columns: 1fr; }
     .facts__title { padding-top: 0; }

@@ -10,6 +10,8 @@ const usesHistory = (d: HTMLDialogElement) => !d.hasAttribute('data-sheet-nohist
 function open(dialog: HTMLDialogElement, push = true) {
   if (dialog.open) return;
   dialog.showModal();
+  const panel = dialog.querySelector<HTMLElement>('.bio__panel');
+  if (panel) panel.scrollTop = 0;
   document.documentElement.classList.add('has-dialog');
   if (!usesHistory(dialog)) return;
   openId = dialog.id;

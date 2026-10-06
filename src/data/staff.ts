@@ -10,6 +10,8 @@ export type Person = {
   name: string; // Фамилия Имя Отчество
   role: string;
   group: 'head' | 'coach' | 'goalie' | 'assistant' | 'specialist';
+  /** a short role for the cards when the full title is long (the bio sheet shows the full one) */
+  roleShort?: string;
   /** portrait scale in the roster grid, so every head reads at the same size (1 = as cropped) */
   zoom?: number;
   photo: string; // file name in src/assets/staff
@@ -78,7 +80,9 @@ export const coaches: Person[] = [
   {
     slug: 'stulov',
     name: 'Стулов Дмитрий Георгиевич',
-    role: 'Главный тренер', // as on the old card (his pop-up has no title); owner to confirm next to «Главный тренер сборов»
+    // the old card says «Главный тренер» (his pop-up has no title, his bio: head coach of МХЛ teams until 2019);
+    // three «главных тренеров» on one page read as a contradiction, so «Тренер» until the owner confirms
+    role: 'Тренер',
     group: 'head',
     photo: 'stulov',
     born: '5 декабря 1973',
@@ -131,7 +135,7 @@ export const coaches: Person[] = [
   {
     slug: 'azimov',
     name: 'Азимов Рустам Шухратович',
-    role: 'Главный тренер', // as on the old card; his own pop-up says «Тренер» and the bio lists no head-coach post — owner to confirm
+    role: 'Тренер', // his own pop-up on the old site; the old card said «Главный тренер», the bio lists no head-coach post — owner to confirm
     group: 'head',
     photo: 'azimov',
     born: '26 января 1991',
@@ -189,17 +193,17 @@ export const coaches: Person[] = [
       {
         title: 'Карьера тренера',
         items: [
-          '2011–2019 — ООО «Салаватспортсервис» (Салават), старший тренер х/к «Юрматы» 2003 г. р.',
+          '2011–2019 — ООО «Салаватспортсервис» (Салават), старший тренер ХК «Юрматы» 2003 г. р.',
           'С 2020 — ДЮСШ ХК «Сочи», главный тренер команды 2014 г. р.',
         ],
       },
       {
         title: 'Тренерские достижения',
         items: [
-          '2017–2018 — первенство России, регион «Урал — Западная Сибирь», II группа — 3 место',
-          '2018–2019 — первенство России, регион «Урал — Западная Сибирь», II группа — 2 место',
-          '2018–2019 — финал первенства, II группа — 2 место',
-          '2018–2019 — переходный турнир в группу сильнейших — 3 место',
+          '2017–2018 — первенство России, регион «Урал — Западная Сибирь», II группа — 3-е место',
+          '2018–2019 — первенство России, регион «Урал — Западная Сибирь», II группа — 2-е место',
+          '2018–2019 — финал первенства, II группа — 2-е место',
+          '2018–2019 — переходный турнир в группу сильнейших — 3-е место',
         ],
       },
       {
@@ -230,9 +234,9 @@ export const coaches: Person[] = [
         items: [
           'Воспитанник череповецкой ДЮСШ по хоккею',
           'Неоднократно привлекался в сборную региона, призёр финалов по регионам СССР',
-          // «ВХЛ» is verbatim from the old site, but the league dates from 2010 and his career ended in 1998
-          // (the 1990s «высшая лига»?) — owner to confirm
-          'Чемпион СНГ среди молодёжи, бронзовый призёр чемпионата ВХЛ',
+          // the old site adds «бронзовый призёр чемпионата ВХЛ», but the league dates from 2010 and his career ended
+          // in 1998 (the 1990s «высшая лига»?): left out until the owner confirms
+          'Чемпион СНГ среди молодёжи',
           '1992–1996 — система «Северстали», Череповец',
           '1995–1998 — «Горняк», Оленегорск',
           'В 1998 году завершил профессиональную карьеру',
@@ -454,8 +458,8 @@ export const specialists: Person[] = [
         title: 'Опыт',
         items: [
           'Дипломированный специалист, два высших образования',
-          'Общий стаж работы психологом — 19 лет',
-          'Детский психолог — 9 лет, специализируется на работе со спортсменами и их родителями',
+          // the old site's «стаж 19 лет» and «детский психолог — 9 лет» come from an undated snapshot
+          'Детский психолог: работает со спортсменами и их родителями',
           'С 2005 года — штатный психолог МЧС Краснодарского края',
         ],
       },
@@ -485,6 +489,7 @@ export const specialists: Person[] = [
     slug: 'zakharchenko',
     name: 'Захарченко Анна Евгеньевна',
     role: 'Тренер по растяжке, ОФП, СФП и реабилитации после травм',
+    roleShort: 'Растяжка, ОФП и СФП',
     group: 'specialist',
     photo: 'zakharchenko',
     highlight: 'Сертифицированный инструктор пилатеса, стрейча и TRX',

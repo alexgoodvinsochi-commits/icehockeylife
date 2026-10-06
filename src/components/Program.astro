@@ -9,7 +9,12 @@ import tps from '../assets/photos/tps-station.jpg';
 import iceCoach from '../assets/photos/coach-teaching.jpg';
 import iceGame from '../assets/photos/group-puck-battle.jpg';
 
-const hours = [...Array(camp.hoursIce).fill('ice'), ...Array(camp.hoursOffIce).fill('off')];
+// one cell per hour, in two blocks that sit over their own columns
+const segs = [
+  { key: 'ice', n: camp.hoursIce },
+  { key: 'off', n: camp.hoursOffIce },
+];
+const tracks = `--tracks: minmax(0, ${camp.hoursIce}fr) minmax(0, ${camp.hoursOffIce}fr)`;
 const files = import.meta.glob<{ default: ImageMetadata }>('../assets/staff/*.png', { eager: true });
 const face = (slug: string) => files[`../assets/staff/${slug}.png`].default;
 const lists = [
@@ -18,62 +23,69 @@ const lists = [
 ];
 ---
 
-<section class="prog section" id="programma" aria-labelledby="prog-title">
+<section class="prog section" id="programma" aria-labelledby="prog-title" style={tracks}>
   <div class="wrap">
     <header class="prog__head">
-      <h2 class="prog__title display" id="prog-title">{t(`${camp.hoursIce + camp.hoursOffIce} часов тренировок за неделю`)}</h2>
+      <h2 class="prog__title display" id="prog-title">{t('Что делаем на льду и вне льда')}</h2>
       <div class="prog__bar" role="img" aria-label={`${camp.hoursIce} часов на льду и ${camp.hoursOffIce} часов вне льда`}>
-        {hours.map((h) => <span class:list={['prog__hour', `prog__hour--${h}`]} />)}
+        {segs.map((s) => (
+          <span class="prog__seg" style={`--n: ${s.n}`}>
+            {Array.from({ length: s.n }, () => <span class:list={['prog__hour', `prog__hour--${s.key}`]} />)}
+          </span>
+        ))}
       </div>
     </header>
 
     <div class="prog__cols">
       {
-        lists.map((l) => (
-          <div class:list={['prog__col', `prog__col--${l.key}`]}>
-            <h3 class="prog__h"><b class="num">{l.n}</b> {t(l.h)}</h3>
-            <ul class:list={['prog__list', l.key === 'off' && 'prog__list--two']} role="list">
-              {l.items.map((it) => (
+        lists.map((l, i) => (
+          <>
+            <div class:list={['prog__col', `prog__col--${l.key}`]}>
+              <h3 class="prog__h"><b class="num">{l.n}</b> {t(l.h)}</h3>
+              <ul class:list={['prog__list', l.key === 'off' && 'prog__list--two']} role="list">
+                {l.items.map((it) => (
+                  <li>
+                    <h4>{t(it.title)}</h4>
+                    {it.text && <p>{t(it.text)}</p>}
+                    {it.who && (
+                      <div class="prog__who">
+                        {it.who.people.map((p) => (
+                          <button class="who" type="button" data-sheet-open={`trener-${p.slug}`} aria-haspopup="dialog">
+                            <Image src={face(p.slug)} alt="" widths={[40, 80]} sizes="40px" loading="lazy" />
+                            <span>{p.name}</span>
+                          </button>
+                        ))}
+                        <span class="prog__who-note">{t(it.who.note)}</span>
+                      </div>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            {i === 0 && (
+              <ul class="prog__photos" role="list" aria-label="Фотографии занятий" data-scroll-strip>
                 <li>
-                  <h4>{t(it.title)}</h4>
-                  {it.text && <p>{t(it.text)}</p>}
-                  {it.who && (
-                    <div class="prog__who">
-                      {it.who.people.map((p) => (
-                        <button class="who" type="button" data-sheet-open={`trener-${p.slug}`} aria-haspopup="dialog">
-                          <Image src={face(p.slug)} alt="" widths={[40, 80]} sizes="40px" loading="lazy" />
-                          <span>{p.name}</span>
-                        </button>
-                      ))}
-                      <span class="prog__who-note">{t(it.who.note)}</span>
-                    </div>
-                  )}
+                  <Image src={iceCoach} alt="Тренер показывает упражнение юному хоккеисту на льду" widths={[400, 700, 960]} sizes="(min-width: 900px) 23vw, 72vw" loading="lazy" />
+                  <span>Лёд: тренер показывает упражнение</span>
                 </li>
-              ))}
-            </ul>
-          </div>
+                <li>
+                  <Image src={iceGame} alt="Группа отрабатывает игровое упражнение у ворот" widths={[400, 700, 960]} sizes="(min-width: 900px) 23vw, 72vw" loading="lazy" />
+                  <span>Игровое упражнение у ворот</span>
+                </li>
+                <li>
+                  <Image src={tps} alt="Бросковая зона: тренажёр для бросков" widths={[400, 700, 960]} sizes="(min-width: 900px) 23vw, 72vw" loading="lazy" />
+                  <span>Бросковая зона</span>
+                </li>
+                <li>
+                  <Image src={psych} alt="Психолог сборов разговаривает с детьми в раздевалке" widths={[400, 700, 960]} sizes="(min-width: 900px) 23vw, 72vw" loading="lazy" />
+                  <span>Занятие с психологом</span>
+                </li>
+              </ul>
+            )}
+          </>
         ))
       }
     </div>
-
-    <ul class="prog__photos" role="list" aria-label="Фотографии занятий" data-scroll-strip>
-      <li>
-        <Image src={iceCoach} alt="Тренер показывает упражнение юному хоккеисту на льду" widths={[400, 700, 960]} sizes="(min-width: 900px) 23vw, 72vw" loading="lazy" />
-        <span>Лёд: тренер показывает упражнение</span>
-      </li>
-      <li>
-        <Image src={iceGame} alt="Группа отрабатывает игровое упражнение у ворот" widths={[400, 700, 960]} sizes="(min-width: 900px) 23vw, 72vw" loading="lazy" />
-        <span>Игровое упражнение у ворот</span>
-      </li>
-      <li>
-        <Image src={tps} alt="Бросковая зона: тренажёр для бросков" widths={[400, 700, 960]} sizes="(min-width: 900px) 23vw, 72vw" loading="lazy" />
-        <span>Бросковая зона</span>
-      </li>
-      <li>
-        <Image src={psych} alt="Психолог сборов разговаривает с детьми в раздевалке" widths={[400, 700, 960]} sizes="(min-width: 900px) 23vw, 72vw" loading="lazy" />
-        <span>Занятие с психологом</span>
-      </li>
-    </ul>
 
     <aside class="goal" aria-labelledby="goal-title">
       <div class="goal__text">
@@ -99,17 +111,18 @@ const lists = [
 </script>
 
 <style>
-  .prog__head { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 20px clamp(24px, 5vw, 80px); align-items: end; }
-  .prog__title { font-size: var(--fs-h2); color: var(--c-blue-deep); grid-column: 1; }
+  .prog { --prog-gap: clamp(28px, 4vw, 64px); }
+  .prog__head { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: clamp(20px, 3vw, 36px) var(--prog-gap); }
+  .prog__title { font-size: var(--fs-h2); color: var(--c-blue-deep); }
 
-  /* one cell per hour: 9 ice (blue), 16 off-ice (red) */
-  .prog__bar { grid-column: 1; display: grid; grid-template-columns: repeat(25, 1fr); gap: 3px; max-width: 760px; }
-  .prog__hour { aspect-ratio: 1 / 1.6; border-radius: 2px; }
+  /* one cell per hour: the ice block (blue) over the ice column, the off-ice block (red) over its column */
+  .prog__bar { grid-column: 1 / -1; display: grid; grid-template-columns: var(--tracks); column-gap: var(--prog-gap); }
+  .prog__seg { display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); gap: 3px; }
+  .prog__hour { height: clamp(16px, 2.2vw, 30px); border-radius: 2px; }
   .prog__hour--ice { background: var(--c-blue-line); }
   .prog__hour--off { background: var(--c-red-line); }
-  .prog__hour--ice:nth-child(9) { margin-right: 6px; }
 
-  .prog__cols { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: clamp(28px, 4vw, 64px); margin-top: clamp(40px, 5vw, 72px); }
+  .prog__cols { display: grid; grid-template-columns: var(--tracks); gap: clamp(32px, 4vw, 56px) var(--prog-gap); margin-top: clamp(28px, 3.4vw, 48px); }
   .prog__h { display: flex; align-items: baseline; gap: 12px; font-family: var(--f-display); font-weight: 800; font-size: clamp(1.5rem, 1.2rem + 1vw, 2.2rem); line-height: 1; padding-bottom: 14px; border-bottom: 4px solid var(--c-blue-line); }
   .prog__h b { font-weight: 900; font-size: 2.6em; line-height: .8; color: var(--c-blue-line); }
   .prog__col--off .prog__h { border-color: var(--c-red-line); }
@@ -121,13 +134,15 @@ const lists = [
   .prog__list p { margin-top: 6px; color: var(--c-ink-2); }
   /* the people behind an activity: their faces open the same bio sheets as the roster */
   .prog__who { margin-top: 10px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; font-size: var(--fs-small); color: var(--c-ink-2); }
+  /* the note names all of them, so it never trails after the last name only */
+  .prog__who-note { flex-basis: 100%; }
   .who { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; border: 0; background: none; padding: 0; font: inherit; font-weight: 600; color: var(--c-ink); text-align: left; cursor: pointer; }
   .who img { width: 36px; height: 45px; object-fit: cover; object-position: center top; border-radius: 4px; background: var(--c-blue-deep); }
   .who span { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .2em; }
   @media (hover: hover) { .who:hover span { color: var(--c-blue-line); text-decoration-thickness: 2px; } }
   .prog__list--two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: clamp(20px, 3vw, 48px); }
 
-  .prog__photos { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(8px, 1vw, 14px); margin-top: clamp(32px, 4vw, 56px); }
+  .prog__photos { grid-column: 1 / -1; grid-row: 2; display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(8px, 1vw, 14px); }
   .prog__photos li { display: grid; gap: 8px; }
   .prog__photos img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--r-s); }
   .prog__photos span { font-size: var(--fs-small); color: var(--c-ink-2); }
@@ -142,7 +157,7 @@ const lists = [
   .goal__art { position: relative; isolation: isolate; }
   /* goal line through the posts' feet (the cut-out's own base bar merges into it) */
   .goal__art::after {
-    content: ''; position: absolute; z-index: -1; left: -12%; right: -4%; top: calc(92% - 2px); height: 4px; background: var(--c-red-line);
+    content: ''; position: absolute; z-index: -1; left: -100vw; right: -100vw; top: calc(92% - 2px); height: 4px; background: var(--c-red-line);
   }
   /* crease: a foreshortened half-disc in front of the goal, crease blue with a red outline */
   .goal__art::before {
@@ -150,18 +165,25 @@ const lists = [
     background: color-mix(in srgb, var(--c-crease) 35%, transparent);
     border: 3px solid var(--c-red-line); border-top: 0; border-radius: 0 0 50% 50% / 0 0 100% 100%;
   }
-  .goal__title { font-size: clamp(2.2rem, 1.4rem + 3vw, 4.4rem); color: var(--c-blue-deep); }
+  .goal__title { font-size: clamp(1.9rem, 1.2rem + 2.2vw, 3.2rem); color: var(--c-blue-deep); }
   .goal__text p { margin-top: 16px; max-width: 46ch; color: var(--c-ink); }
   .goal__text .goal__note { color: var(--c-ink-2); font-size: var(--fs-small); }
   .goal__art img { width: 100%; height: auto; display: block; }
 
   @media (max-width: 900px) {
     .prog__head { grid-template-columns: 1fr; }
-    .prog__cols { grid-template-columns: 1fr; }
-    .prog__photos { grid-template-columns: repeat(4, 72%); overflow-x: auto; scroll-snap-type: x mandatory; margin-inline: calc(-1 * var(--gutter)); padding-inline: var(--gutter); }
+    .prog__bar { column-gap: 8px; }
+    /* ice list, then the photos, then the off-ice list: a break in the long text run */
+    .prog__cols { grid-template-columns: minmax(0, 1fr); }
+    .prog__photos {
+      grid-row: auto; grid-template-columns: repeat(4, 72%); overflow-x: auto; scroll-snap-type: x mandatory;
+      margin-inline: calc(-1 * var(--gutter)); padding-inline: var(--gutter); scroll-padding-inline: var(--gutter);
+    }
     .prog__photos li { scroll-snap-align: start; }
     .goal { grid-template-columns: 1fr; }
     .goal__text { padding-bottom: 0; }
+    /* the crease stays inside the content edge, centred under the goal mouth */
+    .goal__art::before { left: 2%; width: 80%; }
   }
   @media (max-width: 560px) {
     .prog__list--two { grid-template-columns: 1fr; }

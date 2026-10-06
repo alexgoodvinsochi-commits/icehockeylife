@@ -1,5 +1,4 @@
 import { camp, contacts, regularFrom } from '../data/camp';
-import { coaches } from '../data/staff';
 
 /** Closed by default: only an explicit PUBLIC_PREVIEW=0 build is the real, indexable site (see README). */
 export const isPreview = import.meta.env.PUBLIC_PREVIEW !== '0';
@@ -14,7 +13,8 @@ export const seo = {
   // no price here: the description is baked into the page and the share card, and the early price expires
   description:
     `Зимние хоккейные сборы в Сириусе (Сочи) на льду ${camp.arenaShort}: ${camp.hoursIce} часов льда и ${camp.hoursOffIce} часов вне льда, ` +
-    `группы по ${camp.groupSize} детей, ${coaches.length} тренеров, психолог, гимнастика и растяжка.`,
+    // no coach count: the January line-up is still to be confirmed
+    `группы по ${camp.groupSize} детей, тренеры вратарей, психолог, гимнастика и растяжка.`,
   keywords:
     'хоккейные сборы, детские хоккейные сборы, хоккейные сборы Сириус, хоккейные сборы Сочи, зимние хоккейные сборы 2027, хоккейный кэмп, сборы для вратарей',
 };

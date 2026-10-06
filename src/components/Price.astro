@@ -1,6 +1,6 @@
 ---
 import { Image } from 'astro:assets';
-import { camp, rub } from '../data/camp';
+import { camp, contacts, rub } from '../data/camp';
 import { t } from '../lib/typo';
 import lockers from '../assets/photos/lockers-jerseys.jpg';
 ---
@@ -8,6 +8,9 @@ import lockers from '../assets/photos/lockers-jerseys.jpg';
 <section class="price section" id="cena" aria-labelledby="price-title">
   <div class="wrap">
     <h2 class="price__title display" id="price-title">{t('Сколько стоит и что входит')}</h2>
+    <p class="price__past" data-from={camp.overAfter} hidden>
+      {t(`Цены сборов ${camp.datesHuman} года. О следующих сборах и ценах расскажем в Telegram-канале и ВКонтакте.`)}
+    </p>
 
     <!-- centre ice: the red line splits the price into «before» and «after» 8 November -->
     <div class="ice" data-until={camp.price.earlyUntil}>
@@ -15,7 +18,7 @@ import lockers from '../assets/photos/lockers-jerseys.jpg';
         <p class="ice__when">{t(`До ${camp.price.earlyUntilHuman} включительно, первые ${camp.price.earlySeats} участников`)}</p>
         <p class="ice__sum num">{rub(camp.price.early)}</p>
         <p class="ice__left" data-countdown={camp.price.earlyUntil} data-countdown-last="Сегодня последний день ранней цены" hidden>
-          До {camp.price.earlyUntilHuman} осталось <b><span data-countdown-num>…</span>&nbsp;<span data-countdown-word>дней</span></b>
+          Ранняя цена действует ещё <b><span data-countdown-num>…</span>&nbsp;<span data-countdown-word>дней</span></b>
         </p>
       </div>
       <div class="ice__line" aria-hidden="true">
@@ -38,11 +41,11 @@ import lockers from '../assets/photos/lockers-jerseys.jpg';
         <h3 class="terms__h">В стоимость входят</h3>
         <ul class="terms__list" role="list">
           <li>{t(`Тренировки: ${camp.hoursIce} часов на льду и ${camp.hoursOffIce} часов вне льда за семь дней`)}</li>
-          <li>{t('Форма для ОФП, фирменные джерси, шапки и подарки от Ice Hockey Life — каждому участнику')}</li>
+          <li>{t('Форма для ОФП, фирменные джерси, шапка и подарки от Ice Hockey Life — каждому участнику')}</li>
         </ul>
         <h3 class="terms__h terms__h--no">Не входят</h3>
         <ul class="terms__list" role="list">
-          <li>{t('Проживание и питание. В отеле-партнёре «Сочи Парк Отель» для участников специальная цена — её назовёт координатор')}</li>
+          <li>{t(`Проживание и питание: для участников — специальная цена в отеле-партнёре «${camp.hotel.name}»`)}</li>
           <li>{t('Проезд до Сириуса и трансфер')}</li>
           <li>{t('Дневное пребывание с питанием между тренировками — оплачивается отдельно')}</li>
         </ul>
@@ -50,9 +53,13 @@ import lockers from '../assets/photos/lockers-jerseys.jpg';
       <div class="terms__col">
         <h3 class="terms__h">Скидки и&nbsp;оплата</h3>
         <ul class="terms__list" role="list">
-          <li>{t('Вратарям — скидка, её размер назовёт координатор')}</li>
-          <li>{t('Можно оплатить в рассрочку — условия назовёт координатор')}</li>
+          <li>{t('Вратарям — скидка')}</li>
+          <li>{t('Можно оплатить в рассрочку')}</li>
         </ul>
+        <p class="terms__ask">
+          {t(`Размер скидки, условия рассрочки и цену номера назовёт координатор ${contacts.coordinator.name}:`)}
+          <a class="nowrap" href={`tel:${contacts.coordinator.tel}`}>{contacts.coordinator.phone}</a>
+        </p>
         <a class="btn btn--red terms__cta" href="#zapis" data-until={camp.overAfter}>Записаться</a>
       </div>
       <figure class="terms__photo">
@@ -70,10 +77,11 @@ import lockers from '../assets/photos/lockers-jerseys.jpg';
 
 <style>
   .price__title { font-size: var(--fs-h2s); color: var(--c-blue-deep); max-width: 6em; }
+  .price__past { margin-top: 16px; max-width: 60ch; color: var(--c-ink-2); }
   .price__fine { margin-top: clamp(28px, 4vw, 48px); max-width: 72ch; font-size: .875rem; line-height: 1.5; color: var(--c-ink-3); }
 
   .ice {
-    position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 340px); grid-template-rows: auto auto auto;
+    position: relative; display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto auto;
     column-gap: clamp(24px, 4vw, 64px); margin-top: clamp(28px, 4vw, 56px);
   }
   .ice__early { grid-column: 1; grid-row: 1; padding-bottom: clamp(18px, 2vw, 28px); }
@@ -84,13 +92,13 @@ import lockers from '../assets/photos/lockers-jerseys.jpg';
 
   /* centre red line with white interval notches (NHL rule 1.5), centre circle with the IHL badge */
   .ice__line {
-    grid-column: 1 / -1; grid-row: 2; position: relative; height: 14px; margin-inline: calc(-1 * var(--gutter));
+    grid-column: 1 / -1; grid-row: 2; position: relative; height: 14px; margin-inline: calc(50% - 50vw);
     background:
       repeating-linear-gradient(90deg, transparent 0 46px, #fff 46px 62px) center / 100% 4px no-repeat,
       var(--c-red-line);
   }
   .ice__tag {
-    position: absolute; left: var(--gutter); top: 50%; translate: 0 -50%;
+    position: absolute; left: max(var(--gutter), calc((100vw - var(--maxw)) / 2 + var(--gutter))); top: 50%; translate: 0 -50%;
     background: var(--c-red-line); color: #fff; padding: 7px 14px 6px; border-radius: var(--r-s);
     font-family: var(--f-display); font-weight: 800; font-size: clamp(1.1rem, .95rem + .5vw, 1.45rem); letter-spacing: .01em; white-space: nowrap;
   }
@@ -100,6 +108,7 @@ import lockers from '../assets/photos/lockers-jerseys.jpg';
     border: 3px solid var(--c-blue-line); background: var(--c-ice);
     display: grid; place-items: center;
   }
+  @media (min-width: 1100px) { .ice__circle { left: 50%; } }
   /* percent padding would resolve against the long red line, so size the crest directly */
   .ice__crest {
     width: 70%; aspect-ratio: 3114 / 3150; background: var(--c-blue-line);
@@ -115,6 +124,8 @@ import lockers from '../assets/photos/lockers-jerseys.jpg';
   .terms__h { font-family: var(--f-display); font-weight: 800; font-size: 1.6rem; line-height: 1; padding-bottom: 10px; border-bottom: 1px solid var(--c-hair-2); }
   .terms__h--no { margin-top: 28px; border-color: var(--c-hair-2); }
   .terms__list li { padding: 12px 0; border-bottom: 1px solid var(--c-hair); color: var(--c-ink-2); }
+  .terms__ask { margin-top: 14px; color: var(--c-ink-2); }
+  .terms__ask a { color: var(--c-ink); font-weight: 600; }
   .terms__cta { margin-top: 24px; }
   .terms__photo img { width: 100%; height: auto; border-radius: var(--r-s); display: block; }
   .terms__photo figcaption { margin-top: 10px; font-size: var(--fs-small); color: var(--c-ink-2); }

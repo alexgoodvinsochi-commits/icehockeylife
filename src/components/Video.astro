@@ -7,7 +7,7 @@ import poster from '../assets/photos/shot-on-goalie.jpg';
 
 <section class="vid section" aria-labelledby="vid-title">
   <div class="wrap">
-    <div class="vid__head">
+    <div class="vid__head sec-head">
       <h2 class="vid__title display" id="vid-title">Один день<br />на сборах</h2>
       <p class="vid__meta">{t('Фильм «Один день из жизни нашего кэмпа», 3 минуты 56 секунд')}</p>
     </div>
@@ -27,7 +27,7 @@ import poster from '../assets/photos/shot-on-goalie.jpg';
 </script>
 
 <style>
-  .vid__head { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: clamp(20px, 3vw, 36px); flex-wrap: wrap; }
+  .vid__head { margin-bottom: clamp(20px, 3vw, 36px); }
   .vid__title { font-size: var(--fs-h2s); color: var(--c-blue-deep); }
   .vid__meta { color: var(--c-ink-2); max-width: 30ch; }
   .vid__frame { position: relative; aspect-ratio: 16 / 9; border-radius: var(--r-s); overflow: hidden; background: var(--c-ink); }
@@ -44,4 +44,5 @@ import poster from '../assets/photos/shot-on-goalie.jpg';
   .vid__play:focus-visible .vid__label { outline: 3px solid var(--c-red-line); outline-offset: 2px; }
   @media (hover: hover) { .vid__play:hover .vid__label { background: var(--c-red-line); } }
   .vid__alt { margin-top: 14px; font-size: var(--fs-small); color: var(--c-ink-3); }
+  .vid__alt a { padding-block: 10px; }
 </style>

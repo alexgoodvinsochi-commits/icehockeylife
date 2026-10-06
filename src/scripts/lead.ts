@@ -109,6 +109,16 @@ export function initLeadForm(form: HTMLFormElement) {
   if (recall() && back) {
     back.hidden = false;
     goal('lead_nudge_reload');
+    // the browser would put the parent back where the «message ready» panel was: on the empty bottom of the form
+    try { history.scrollRestoration = 'manual'; } catch { /* old browsers */ }
+    back.tabIndex = -1;
+    const reveal = () => {
+      back.scrollIntoView({ block: 'center' });
+      back.focus({ preventScroll: true });
+      try { history.scrollRestoration = 'auto'; } catch { /* old browsers */ }
+    };
+    if (document.readyState === 'complete') reveal();
+    else addEventListener('load', reveal, { once: true });
   }
 
   phone.addEventListener('input', () => {

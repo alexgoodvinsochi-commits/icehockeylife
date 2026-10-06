@@ -24,7 +24,7 @@ const labels: Record<string, { a: 'start' | 'end'; dy?: number; minor?: boolean 
 
 <section class="geo section" id="geografiya" aria-labelledby="geo-title">
   <div class="wrap">
-    <div class="geo__head">
+    <div class="geo__head sec-head">
       <h2 class="geo__title display" id="geo-title">{t('От Тарту до Камчатки')}</h2>
       <p class="geo__lead">
         {t(`На сборах Ice Hockey Life уже были игроки из ${cities.length} городов и ${countries} стран. Дальше всех добираться из Петропавловска-Камчатского: больше ${fmt(Math.floor(farthest.km / 100) * 100)} км по прямой до Сириуса.`)}
@@ -99,7 +99,6 @@ const labels: Record<string, { a: 'start' | 'end'; dy?: number; minor?: boolean 
 
 <style>
   .geo { background: var(--c-board); }
-  .geo__head { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); gap: 20px clamp(24px, 5vw, 80px); align-items: end; }
   .geo__title { font-size: var(--fs-h2s); color: var(--c-blue-deep); }
   .geo__lead { font-size: var(--fs-lead); line-height: 1.45; color: var(--c-ink-2); max-width: 40ch; }
 
@@ -128,7 +127,6 @@ const labels: Record<string, { a: 'start' | 'end'; dy?: number; minor?: boolean 
   .geo__list .geo__km { color: var(--c-ink-3); white-space: nowrap; }
 
   @media (max-width: 860px) {
-    .geo__head { grid-template-columns: 1fr; }
     .geo__map { margin-inline: calc(-1 * var(--gutter) + 4px); }
     .geo__labels text { font-size: 34px; stroke-width: 8px; }
     .geo__labels .is-minor { display: none; }

@@ -16,7 +16,7 @@ const bring = [
 
 <section class="log section" id="roditelyam" aria-labelledby="log-title">
   <div class="wrap">
-    <div class="log__head">
+    <div class="log__head sec-head">
       <h2 class="log__title display" id="log-title">{t('Как всё устроено в Сириусе')}</h2>
       <p class="log__lead">{t('В Сириусе ребёнок живёт с вами, а на тренировки вы его привозите. Есть два варианта дня.')}</p>
     </div>
@@ -52,13 +52,13 @@ const bring = [
         <h3>Где</h3>
         <p>{t(`${camp.arena}, ${venue.address}.`)}</p>
         {venue.note && <p class="log__muted">{t(venue.note)}</p>}
-        <p><a href={`https://yandex.ru/maps/?text=${encodeURIComponent(`${camp.arena}, ${venue.address}`)}`} target="_blank" rel="noopener">Открыть в Яндекс Картах</a></p>
+        <p><a href={`https://yandex.ru/maps/?text=${encodeURIComponent(`${camp.arena}, ${venue.address}`)}`} target="_blank" rel="noopener" class="log__map">{t('Открыть в Яндекс Картах')}</a></p>
       </div>
       <div class="log__block">
         <h3>Жильё</h3>
         <p set:html={withPhones(`Проживание и питание в стоимость не входят. В отеле-партнёре «${camp.hotel.name}» для участников специальная цена — её назовёт координатор ${contacts.coordinator.name}: ${contacts.coordinator.phone}.`)} />
       </div>
-      <div class="log__block">
+      <div class="log__block" data-until={camp.overAfter}>
         <h3>Расписание</h3>
         <p>{t('Точное расписание пришлём за 2 недели до сборов. Примерный распорядок дня пришлём уже сейчас — спросите координатора.')}</p>
         <p><a href={`tel:${contacts.coordinator.tel}`}>{contacts.coordinator.name}, координатор: <span class="nowrap">{contacts.coordinator.phone}</span></a></p>
@@ -75,7 +75,6 @@ const bring = [
 </section>
 
 <style>
-  .log__head { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 20px clamp(24px, 5vw, 80px); align-items: end; }
   .log__title { font-size: var(--fs-h2s); color: var(--c-blue-deep); }
   .log__lead { font-size: var(--fs-lead); line-height: 1.45; color: var(--c-ink-2); max-width: 38ch; }
 
@@ -95,13 +94,18 @@ const bring = [
   .day--stay .day__line::before { background: var(--c-red-line); }
   .day--stay .day__line li::before { border-color: var(--c-red-line); }
   .day__long { padding-block: 10px; }
+  @media (min-width: 761px) {
+    .day__line { grid-template-rows: repeat(4, minmax(1.6em, auto)); }
+    .day__long { grid-row: span 2; align-self: center; padding-block: 0; }
+  }
   .day__note { margin-top: 18px; font-size: var(--fs-small); color: var(--c-ink-2); }
 
   .log__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(20px, 3vw, 40px); margin-top: clamp(40px, 5vw, 72px); }
   .log__block h3 { font-family: var(--f-display); font-weight: 800; font-size: 1.6rem; line-height: 1; padding-bottom: 10px; border-bottom: 1px solid var(--c-hair-2); margin-bottom: 12px; }
   .log__block p + p { margin-top: 10px; }
   .log__block p, .log__block li { color: var(--c-ink-2); }
-  .log__block a { color: var(--c-ink); font-weight: 600; }
+  .log__block a, .log__block :global(a) { color: var(--c-ink); font-weight: 600; }
+  .log__map { padding-block: 10px; }
   .log__muted { font-size: var(--fs-small); }
   .log__block li { padding: 6px 0; border-bottom: 1px solid var(--c-hair); }
 
@@ -113,7 +117,7 @@ const bring = [
     .log__grid { grid-template-columns: 1fr 1fr; }
   }
   @media (max-width: 760px) {
-    .log__head, .days, .log__grid { grid-template-columns: 1fr; }
+    .days, .log__grid { grid-template-columns: 1fr; }
     .day__line li { grid-template-columns: 1fr; gap: 2px; }
   }
 </style>
