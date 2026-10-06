@@ -111,8 +111,8 @@ import { t } from '../lib/typo';
     .hero__dates { position: relative; z-index: 1; margin-top: -11%; }
     .hero__hash-b { display: none; } /* would cross the month line below */
   }
-  /* phones: a flatter art box so the price and the button fit the first screen of Safari (≈714 px) */
-  @media (max-width: 480px) {
+  /* phones and tablets: a flatter art box so the price and the button fit the first screen (Safari on a phone: ≈714 px) */
+  @media (max-width: 980px) {
     .hero__art { aspect-ratio: 1.7; margin-top: 10px; }
     .hero__circle { width: 64%; left: 20%; translate: 0 -52%; }
     .hero__skater { width: 72%; translate: -36% -55%; }

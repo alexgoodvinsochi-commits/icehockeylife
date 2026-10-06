@@ -136,6 +136,7 @@ const lists = [
   .goal {
     position: relative; display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); align-items: end; gap: 24px;
     margin-top: clamp(48px, 6vw, 96px); padding-bottom: clamp(36px, 5vw, 64px);
+    overflow-x: clip; /* the goal line may run past the art, never past the page */
   }
   .goal__text { padding-bottom: clamp(28px, 5vw, 72px); }
   .goal__art { position: relative; isolation: isolate; }
