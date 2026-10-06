@@ -17,11 +17,11 @@ const year = new Date().getFullYear();
         <h2 class="ftr__h" id="ftr-title">Контакты</h2>
         <a class="ftr__phone" href={`tel:${contacts.coordinator.tel}`}>
           <b class="num">{contacts.coordinator.phone}</b>
-          <span>{contacts.coordinator.name}, {contacts.coordinator.role}</span>
+          <span>{contacts.coordinator.name}, {contacts.coordinator.role}: {contacts.coordinator.remit}</span>
         </a>
         <a class="ftr__phone" href={`tel:${contacts.headCoach.tel}`}>
           <b class="num">{contacts.headCoach.phone}</b>
-          <span>{contacts.headCoach.name}, {contacts.headCoach.role}</span>
+          <span>{contacts.headCoach.name}, {contacts.headCoach.role}: {contacts.headCoach.remit}</span>
         </a>
       </div>
       <ul class="ftr__social" role="list">
@@ -32,7 +32,7 @@ const year = new Date().getFullYear();
       <div class="ftr__badge" aria-hidden="true"></div>
     </div>
 
-    <div class="ftr__boards" aria-label="Партнёры">
+    <div class="ftr__boards" role="group" aria-label="Партнёры">
       <div class="ftr__board">
         <span class="ftr__pnote">Партнёр сборов, российский хоккейный бренд</span>
         <div class="ftr__plogo ftr__plogo--vitokin" role="img" aria-label="Vitokin" set:html={vitokin} />

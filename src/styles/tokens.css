@@ -23,7 +23,7 @@
   --c-hair-2: #b9c6d3;
 
   /* type */
-  --f-display: 'IHL Sofia XC', 'IHL Ruble', 'Arial Narrow', sans-serif;
+  --f-display: 'IHL Sofia XC', 'IHL Ruble', 'IHL Sofia XC fallback', 'Arial Narrow', sans-serif;
   --f-text: 'IHL Golos', 'IHL Golos fallback', Arial, sans-serif;
 
   --fs-mega: clamp(4.25rem, 2.2rem + 10.5vw, 13.5rem);   /* hero line */

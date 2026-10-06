@@ -1,5 +1,5 @@
 ---
-import { camp, contacts } from '../data/camp';
+import { camp, contacts, rub } from '../data/camp';
 import { revision } from '../data/legal';
 const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
 // every message quotes the consent document it was sent under (there is no server to keep the checkbox)
@@ -12,19 +12,28 @@ const consentUrl = new URL(`${base}soglasie/`, Astro.site).href.replace(/^https?
       <h2 class="signup__title display" id="signup-title">Записаться на&nbsp;сборы</h2>
       <p class="signup__lead">
         {camp.datesHuman}, {camp.arena}. Заполните четыре поля — откроется WhatsApp с&nbsp;готовым сообщением
-        главному тренеру. Отправьте его — в&nbsp;ответ расскажем о&nbsp;программе и&nbsp;условиях оплаты, а&nbsp;заодно скажем,
-        осталось&nbsp;ли место по&nbsp;ранней цене.
+        главному тренеру. Отправьте его — в&nbsp;ответ расскажем о&nbsp;программе и&nbsp;условиях оплаты<span data-until={camp.price.earlyUntil}>, а&nbsp;заодно скажем,
+        осталось&nbsp;ли место по&nbsp;ранней цене</span>.
       </p>
       <dl class="signup__facts">
-        <div data-until={camp.price.earlyUntil}><dt>До 8 ноября включительно, первым&nbsp;15</dt><dd class="num">43&nbsp;680&nbsp;₽</dd></div>
-        <div class="signup__late"><dt>С 9 ноября</dt><dd class="num">48&nbsp;860&nbsp;₽</dd></div>
+        <div data-until={camp.price.earlyUntil}><dt>До {camp.price.earlyUntilHuman} включительно, первым&nbsp;{camp.price.earlySeats}</dt><dd class="num">{rub(camp.price.early)}</dd></div>
+        <div class="signup__late"><dt>С {camp.price.regularFromHuman}</dt><dd class="num">{rub(camp.price.regular)}</dd></div>
       </dl>
       <p class="signup__alt">
         Удобнее голосом? <a href={`tel:${contacts.coordinator.tel}`}>{contacts.coordinator.name}, координатор:&nbsp;<span class="nowrap">{contacts.coordinator.phone}</span></a>
       </p>
     </div>
 
-    <form class="signup__form" data-lead data-consent-url={consentUrl} data-revision={revision} novalidate>
+    <div class="signup__over" data-from={camp.overAfter} hidden>
+      <p><b>{`Сборы ${camp.datesHuman} года прошли.`}</b> О&nbsp;следующих сборах рассказываем в&nbsp;Telegram-канале и&nbsp;ВКонтакте, ссылки — внизу страницы.</p>
+      <p>Или позвоните координатору: <a class="nowrap" href={`tel:${contacts.coordinator.tel}`}>{contacts.coordinator.phone}</a>, {contacts.coordinator.name}.</p>
+    </div>
+
+    <form class="signup__form" data-lead data-consent-url={consentUrl} data-revision={revision} data-until={camp.overAfter} novalidate>
+      <p class="signup__nudge" data-lead-back hidden role="status">
+        <b>Сообщение ушло?</b> Если рядом с&nbsp;ним в&nbsp;WhatsApp часики, позвоните координатору:
+        <a class="nowrap" href={`tel:${contacts.coordinator.tel}`}>{contacts.coordinator.phone}</a> — или заполните форму ещё раз и&nbsp;отправьте заявку по&nbsp;СМС.
+      </p>
       <div class="field">
         <label for="f-parent">Как к вам обращаться</label>
         <input id="f-parent" name="parent" type="text" autocomplete="name" required maxlength="80" placeholder="Имя родителя" />
@@ -116,6 +125,8 @@ const consentUrl = new URL(`${base}soglasie/`, Astro.site).href.replace(/^https?
   .signup__facts div:first-child:not([hidden]) + .signup__late dd { color: rgb(255 255 255 / .62); }
   .signup__alt { margin-top: 32px; color: rgb(255 255 255 / .78); }
   .signup__alt a { color: #fff; font-weight: 600; }
+  .signup__over { display: grid; gap: 12px; align-content: start; background: var(--c-board); color: var(--c-ink); border-radius: var(--r-s); padding: clamp(22px, 3vw, 40px); }
+  .signup__over a { color: var(--c-blue-line); font-weight: 600; }
 
   .signup__form {
     background: var(--c-board); color: var(--c-ink);

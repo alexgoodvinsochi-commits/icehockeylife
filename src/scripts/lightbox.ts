@@ -59,6 +59,7 @@ export function initLightbox() {
 
   let x0: number | null = null;
   dialog.addEventListener('pointerdown', (e) => (x0 = e.clientX), { passive: true });
+  dialog.addEventListener('pointercancel', () => (x0 = null), { passive: true });
   dialog.addEventListener(
     'pointerup',
     (e) => {

@@ -39,7 +39,12 @@ const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL :
       window.ym(metrikaId, 'init', { clickmap: true, trackLinks: false, accurateTrackBounce: true, webvisor: false });
     };
     box.querySelector('[data-cookie-yes]').addEventListener('click', function () { save('yes'); box.hidden = true; load(); });
-    box.querySelector('[data-cookie-no]').addEventListener('click', function () { save('no'); box.hidden = true; });
+    box.querySelector('[data-cookie-no]').addEventListener('click', function () {
+      save('no');
+      box.hidden = true;
+      // consent withdrawn after the counter already started: reload so it is really gone
+      if (loaded) location.reload();
+    });
     document.addEventListener('click', function (e) {
       var b = e.target.closest && e.target.closest('[data-cookie-settings]');
       if (!b) return;
@@ -60,7 +65,8 @@ const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL :
 
 <style>
   .cookie {
-    position: fixed; z-index: 60; left: 16px; right: 16px; bottom: 16px; margin-inline: auto; max-width: 760px;
+    position: fixed; z-index: 60; left: 16px; right: 16px; bottom: max(16px, calc(env(safe-area-inset-bottom) + 8px));
+    margin-inline: auto; max-width: 760px;
     display: flex; gap: 14px 20px; align-items: center; flex-wrap: wrap;
     background: var(--c-ink); color: #fff; border-radius: var(--r-s); padding: 14px 16px;
     box-shadow: 0 8px 28px rgb(11 30 63 / .28);
@@ -72,8 +78,10 @@ const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL :
   .cookie__btns button { min-height: 44px; padding: 0 18px; border-radius: var(--r-s); font-weight: 600; font-size: .95rem; cursor: pointer; }
   .cookie__yes { border: 0; background: #fff; color: var(--c-ink); }
   .cookie__no { border: 1.5px solid rgb(255 255 255 / .6); background: none; color: #fff; }
+  /* above the phone bottom bar, so «Позвонить» and «Записаться» stay reachable while the choice is pending */
+  :global(html.has-mbar) .cookie { bottom: calc(80px + env(safe-area-inset-bottom)); }
   @media (max-width: 560px) {
-    .cookie { left: 8px; right: 8px; bottom: 8px; }
+    .cookie { left: 8px; right: 8px; bottom: max(8px, calc(env(safe-area-inset-bottom) + 4px)); }
     .cookie__long { display: none; }
     .cookie__short { display: inline; }
     .cookie__btns { width: 100%; }

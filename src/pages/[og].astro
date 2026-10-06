@@ -1,9 +1,15 @@
 ---
 // Share-image composition (1200×630). scripts/make-og.mjs screenshots this page into public/og.jpg.
+// Built only in preview/local builds: the real site has no public /og/ page.
+import { isPreview } from '../lib/seo';
+export function getStaticPaths() {
+  return isPreview ? [{ params: { og: 'og' } }] : [];
+}
 import { Image } from 'astro:assets';
 import '../styles/base.css';
 import skater from '../assets/cutouts/skater.png';
 import logo from '../assets/brand/logo.svg?raw';
+import { camp } from '../data/camp';
 ---
 
 <!doctype html>
@@ -42,11 +48,11 @@ import logo from '../assets/brand/logo.svg?raw';
       <Image class="og__skater" src={skater} alt="" widths={[1000]} loading="eager" />
       <div class="og__text">
         <p class="og__title">Зимние хоккейные сборы в&nbsp;Сириусе</p>
-        <p class="og__dates"><b>4–10</b><span>января 2027<br />ЛД «Большой»</span></p>
+        <p class="og__dates"><b>{camp.daysRange}</b><span>{camp.monthYear}<br />{camp.arenaShort}</span></p>
       </div>
       <div class="og__brand">
         <div set:html={logo}></div>
-        <p><b>Ice Hockey Life</b> · 9 часов льда, 16 часов вне льда, группы по 5–6</p>
+        <p><b>Ice Hockey Life</b> · {camp.hoursIce} часов льда, {camp.hoursOffIce} часов вне льда, группы по {camp.groupSize}</p>
       </div>
       <div class="og__kick"></div>
     </div>

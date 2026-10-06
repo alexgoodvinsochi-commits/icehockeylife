@@ -22,7 +22,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const ogImage = Astro.props.ogImage ?? new URL('og.jpg', siteUrl).href;
 const closed = isPreview || noindex;
 // the real site must not go live with [placeholders] in the policy, the consent and the footer
-if (metrikaOn && missing.length && process.env.IHL_TEST_PROD !== "1") throw new Error(`src/data/legal.ts: fill in ${missing.join(', ')} before the production build`);
+if (!isPreview && missing.length && process.env.IHL_TEST_PROD !== '1') throw new Error(`src/data/legal.ts: fill in ${missing.join(', ')} before the production build`);
 ---
 
 <!doctype html>
@@ -54,7 +54,9 @@ if (metrikaOn && missing.length && process.env.IHL_TEST_PROD !== "1") throw new 
 
     <!-- opened with an anchor (/#cena): measure the real page before the browser jumps, see base.css -->
     <script is:inline>
-      if (location.hash.length > 1) document.documentElement.classList.add('cv-all');
+      // opened on an anchor, or reloaded / restored with a scroll position: measure the real page first
+      var nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+      if (location.hash.length > 1 || (nav && nav.type !== 'navigate')) document.documentElement.classList.add('cv-all');
       // touch screen or a phone browser: offer SMS next to WhatsApp (media queries alone misreport on some phones)
       if (matchMedia('(pointer: coarse)').matches || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent)) document.documentElement.classList.add('is-phone');
     </script>

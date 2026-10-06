@@ -17,7 +17,7 @@ import { withPhones } from '../lib/rich';
     <div class="faq__list">
       {
         faq.map((item, i) => (
-          <details class="faq__item" open={i === 0}>
+          <details class="faq__item" open={i === 0} data-until={item.until} data-from={item.from} hidden={!!item.from}>
             <summary>
               <span class="faq__dot" aria-hidden="true" />
               <span class="faq__q">{t(item.q)}</span>

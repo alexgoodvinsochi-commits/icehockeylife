@@ -1,6 +1,6 @@
 ---
 import Mark from './Mark.astro';
-import { contacts } from '../data/camp';
+import { camp, contacts } from '../data/camp';
 
 const nav = [
   { href: '#programma', label: 'Программа' },
@@ -30,7 +30,7 @@ const to = (hash: string) => (onHome || hash === '#kontakty' ? hash : base + has
       </ul>
     </nav>
 
-    <a class="hdr__cta" href={to('#zapis')}>Записаться</a>
+    <a class="hdr__cta" href={to('#zapis')} data-until={camp.overAfter}>Записаться</a>
 
     <button class="hdr__burger" type="button" data-sheet-open="menu" aria-label="Меню" aria-haspopup="dialog">
       <span></span><span></span>
@@ -70,11 +70,11 @@ const to = (hash: string) => (onHome || hash === '#kontakty' ? hash : base + has
     </ul>
     <div class="menu__contacts">
       <a href={`tel:${contacts.coordinator.tel}`}>
-        <span>{contacts.coordinator.name}, {contacts.coordinator.role}</span>
+        <span>{contacts.coordinator.name}, {contacts.coordinator.role}: {contacts.coordinator.remit}</span>
         <b>{contacts.coordinator.phone}</b>
       </a>
       <a href={`tel:${contacts.headCoach.tel}`}>
-        <span>{contacts.headCoach.name}, {contacts.headCoach.role}</span>
+        <span>{contacts.headCoach.name}, {contacts.headCoach.role}: {contacts.headCoach.remit}</span>
         <b>{contacts.headCoach.phone}</b>
       </a>
     </div>
@@ -146,7 +146,10 @@ const to = (hash: string) => (onHome || hash === '#kontakty' ? hash : base + has
   .menu::backdrop { background: rgb(11 30 63 / .45); }
   .menu[open] { animation: menu-in .32s var(--ease-out); }
   @keyframes menu-in { from { transform: translateX(100%); } }
-  .menu__panel { display: flex; flex-direction: column; min-height: 100%; padding: 18px var(--gutter) 28px; }
+  .menu__panel {
+    display: flex; flex-direction: column; min-height: 100%;
+    padding: 18px max(var(--gutter), env(safe-area-inset-right)) max(28px, env(safe-area-inset-bottom)) var(--gutter);
+  }
   .menu__top { display: flex; justify-content: space-between; align-items: center; color: var(--c-crease); }
   .menu__h { font-weight: 600; }
   .menu__close { width: 44px; height: 44px; border: 0; background: none; color: #fff; font-size: 2.2rem; line-height: 1; margin-right: -8px; }

@@ -65,7 +65,11 @@ ul[role='list'], ol[role='list'] { list-style: none; padding: 0; }
 .skip-link:focus { top: 12px; }
 
 /* layout primitives */
-.wrap { width: 100%; max-width: var(--maxw); margin-inline: auto; padding-inline: var(--gutter); }
+.wrap {
+  width: 100%; max-width: var(--maxw); margin-inline: auto;
+  /* viewport-fit=cover: in landscape the notch takes the side, keep the text clear of it */
+  padding-inline: max(var(--gutter), env(safe-area-inset-left)) max(var(--gutter), env(safe-area-inset-right));
+}
 .section { padding-block: var(--section); position: relative; }
 
 /* type primitives */
@@ -76,6 +80,8 @@ ul[role='list'], ol[role='list'] { list-style: none; padding: 0; }
 }
 .num { font-variant-numeric: tabular-nums lining-nums; }
 .nowrap { white-space: nowrap; }
+/* a section focused after a jump from the menu (dialogs.ts) needs no ring: the scroll already shows where you are */
+main > section[tabindex='-1']:focus, footer[tabindex='-1']:focus { outline: none; }
 /* phone numbers inside running text: a taller touch area (inline padding does not move the lines) */
 :is(p, li, dd) > a[href^='tel:'] { padding-block: 10px; }
 

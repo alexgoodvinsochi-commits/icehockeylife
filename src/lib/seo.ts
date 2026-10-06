@@ -1,14 +1,20 @@
-import { camp, contacts } from '../data/camp';
+import { camp, contacts, regularFrom } from '../data/camp';
+import { coaches } from '../data/staff';
 
-export const isPreview = import.meta.env.PUBLIC_PREVIEW === '1';
+/** Closed by default: only an explicit PUBLIC_PREVIEW=0 build is the real, indexable site (see README). */
+export const isPreview = import.meta.env.PUBLIC_PREVIEW !== '0';
 /** Yandex.Metrica runs only in an explicit production build (PUBLIC_METRIKA=1), never locally or on the preview. */
 export const metrikaOn = import.meta.env.PUBLIC_METRIKA === '1' && !isPreview;
 
+/** The site root with a trailing slash, whatever BASE_PATH looks like (`/icehockeylife` or `/icehockeylife/`) */
+export const siteBase = (site: URL | undefined) => new URL(import.meta.env.BASE_URL.replace(/\/?$/, '/'), site);
+
 export const seo = {
   title: `Хоккейные сборы для детей в Сириусе, ${camp.datesHuman} — Ice Hockey Life`,
+  // no price here: the description is baked into the page and the share card, and the early price expires
   description:
-    'Зимние хоккейные сборы в Сириусе (Сочи) на льду ЛД «Большой»: 9 часов льда и 16 часов вне льда, группы по 5–6 детей, ' +
-    '12 тренеров, психолог, гимнастика и растяжка. Ранняя цена 43 680 ₽ — первым 15 участникам до 8 ноября включительно.',
+    `Зимние хоккейные сборы в Сириусе (Сочи) на льду ${camp.arenaShort}: ${camp.hoursIce} часов льда и ${camp.hoursOffIce} часов вне льда, ` +
+    `группы по ${camp.groupSize} детей, ${coaches.length} тренеров, психолог, гимнастика и растяжка.`,
   keywords:
     'хоккейные сборы, детские хоккейные сборы, хоккейные сборы Сириус, хоккейные сборы Сочи, зимние хоккейные сборы 2027, хоккейный кэмп, сборы для вратарей',
 };
@@ -18,7 +24,7 @@ export function eventJsonLd(siteUrl: string, image: string) {
   const offers = [
     {
       '@type': 'Offer',
-      name: 'Ранняя цена — первым 15 участникам до 8 ноября включительно',
+      name: `Ранняя цена — первым ${camp.price.earlySeats} участникам до ${camp.price.earlyUntilHuman} включительно`,
       price: camp.price.early,
       priceCurrency: 'RUB',
       validThrough: camp.price.earlyUntil,
@@ -27,10 +33,10 @@ export function eventJsonLd(siteUrl: string, image: string) {
     },
     {
       '@type': 'Offer',
-      name: 'Стоимость с 9 ноября',
+      name: `Стоимость с ${camp.price.regularFromHuman}`,
       price: camp.price.regular,
       priceCurrency: 'RUB',
-      validFrom: '2026-11-09T00:00:00+03:00',
+      validFrom: regularFrom,
       availability: 'https://schema.org/InStock',
       url: `${siteUrl}#zapis`,
     },

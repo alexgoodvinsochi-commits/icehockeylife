@@ -8,10 +8,15 @@ export const camp = {
   sloganVideo: 'Заряжаем на успех',
 
   season: 'Зимние сборы',
-  // ISO dates in Moscow time; used for the countdowns and JSON-LD
-  start: '2027-01-04T09:00:00+03:00',
-  end: '2027-01-10T20:00:00+03:00',
+  // days only: the sources give no start or finish times (JSON-LD, the SMS text)
+  start: '2027-01-04',
+  end: '2027-01-10',
+  /** after this moment the page stops taking sign-ups for this camp: the end of the last day, Moscow time */
+  overAfter: '2027-01-10T23:59:59+03:00',
+  daysRange: '4–10',
+  monthYear: 'января 2027',
   datesHuman: '4–10 января 2027',
+  days: 'Семь дней',
   city: 'Сочи',
   place: 'Сириус',
   arena: 'Ледовый дворец «Большой»',
@@ -24,9 +29,11 @@ export const camp = {
   price: {
     early: 43680,
     regular: 48860,
-    // early price: first 15 participants who book before 8 November
+    // early price: the first 15 participants who book by 8 November inclusive (Moscow time)
     earlyUntil: '2026-11-08T23:59:59+03:00',
     earlyUntilHuman: '8 ноября',
+    earlyYear: 2026,
+    regularFromHuman: '9 ноября',
     earlySeats: 15,
     covers: 'Стоимость — за тренировки',
     installments: true,
@@ -41,9 +48,16 @@ export const camp = {
   },
 } as const;
 
+/** «43 680 ₽» with no-break spaces, so a price never splits across lines */
+export const rub = (n: number) => `${String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '\u00a0')}\u00a0₽`;
+
+/** the moment the regular price starts: one second after the early price ends */
+export const regularFrom = new Date(Date.parse(camp.price.earlyUntil) + 1000).toISOString();
+
 export const contacts = {
-  coordinator: { name: 'Олег', role: 'координатор сборов', phone: '+7 938 457-89-82', tel: '+79384578982' },
-  headCoach: { name: 'Максим Сергеевич', role: 'главный тренер', phone: '+7 938 438-91-63', tel: '+79384389163' },
+  // remit: whom to call about what, the same everywhere the two numbers appear
+  coordinator: { name: 'Олег', role: 'координатор сборов', remit: 'запись, оплата, проживание', phone: '+7 938 457-89-82', tel: '+79384578982' },
+  headCoach: { name: 'Максим Сергеевич', role: 'главный тренер', remit: 'программа, возраст и уровень', phone: '+7 938 438-91-63', tel: '+79384389163' },
   whatsapp: '79384389163',
   telegram: 'https://t.me/icehockeylife',
   vk: 'https://vk.com/icehockeyliferu',

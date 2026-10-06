@@ -20,8 +20,8 @@ const lists = [
 <section class="prog section" id="programma" aria-labelledby="prog-title">
   <div class="wrap">
     <header class="prog__head">
-      <h2 class="prog__title display" id="prog-title">{t('25 часов тренировок за неделю')}</h2>
-      <div class="prog__bar" role="img" aria-label="9 часов на льду и 16 часов вне льда">
+      <h2 class="prog__title display" id="prog-title">{t(`${camp.hoursIce + camp.hoursOffIce} часов тренировок за неделю`)}</h2>
+      <div class="prog__bar" role="img" aria-label={`${camp.hoursIce} часов на льду и ${camp.hoursOffIce} часов вне льда`}>
         {hours.map((h) => <span class:list={['prog__hour', `prog__hour--${h}`]} />)}
       </div>
     </header>
@@ -55,17 +55,17 @@ const lists = [
       }
     </div>
 
-    <ul class="prog__photos" role="list" tabindex="0" aria-label="Фотографии занятий вне льда">
+    <ul class="prog__photos" role="list" aria-label="Фотографии занятий вне льда" data-scroll-strip>
       <li>
-        <Image src={tps} alt="Бросковая зона: тренажёр для бросков" widths={[400, 700]} sizes="(min-width: 900px) 30vw, 80vw" loading="lazy" />
+        <Image src={tps} alt="Бросковая зона: тренажёр для бросков" widths={[400, 700, 960]} sizes="(min-width: 900px) 30vw, 80vw" loading="lazy" />
         <span>Бросковая зона</span>
       </li>
       <li>
-        <Image src={psych} alt="Психолог сборов разговаривает с детьми в раздевалке" widths={[400, 700]} sizes="(min-width: 900px) 30vw, 80vw" loading="lazy" />
+        <Image src={psych} alt="Психолог сборов разговаривает с детьми в раздевалке" widths={[400, 700, 960]} sizes="(min-width: 900px) 30vw, 80vw" loading="lazy" />
         <span>Занятие с психологом</span>
       </li>
       <li>
-        <Image src={video} alt="Видеоанализ: дети смотрят разбор игры на большом экране" widths={[400, 700]} sizes="(min-width: 900px) 30vw, 80vw" loading="lazy" />
+        <Image src={video} alt="Видеоанализ: дети смотрят разбор игры на большом экране" widths={[400, 700, 960]} sizes="(min-width: 900px) 30vw, 80vw" loading="lazy" />
         <span>Видеоанализ</span>
       </li>
     </ul>
@@ -84,6 +84,14 @@ const lists = [
     </aside>
   </div>
 </section>
+
+<script>
+  // the photo strip scrolls sideways on phones only: make it focusable for the keyboard just there
+  const strip = document.querySelector<HTMLElement>('[data-scroll-strip]');
+  const sync = () => strip && (strip.scrollWidth > strip.clientWidth + 2 ? strip.setAttribute('tabindex', '0') : strip.removeAttribute('tabindex'));
+  sync();
+  addEventListener('resize', sync, { passive: true });
+</script>
 
 <style>
   .prog__head { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 20px clamp(24px, 5vw, 80px); align-items: end; }
@@ -112,7 +120,7 @@ const lists = [
   .who img { width: 36px; height: 45px; object-fit: cover; object-position: center top; border-radius: 4px; background: var(--c-blue-deep); }
   .who span { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .2em; }
   @media (hover: hover) { .who:hover span { color: var(--c-blue-line); text-decoration-thickness: 2px; } }
-  .prog__list--two { display: grid; grid-template-columns: 1fr 1fr; column-gap: clamp(20px, 3vw, 48px); }
+  .prog__list--two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: clamp(20px, 3vw, 48px); }
 
   .prog__photos { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(8px, 1vw, 14px); margin-top: clamp(32px, 4vw, 56px); }
   .prog__photos li { display: grid; gap: 8px; }

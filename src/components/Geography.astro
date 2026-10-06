@@ -88,7 +88,13 @@ const labels: Record<string, { a: 'start' | 'end'; dy?: number; minor?: boolean 
 <script>
   // the full list is open by default on wide screens; on phones it is one tap away
   const all = document.querySelector<HTMLDetailsElement>('[data-geo-all]');
-  if (all && matchMedia('(min-width: 861px)').matches) all.open = true;
+  const wide = matchMedia('(min-width: 861px)');
+  // on wide screens the summary is hidden, so the list must be open there — also after a tablet is rotated
+  const sync = () => {
+    if (all && wide.matches) all.open = true;
+  };
+  sync();
+  wide.addEventListener('change', sync);
 </script>
 
 <style>

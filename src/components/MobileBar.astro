@@ -1,5 +1,5 @@
 ---
-import { contacts } from '../data/camp';
+import { camp, contacts } from '../data/camp';
 ---
 
 <div class="mbar" data-mbar aria-hidden="true" inert>
@@ -7,7 +7,7 @@ import { contacts } from '../data/camp';
     <b>Позвонить Олегу</b>
     <span class="nowrap">{contacts.coordinator.phone}</span>
   </a>
-  <a class="mbar__cta" href="#zapis">Записаться</a>
+  <a class="mbar__cta" href="#zapis" data-until={camp.overAfter}>Записаться</a>
 </div>
 
 <script>
@@ -36,7 +36,7 @@ import { contacts } from '../data/camp';
     .mbar {
       position: fixed; z-index: 30; left: 0; right: 0; bottom: 0;
       display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center;
-      padding: 10px var(--gutter) max(10px, env(safe-area-inset-bottom));
+      padding: 10px max(var(--gutter), env(safe-area-inset-right)) max(10px, env(safe-area-inset-bottom)) max(var(--gutter), env(safe-area-inset-left));
       background: var(--c-board); box-shadow: inset 0 3px 0 var(--c-kick), 0 -1px 0 var(--c-hair);
       opacity: 0; visibility: hidden; transition: opacity .15s, visibility .15s;
     }

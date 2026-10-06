@@ -1,7 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import { coaches, specialists, type Person } from '../data/staff';
-import { contacts } from '../data/camp';
+import { camp, contacts } from '../data/camp';
 import { t } from '../lib/typo';
 import BioSheet from './BioSheet.astro';
 import lineup from '../assets/photos/coaches-lineup-ice.jpg';
@@ -139,7 +139,7 @@ const split = (p: Person) => {
         })
       }
     </ul>
-    <p class="team__note">{t('Состав тренеров на смену 4–10 января 2027 года подтвердит координатор.')}</p>
+    <p class="team__note">{t(`Состав тренеров на смену ${camp.datesHuman} года подтвердит координатор.`)}</p>
   </div>
 
   {[...coaches, ...specialists].filter((p) => p.bio).map((p) => <BioSheet person={p} portrait={portrait(p.photo)} />)}

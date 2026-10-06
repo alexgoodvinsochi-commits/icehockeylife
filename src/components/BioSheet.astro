@@ -19,7 +19,7 @@ const sections = [...(person.bio ?? [])].sort((a, b) => rank(a.title) - rank(b.t
 
 <dialog class="bio" id={`trener-${person.slug}`} data-sheet aria-labelledby={`bio-${person.slug}-name`}>
   <div class="bio__panel">
-    <button class="bio__close" type="button" data-sheet-close aria-label="Закрыть">×</button>
+    <button class="bio__close" type="button" data-sheet-close aria-label="Закрыть" autofocus>×</button>
     <header class="bio__head">
       <div class="bio__photo">
         <Image src={portrait} alt="" widths={[240, 480]} sizes="240px" loading="lazy" />

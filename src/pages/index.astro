@@ -39,11 +39,12 @@ import MobileBar from '../components/MobileBar.astro';
 
 <script>
   import { initDialogs } from '../scripts/dialogs';
-  import { applyDates } from '../scripts/dates';
+  import { watchDates } from '../scripts/dates';
   import { initAnchors } from '../scripts/anchors';
   import { initCallGoals } from '../scripts/goals';
+  // prices first: nothing that fails later may leave an expired offer on screen
+  watchDates();
   initAnchors();
   initCallGoals();
   initDialogs();
-  applyDates();
 </script>

@@ -7,13 +7,24 @@
   font-style: normal;
   font-display: swap;
 }
-/* Arial tuned to Golos metrics, so the swap does not move the text */
+/* Arial (Roboto on Android, approximately) tuned to Golos metrics, so the swap does not move the text */
 @font-face {
   font-family: 'IHL Golos fallback';
-  src: local('Arial');
+  src: local('Arial'), local('Roboto');
   size-adjust: 108.5687%;
   ascent-override: 90.2654%;
   descent-override: 20.2637%;
+  line-gap-override: 0%;
+}
+
+/* the same for the extra-condensed display face: without it the H1 falls back to a wide sans and rewraps
+   (metrics measured from ihl-sofia-xc.woff2 the way Astro measures Golos) */
+@font-face {
+  font-family: 'IHL Sofia XC fallback';
+  src: local('Arial'), local('Roboto');
+  size-adjust: 65.0515%;
+  ascent-override: 138.352%;
+  descent-override: 46.1173%;
   line-gap-override: 0%;
 }
 

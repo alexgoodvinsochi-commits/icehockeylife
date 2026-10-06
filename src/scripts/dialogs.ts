@@ -13,7 +13,11 @@ function open(dialog: HTMLDialogElement, push = true) {
   document.documentElement.classList.add('has-dialog');
   if (!usesHistory(dialog)) return;
   openId = dialog.id;
-  if (push) history.pushState({ dialog: dialog.id }, '', `#${dialog.id}`);
+  if (push) {
+    // an older #anchor in the current entry would make Back (closing the sheet) jump the page back to it
+    if (location.hash) history.replaceState(history.state, '', location.pathname + location.search);
+    history.pushState({ dialog: dialog.id }, '', `#${dialog.id}`);
+  }
 }
 
 function closeFromUi(dialog: HTMLDialogElement) {
@@ -47,7 +51,13 @@ export function initDialogs() {
         d.close();
         document.documentElement.classList.remove('has-dialog');
         requestAnimationFrame(() => {
-          document.querySelector(href)?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+          const target = document.querySelector<HTMLElement>(href);
+          target?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+          // keyboard and screen-reader users continue from the section they picked, not from the burger
+          if (target) {
+            if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+            target.focus({ preventScroll: true });
+          }
           history.replaceState(history.state, '', href);
         });
         return;
@@ -83,7 +93,12 @@ export function initDialogs() {
     }
   });
 
-  const hash = decodeURIComponent(location.hash.slice(1));
+  let hash = '';
+  try {
+    hash = decodeURIComponent(location.hash.slice(1));
+  } catch {
+    // a truncated shared link: ignore the anchor
+  }
   const fromHash = hash && (document.getElementById(hash) as HTMLDialogElement | null);
   if (fromHash && fromHash.matches('dialog[data-sheet]:not([data-sheet-nohistory])')) {
     history.replaceState(null, '', location.pathname + location.search);

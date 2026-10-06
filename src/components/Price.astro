@@ -1,6 +1,6 @@
 ---
 import { Image } from 'astro:assets';
-import { camp } from '../data/camp';
+import { camp, rub } from '../data/camp';
 import { t } from '../lib/typo';
 import lockers from '../assets/photos/lockers-jerseys.jpg';
 ---
@@ -12,32 +12,32 @@ import lockers from '../assets/photos/lockers-jerseys.jpg';
     <!-- centre ice: the red line splits the price into «before» and «after» 8 November -->
     <div class="ice" data-until={camp.price.earlyUntil}>
       <div class="ice__early">
-        <p class="ice__when">{t('До 8 ноября включительно, первые 15 участников')}</p>
-        <p class="ice__sum num">43&nbsp;680&nbsp;₽</p>
-        <p class="ice__left" data-countdown={camp.price.earlyUntil} data-countdown-last="Сегодня последний день ранней цены">
-          До 8 ноября осталось <b><span data-countdown-num>…</span>&nbsp;<span data-countdown-word>дней</span></b>
+        <p class="ice__when">{t(`До ${camp.price.earlyUntilHuman} включительно, первые ${camp.price.earlySeats} участников`)}</p>
+        <p class="ice__sum num">{rub(camp.price.early)}</p>
+        <p class="ice__left" data-countdown={camp.price.earlyUntil} data-countdown-last="Сегодня последний день ранней цены" hidden>
+          До {camp.price.earlyUntilHuman} осталось <b><span data-countdown-num>…</span>&nbsp;<span data-countdown-word>дней</span></b>
         </p>
       </div>
       <div class="ice__line" aria-hidden="true">
-        <span class="ice__tag">8 ноября — красная линия</span>
+        <span class="ice__tag">{camp.price.earlyUntilHuman} — красная линия</span>
         <span class="ice__circle"><span class="ice__crest"></span></span>
       </div>
       <div class="ice__late">
-        <p class="ice__when">{t('С 9 ноября — или раньше, если 15 мест по ранней цене закончатся')}</p>
-        <p class="ice__sum ice__sum--late num">48&nbsp;860&nbsp;₽</p>
+        <p class="ice__when">{t(`С ${camp.price.regularFromHuman} — или раньше, если ${camp.price.earlySeats} мест по ранней цене закончатся`)}</p>
+        <p class="ice__sum ice__sum--late num">{rub(camp.price.regular)}</p>
       </div>
     </div>
 
     <div class="ice ice--after" data-from={camp.price.earlyUntil} hidden>
       <p class="ice__when">{t('Стоимость тренировок')}</p>
-      <p class="ice__sum num">48&nbsp;860&nbsp;₽</p>
+      <p class="ice__sum num">{rub(camp.price.regular)}</p>
     </div>
 
     <div class="terms">
       <div class="terms__col">
         <h3 class="terms__h">В стоимость входят</h3>
         <ul class="terms__list" role="list">
-          <li>{t('Тренировки: 9 часов на льду и 16 часов вне льда за семь дней')}</li>
+          <li>{t(`Тренировки: ${camp.hoursIce} часов на льду и ${camp.hoursOffIce} часов вне льда за семь дней`)}</li>
           <li>{t('Форма для ОФП, фирменные джерси, шапки и подарки от Ice Hockey Life — каждому участнику')}</li>
         </ul>
         <h3 class="terms__h terms__h--no">Не входят</h3>
@@ -53,7 +53,7 @@ import lockers from '../assets/photos/lockers-jerseys.jpg';
           <li>{t('Вратарям — скидка, её размер назовёт координатор')}</li>
           <li>{t('Можно оплатить в рассрочку — условия назовёт координатор')}</li>
         </ul>
-        <a class="btn btn--red terms__cta" href="#zapis">Записаться</a>
+        <a class="btn btn--red terms__cta" href="#zapis" data-until={camp.overAfter}>Записаться</a>
       </div>
       <figure class="terms__photo">
         <Image src={lockers} alt="Подарки участникам в шкафчиках раздевалки: фирменные джерси, кепки и форма" widths={[480, 800, 1100]} sizes="(min-width: 1000px) 40vw, 92vw" loading="lazy" />
@@ -61,7 +61,9 @@ import lockers from '../assets/photos/lockers-jerseys.jpg';
       </figure>
     </div>
     <p class="price__fine">
-      {t('Цена — за тренировочную программу для одного участника, в рублях. Специальная цена 43 680 ₽ действует для первых 15 участников, забронировавших место до 8 ноября 2026 года включительно; затем — 48 860 ₽. Как закрепить место по ранней цене, расскажет координатор. Сведения на сайте носят информационный характер и не являются публичной офертой: условия участия уточнит координатор.')}
+      {t('Цена — за тренировочную программу для одного участника, в рублях.')}
+      <span data-until={camp.price.earlyUntil}>{t(`Специальная цена ${rub(camp.price.early)} действует для первых ${camp.price.earlySeats} участников, забронировавших место до ${camp.price.earlyUntilHuman} ${camp.price.earlyYear} года включительно; затем — ${rub(camp.price.regular)}. Как закрепить место по ранней цене, расскажет координатор.`)}</span>
+      {t('Сведения на сайте носят информационный характер и не являются публичной офертой: условия участия уточнит координатор.')}
     </p>
   </div>
 </section>

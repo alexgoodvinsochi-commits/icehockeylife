@@ -2,11 +2,10 @@
 import { Image, getImage } from 'astro:assets';
 import { photos } from '../data/photos';
 
-// eager-load every photo in src/assets/photos so they are processed at build time
+// every photo in src/assets/photos is processed at build time; spare ones live in photos/spare/ so they
+// are not built and shipped (an imported image always lands in dist as an original file)
 const files = import.meta.glob<{ default: ImageMetadata }>('../assets/photos/*.jpg', { eager: true });
-const bySlug = Object.fromEntries(
-  Object.entries(files).map(([path, mod]) => [path.split('/').pop()!.replace('.jpg', ''), mod.default]),
-);
+const load = (slug: string) => files[`../assets/photos/${slug}.jpg`]?.default;
 
 // curated order: the story of a week, alternating ice and off-ice, people first
 // photos already used elsewhere on the page (program, price, coaches, video poster, cut-outs) are not repeated;
@@ -18,22 +17,25 @@ const order = [
   'team-photo-arena', 'boy-red-jersey', 'goalies-net', 'locker-room', 'coaches-at-arena', 'team-at-arena',
 ];
 const meta = Object.fromEntries(photos.map((p) => [p.file, p]));
-const items = await Promise.all(
-  order
-    .filter((f) => bySlug[f])
-    .map(async (f) => {
-      const src = bySlug[f];
-      const full = await getImage({ src, widths: [960, 1680], format: 'webp' });
-      return { file: f, src, alt: meta[f]?.alt ?? '', caption: meta[f]?.caption, full };
-    }),
+const loaded = await Promise.all(
+  order.map(async (f) => {
+    const src = load(f);
+    if (!src) return null;
+    const full = await getImage({ src, widths: [960, 1680], format: 'webp' });
+    return { file: f, src, alt: meta[f]?.alt ?? '', caption: meta[f]?.caption, full };
+  }),
 );
+const items = loaded.filter((x): x is NonNullable<typeof x> => !!x);
 const FIRST = 12;
+const isBig = (i: number) => i % 12 === 0 || i % 12 === 6;
+const plural = (n: number, forms: [string, string, string]) =>
+  forms[n % 10 === 1 && n % 100 !== 11 ? 0 : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : 2];
 ---
 
 <section class="gal section" id="foto" aria-labelledby="gal-title">
   <div class="wrap">
     <div class="gal__head">
-      <h2 class="gal__title display" id="gal-title">{items.length} фотографии с&nbsp;прошлых смен</h2>
+      <h2 class="gal__title display" id="gal-title">{items.length}&nbsp;{plural(items.length, ['фотография', 'фотографии', 'фотографий'])} с&nbsp;прошлых смен</h2>
       <p class="gal__note">Лёд, зал, растяжка и&nbsp;перерывы между тренировками.</p>
     </div>
     <ul class="gal__grid" role="list" data-gal>
@@ -47,7 +49,11 @@ const FIRST = 12;
               data-srcset={it.full.srcSet.attribute}
               data-sizes="100vw"
             >
-              <Image src={it.src} alt={it.alt} widths={[360, 560, 840]} sizes="(min-width: 1100px) 30vw, (min-width: 640px) 45vw, 92vw" loading="lazy" />
+              {isBig(i) ? (
+                <Image src={it.src} alt={it.alt} widths={[560, 900, 1260, 1680]} sizes="(min-width: 761px) 62vw, 92vw" loading="lazy" />
+              ) : (
+                <Image src={it.src} alt={it.alt} widths={[360, 560, 840]} sizes="(min-width: 761px) 31vw, 46vw" loading="lazy" />
+              )}
             </a>
           </li>
         ))
@@ -59,7 +65,7 @@ const FIRST = 12;
   <dialog class="lb" data-lightbox-dialog aria-label="Просмотр фотографий">
     <img data-lb-img alt="" />
     <div class="lb__bar">
-      <span class="lb__count num" data-lb-count></span>
+      <span class="lb__count num" data-lb-count aria-live="polite"></span>
       <p class="lb__cap" data-lb-caption></p>
       <div class="lb__nav">
         <button type="button" data-lb-prev aria-label="Предыдущее фото">←</button>
@@ -75,12 +81,17 @@ const FIRST = 12;
   initLightbox();
   const more = document.querySelector<HTMLButtonElement>('[data-gal-more]');
   more?.addEventListener('click', () => {
-    document.querySelectorAll<HTMLElement>('[data-gal] [data-more]').forEach((li) => (li.hidden = false));
+    const hidden = [...document.querySelectorAll<HTMLElement>('[data-gal] [data-more]')];
+    hidden.forEach((li) => (li.hidden = false));
     more.remove();
+    // keyboard users continue from the first new photo, not from the top of the page
+    hidden[0]?.querySelector<HTMLAnchorElement>('a')?.focus();
   });
 </script>
 
 <style>
+  /* swipes reach the script as pointer events instead of being taken over by the browser */
+  .lb { touch-action: pan-y pinch-zoom; }
   .gal__head { display: flex; justify-content: space-between; align-items: end; gap: 24px; flex-wrap: wrap; margin-bottom: clamp(20px, 3vw, 40px); }
   .gal__title { font-size: var(--fs-h2s); color: var(--c-blue-deep); }
   .gal__note { max-width: 32ch; color: var(--c-ink-2); }

@@ -1,9 +1,10 @@
 import type { APIRoute } from 'astro';
+import { siteBase } from '../lib/seo';
 
 const pages = ['', 'politika/', 'soglasie/'];
 
 export const GET: APIRoute = ({ site }) => {
-  const base = new URL(import.meta.env.BASE_URL, site);
+  const base = siteBase(site);
   const today = new Date().toISOString().slice(0, 10);
   const urls = pages
     .map((p) => `  <url><loc>${new URL(p, base).href}</loc><lastmod>${today}</lastmod></url>`)

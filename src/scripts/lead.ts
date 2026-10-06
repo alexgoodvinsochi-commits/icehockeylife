@@ -28,12 +28,14 @@ export function formatPhone(raw: string): string {
   let d = digits(raw);
   if (d.startsWith('8')) d = '7' + d.slice(1);
   if (!d.startsWith('7')) d = '7' + d;
+  // «+7 8 938 …» pasted with both prefixes
+  if (d.length === 12 && d.startsWith('78')) d = '7' + d.slice(2);
   d = d.slice(0, 11);
   const p = d.slice(1);
   let out = '+7';
   if (p.length) out += ' (' + p.slice(0, 3);
-  if (p.length >= 3) out += ')';
-  if (p.length > 3) out += ' ' + p.slice(3, 6);
+  // the bracket closes only when the 4th digit arrives, so Backspace after «(938» is not undone by the mask
+  if (p.length > 3) out += ') ' + p.slice(3, 6);
   if (p.length > 6) out += '-' + p.slice(6, 8);
   if (p.length > 8) out += '-' + p.slice(8, 10);
   return out;
@@ -98,10 +100,27 @@ export function initLeadForm(form: HTMLFormElement) {
   let lastMessage = '';
   let waPending = false;
 
+  // Android often reloads the tab while the parent is in WhatsApp: remember (for this tab only) that a message
+  // was handed to WhatsApp, so the «did it leave?» question survives the reload. The text itself is not stored.
+  const KEY = 'ihl-wa-pending';
+  const remember = () => { try { sessionStorage.setItem(KEY, '1'); } catch { /* storage blocked */ } };
+  const recall = () => { try { const v = sessionStorage.getItem(KEY) === '1'; sessionStorage.removeItem(KEY); return v; } catch { return false; } };
+  const back = form.querySelector<HTMLElement>('[data-lead-back]');
+  if (recall() && back) {
+    back.hidden = false;
+    goal('lead_nudge_reload');
+  }
+
   phone.addEventListener('input', () => {
-    const atEnd = phone.selectionStart === phone.value.length;
+    // keep the caret after the same digit it followed before the mask rewrote the value
+    // (the part before the caret is formatted too, so an added «7» country code is counted)
+    const caret = phone.selectionStart ?? phone.value.length;
+    const before = caret ? digits(formatPhone(phone.value.slice(0, caret))).length : 0;
     phone.value = phone.value ? formatPhone(phone.value) : '';
-    if (atEnd) phone.setSelectionRange(phone.value.length, phone.value.length);
+    let pos = 0;
+    for (let seen = 0; pos < phone.value.length && seen < before; pos++) if (/\d/.test(phone.value[pos])) seen++;
+    if (!before) pos = caret ? Math.min(caret, phone.value.search(/\d|$/)) : 0;
+    phone.setSelectionRange(pos, pos);
     phone.setCustomValidity('');
   });
   phone.addEventListener('blur', () => {
@@ -117,7 +136,13 @@ export function initLeadForm(form: HTMLFormElement) {
       phone.setCustomValidity(isForeign(phone.value) ? 'Проверьте номер: нужно от 8 до 15 цифр после «+»' : 'Проверьте номер: нужно 10 цифр после +7');
     }
     if (consentHint && consentBox) consentHint.hidden = consentBox.checked;
+    // «   » would pass `required` and send empty lines to the coach
+    for (const name of ['parent', 'age']) {
+      const el = form.elements.namedItem(name) as HTMLInputElement | null;
+      if (el) el.value = el.value.trim();
+    }
     if (!form.reportValidity()) return null;
+    if (copyBtn) copyBtn.textContent = 'Скопировать текст';
     const data = new FormData(form);
     const lead: Lead = {
       parent: String(data.get('parent') ?? ''),
@@ -145,12 +170,14 @@ export function initLeadForm(form: HTMLFormElement) {
     if (!r) return;
     goal('lead_whatsapp');
     waPending = true;
+    remember();
     window.open(whatsappLink(r.text), '_blank', 'noopener');
   });
 
   openLink?.addEventListener('click', () => {
     goal('lead_whatsapp_again');
     waPending = true;
+    remember();
   });
 
   smsBtn?.addEventListener('click', () => {
@@ -165,6 +192,7 @@ export function initLeadForm(form: HTMLFormElement) {
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState !== 'visible' || !waPending || !nudge) return;
     waPending = false;
+    recall();
     nudge.hidden = false;
     goal('lead_nudge');
   });

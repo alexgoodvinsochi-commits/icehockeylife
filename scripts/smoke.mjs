@@ -39,6 +39,20 @@ await page.goBack();
 await page.waitForTimeout(300);
 check('Back closes bio', !(await page.locator('#trener-stulov').evaluate((d) => d.open)));
 
+// 1b. after an in-page jump (#zapis in the URL) closing a bio must not jump the page back to the anchor
+await page.locator('.hero__cta .btn').click();
+await page.waitForTimeout(800);
+await page.locator('[data-sheet-open="trener-azimov"]').first().scrollIntoViewIfNeeded();
+await page.waitForTimeout(300);
+const y0 = await page.evaluate(() => scrollY);
+await page.locator('[data-sheet-open="trener-azimov"]').first().click();
+await page.waitForTimeout(400);
+await page.keyboard.press('Escape');
+await page.waitForTimeout(500);
+const y1 = await page.evaluate(() => scrollY);
+check('closing a bio after #zapis keeps the scroll', Math.abs(y1 - y0) < 40, `${y0} → ${y1}`);
+await page.evaluate(() => scrollTo(0, 0));
+
 // 2. menu opens and a link closes it and jumps
 await page.locator('.hdr__burger').click();
 await page.waitForTimeout(400);
@@ -63,6 +77,23 @@ await page.fill('#f-parent', 'Анна');
 await page.locator('#f-phone').click();
 await page.keyboard.type('+375291234567');
 check('foreign phone kept as typed', (await page.inputValue('#f-phone')) === '+375291234567', await page.inputValue('#f-phone'));
+// the mask: Backspace after the area code, a fix in the middle, a pasted «+7 8 …»
+await page.fill('#f-phone', '');
+await page.locator('#f-phone').click();
+await page.keyboard.type('938');
+await page.keyboard.press('Backspace');
+check('Backspace after the area code', (await page.inputValue('#f-phone')) === '+7 (93', await page.inputValue('#f-phone'));
+await page.fill('#f-phone', '');
+await page.locator('#f-phone').click();
+await page.keyboard.type('9384389163');
+await page.evaluate(() => { const el = document.querySelector('#f-phone'); el.setSelectionRange(11, 11); });
+await page.keyboard.press('Backspace'); // removes the 3 of «438»
+await page.keyboard.type('3');
+check('edit in the middle keeps the number', (await page.inputValue('#f-phone')) === '+7 (938) 438-91-63', await page.inputValue('#f-phone'));
+await page.fill('#f-phone', '');
+await page.locator('#f-phone').click();
+await page.evaluate(() => { const el = document.querySelector('#f-phone'); el.value = '+7 8 938 438 91 63'; el.dispatchEvent(new Event('input', { bubbles: true })); });
+check('pasted «+7 8 …» number', (await page.inputValue('#f-phone')) === '+7 (938) 438-91-63', await page.inputValue('#f-phone'));
 await page.fill('#f-phone', '');
 await page.locator('#f-phone').click();
 await page.keyboard.type('9181234567');
@@ -125,6 +156,17 @@ const earlyVisible = await p2.locator('.hero__price [data-until]').isVisible();
 const lateVisible = await p2.locator('.hero__price [data-from]').isVisible();
 check('after 8 Nov the early price hides', !earlyVisible && lateVisible);
 check('after 8 Nov the countdown hides', !(await p2.locator('[data-countdown]').isVisible()));
+const faqEarly = await p2.locator('.faq__item[data-until]').isVisible();
+const faqLate = await p2.locator('.faq__item[data-from]').count() === 1 && !(await p2.locator('.faq__item[data-from]').evaluate((d) => d.hidden));
+check('after 8 Nov the FAQ answer has no early price', !faqEarly && faqLate);
+check('after 8 Nov the fine print has no early price', !(await p2.locator('.price__fine [data-until]').evaluate((e) => !e.hidden)));
+
+// 6b. after the camp: no sign-up buttons, the form gives way to a note
+const p4 = await ctx.newPage();
+await p4.addInitScript(() => { const T = new Date('2027-01-11T12:00:00+03:00').getTime(); const D = Date; globalThis.Date = class extends D { constructor(...a) { super(...(a.length ? a : [T])); } static now() { return T; } }; });
+await p4.goto('http://site.test/', { waitUntil: 'networkidle' });
+check('after the camp the hero CTA hides', !(await p4.locator('.hero__cta').isVisible()) && (await p4.locator('.hero__over').isVisible()));
+check('after the camp the form gives way to a note', !(await p4.locator('form[data-lead]').evaluate((f) => !f.hidden)) && !(await p4.locator('.signup__over').evaluate((e) => e.hidden)));
 
 // 7. legal pages: separate documents, header leads back to the home page
 const p3 = await ctx.newPage();

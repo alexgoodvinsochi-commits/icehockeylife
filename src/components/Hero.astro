@@ -1,7 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import skater from '../assets/cutouts/skater.png';
-import { camp, contacts } from '../data/camp';
+import { camp, contacts, rub, regularFrom } from '../data/camp';
 import { t } from '../lib/typo';
 ---
 
@@ -11,26 +11,29 @@ import { t } from '../lib/typo';
       <h1 class="hero__title display" id="hero-title">{t('Зимние хоккейные сборы в Сириусе')}</h1>
 
       <p class="hero__dates">
-        <span class="hero__days num" aria-hidden="true">4–10</span>
-        <span class="hero__month"><span class="visually-hidden">4–10 </span>января 2027<br />{camp.arena}</span>
+        <span class="hero__days num" aria-hidden="true">{camp.daysRange}</span>
+        <span class="hero__month"><span class="visually-hidden">{camp.daysRange} </span>{camp.monthYear}<br />{camp.arena}</span>
       </p>
 
       <p class="hero__lead">
-        {t('Семь дней: 9 часов на льду и 16 вне льда, группы по 5–6 человек. Ведёт главный тренер Максим Крейдиков.')}
+        {t(`${camp.days}: ${camp.hoursIce} часов на льду и ${camp.hoursOffIce} вне льда, группы по ${camp.groupSize} человек. Ведёт главный тренер Максим Крейдиков.`)}
       </p>
 
-      <div class="hero__price">
+      <div class="hero__price" data-until={camp.overAfter}>
         <p data-until={camp.price.earlyUntil}>
-          <b class="num">43&nbsp;680&nbsp;₽</b>
-          <span>{t('первым 15 участникам, которые забронируют место до 8 ноября включительно. С 9 ноября —')} <span class="nowrap">48&nbsp;860&nbsp;₽</span></span>
+          <b class="num">{rub(camp.price.early)}</b>
+          <span>{t(`первым ${camp.price.earlySeats} участникам, которые забронируют место до ${camp.price.earlyUntilHuman} включительно. С ${camp.price.regularFromHuman} —`)} <span class="nowrap">{rub(camp.price.regular)}</span></span>
         </p>
-        <p data-from={camp.price.earlyUntil} hidden>
-          <b class="num">48&nbsp;860&nbsp;₽</b>
+        <p data-from={regularFrom} hidden>
+          <b class="num">{rub(camp.price.regular)}</b>
           <span>{t('за тренировки. Вратарям — скидка, можно оплатить в рассрочку.')}</span>
         </p>
       </div>
+      <p class="hero__over" data-from={camp.overAfter} hidden>
+        {t(`Сборы ${camp.datesHuman} года прошли. О следующих расскажем в Telegram-канале и ВКонтакте — ссылки внизу страницы.`)}
+      </p>
 
-      <div class="hero__cta">
+      <div class="hero__cta" data-until={camp.overAfter}>
         <a class="btn btn--red" href="#zapis">Записаться</a>
         <p class="hero__call">
           {t('или позвоните Олегу, координатору:')}
@@ -82,6 +85,7 @@ import { t } from '../lib/typo';
   .hero__lead { margin-top: clamp(16px, 1.8vw, 24px); font-size: var(--fs-lead); line-height: 1.45; max-width: 36ch; color: var(--c-ink-2); }
 
   .hero__price { margin-top: 18px; }
+  .hero__over { margin-top: 18px; max-width: 36ch; font-weight: 600; color: var(--c-ink); }
   .hero__price p { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; }
   .hero__price b { font-family: var(--f-display); font-weight: 900; font-size: clamp(2.1rem, 1.6rem + 1.6vw, 3rem); line-height: 1; color: var(--c-ink); }
   .hero__price span { color: var(--c-ink-2); max-width: 36ch; }
