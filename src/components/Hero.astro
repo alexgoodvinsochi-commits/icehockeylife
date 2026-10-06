@@ -122,4 +122,8 @@ import { t } from '../lib/typo';
     .hero__price { margin-top: 12px; }
     .hero__cta { margin-top: 16px; }
   }
+  /* the narrowest phones: the boots would touch «января 2027», so the dates sit a little lower */
+  @media (max-width: 350px) {
+    .hero__dates { margin-top: -5%; }
+  }
 </style>
