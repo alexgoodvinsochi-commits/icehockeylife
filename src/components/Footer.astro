@@ -1,6 +1,8 @@
 ---
 import { contacts, camp } from '../data/camp';
-import logo from '../assets/brand/logo.svg?raw';
+import { operator, operatorLine } from '../data/legal';
+import { metrikaOn } from '../lib/seo';
+import { rich } from '../lib/rich';
 import vitokin from '../assets/brand/vitokin.svg?raw';
 import onetimer from '../assets/brand/onetimer.svg?raw';
 
@@ -27,7 +29,7 @@ const year = new Date().getFullYear();
         <li><a href={contacts.telegram} target="_blank" rel="noopener">Telegram-канал</a></li>
         <li><a href={contacts.vk} target="_blank" rel="noopener">ВКонтакте</a></li>
       </ul>
-      <div class="ftr__badge" set:html={logo} aria-hidden="true" />
+      <div class="ftr__badge" aria-hidden="true"></div>
     </div>
 
     <div class="ftr__boards" aria-label="Партнёры">
@@ -45,8 +47,14 @@ const year = new Date().getFullYear();
     </div>
 
     <div class="ftr__legal">
-      <p>© 2023–{year} Ice Hockey Life. Цены на сайте — справочные и не являются публичной офертой.</p>
-      <p><a href={`${base}policy/`}>Политика обработки персональных данных</a></p>
+      <p set:html={rich(operatorLine)} />
+      {operator.hours && <p>Режим работы: {operator.hours}</p>}
+      <p>© 2023–{year} Ice Hockey Life (Айс Хоккей Лайф). Сведения на сайте носят информационный характер и не являются публичной офертой.</p>
+      <p class="ftr__docs">
+        <a href={`${base}politika/`}>Политика обработки персональных данных</a>
+        <a href={`${base}soglasie/`}>Согласие на обработку персональных данных</a>
+        {metrikaOn && <button type="button" data-cookie-settings>Настройки cookie</button>}
+      </p>
     </div>
   </div>
 </footer>
@@ -63,7 +71,12 @@ const year = new Date().getFullYear();
   .ftr__social a { font-family: var(--f-display); font-weight: 800; font-size: 1.6rem; text-transform: uppercase; text-decoration: none; letter-spacing: .02em; }
   .ftr__social a:hover { color: var(--c-crease); }
   .ftr__social sup { font-size: .55em; vertical-align: super; }
-  .ftr__badge { justify-self: end; width: min(100%, 220px); fill: rgb(255 255 255 / .9); }
+  /* the crest is a 68 KB traced path: kept out of the HTML as one cached file, coloured through a mask */
+  .ftr__badge {
+    justify-self: end; width: min(100%, 220px); aspect-ratio: 3114 / 3150; background: rgb(255 255 255 / .9);
+    -webkit-mask: url('../assets/brand/logo.svg') center / contain no-repeat;
+    mask: url('../assets/brand/logo.svg') center / contain no-repeat;
+  }
 
   /* partners on the dasher boards: white panels over a yellow kick plate */
   .ftr__boards {
@@ -81,6 +94,9 @@ const year = new Date().getFullYear();
 
   .ftr__legal { display: grid; gap: 8px; margin-top: 40px; font-size: .875rem; color: rgb(255 255 255 / .62); }
   .ftr__legal a { color: rgb(255 255 255 / .85); }
+  .ftr__docs { display: flex; flex-wrap: wrap; gap: 6px 22px; }
+  .ftr__docs button { border: 0; background: none; padding: 0; color: rgb(255 255 255 / .85); text-decoration: underline; font: inherit; cursor: pointer; }
+  .ftr__legal :global(mark.todo) { background: rgb(242 226 125 / .9); color: var(--c-ink); padding: 0 .2em; border-radius: 3px; }
 
   @media (max-width: 900px) {
     .ftr__top { grid-template-columns: 1fr 1fr; }

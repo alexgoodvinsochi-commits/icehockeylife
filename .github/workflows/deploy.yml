@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       # Preview build: closed from search engines, no analytics.
-      # For production on icehockeylife.ru build with SITE_URL=https://icehockeylife.ru BASE_PATH=/ PUBLIC_PREVIEW=0 PUBLIC_METRIKA=1
+      # For production on icehockeylife.ru build with SITE_URL=https://icehockeylife.ru PUBLIC_PREVIEW=0 PUBLIC_METRIKA=1 (see README)
       PUBLIC_PREVIEW: '1'
       SITE_URL: https://alexgoodvinsochi-commits.github.io
       BASE_PATH: /icehockeylife

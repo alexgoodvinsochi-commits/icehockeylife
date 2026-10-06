@@ -6,26 +6,31 @@ const nav = [
   { href: '#programma', label: 'Программа' },
   { href: '#trenery', label: 'Тренеры' },
   { href: '#cena', label: 'Стоимость' },
+  { href: '#roditelyam', label: 'Родителям' },
   { href: '#otzyvy', label: 'Отзывы' },
   { href: '#voprosy', label: 'Вопросы' },
   { href: '#kontakty', label: 'Контакты' },
 ];
+// the header is shared with the legal pages: there every anchor has to lead back to the home page
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+const onHome = Astro.url.pathname === base || Astro.url.pathname === base.slice(0, -1);
+const to = (hash: string) => (onHome || hash === '#kontakty' ? hash : base + hash);
 ---
 
 <header class="hdr" data-hdr>
   <div class="hdr__in wrap">
-    <a class="hdr__brand" href="#top" aria-label="Ice Hockey Life — наверх">
+    <a class="hdr__brand" href={onHome ? '#top' : base} aria-label={onHome ? 'Ice Hockey Life — наверх' : 'Ice Hockey Life — на главную'}>
       <Mark size={36} />
       <span class="hdr__word">Ice Hockey Life</span>
     </a>
 
     <nav class="hdr__nav" aria-label="Разделы">
       <ul role="list">
-        {nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}
+        {nav.map((n) => <li><a href={to(n.href)}>{n.label}</a></li>)}
       </ul>
     </nav>
 
-    <a class="hdr__cta" href="#zapis">Записаться</a>
+    <a class="hdr__cta" href={to('#zapis')}>Записаться</a>
 
     <button class="hdr__burger" type="button" data-sheet-open="menu" aria-label="Меню" aria-haspopup="dialog">
       <span></span><span></span>
@@ -35,10 +40,8 @@ const nav = [
 
 <script>
   // highlight the section the reader is in
-  const links = [...document.querySelectorAll<HTMLAnchorElement>('.hdr__nav a')];
-  const sections = links
-    .map((a) => document.querySelector<HTMLElement>(a.getAttribute('href')!))
-    .filter((s): s is HTMLElement => !!s);
+  const links = [...document.querySelectorAll<HTMLAnchorElement>('.hdr__nav a')].filter((a) => a.pathname === location.pathname);
+  const sections = links.map((a) => document.getElementById(a.hash.slice(1))).filter((s): s is HTMLElement => !!s);
   // every top-level section is watched, so passing a section that is not in the menu clears the highlight
   const watched = [...document.querySelectorAll<HTMLElement>('main > section, footer')];
   if ('IntersectionObserver' in window && sections.length) {
@@ -46,7 +49,7 @@ const nav = [
       (entries) => {
         for (const e of entries) {
           if (!e.isIntersecting) continue;
-          links.forEach((a) => a.setAttribute('aria-current', String(a.getAttribute('href') === `#${e.target.id}`)));
+          links.forEach((a) => a.setAttribute('aria-current', String(a.hash === `#${e.target.id}`)));
         }
       },
       { rootMargin: '-45% 0px -50% 0px' },
@@ -62,8 +65,8 @@ const nav = [
       <button class="menu__close" type="button" data-sheet-close aria-label="Закрыть меню">×</button>
     </div>
     <ul class="menu__list" role="list">
-      {nav.map((n) => <li><a href={n.href} data-sheet-close>{n.label}</a></li>)}
-      <li><a href="#zapis" data-sheet-close>Записаться</a></li>
+      {nav.filter((n) => n.href !== '#kontakty').map((n) => <li><a href={to(n.href)} data-sheet-close>{n.label}</a></li>)}
+      <li><a href={to('#zapis')} data-sheet-close>Записаться</a></li>
     </ul>
     <div class="menu__contacts">
       <a href={`tel:${contacts.coordinator.tel}`}>

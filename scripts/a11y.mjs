@@ -4,7 +4,7 @@ import { readFile, stat } from 'node:fs/promises';
 import path from 'node:path';
 const axeSource = await readFile('node_modules/axe-core/axe.min.js', 'utf8');
 const TYPES = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.woff2': 'font/woff2', '.webp': 'image/webp', '.png': 'image/png', '.svg': 'image/svg+xml', '.jpg': 'image/jpeg', '.avif': 'image/avif' };
-const pages = process.argv.slice(2).length ? process.argv.slice(2) : ['/', '/policy/'];
+const pages = process.argv.slice(2).length ? process.argv.slice(2) : ['/', '/politika/', '/soglasie/'];
 const browser = await chromium.launch();
 for (const [w, h] of [[390, 844], [1440, 900]]) {
   const ctx = await browser.newContext({ viewport: { width: w, height: h } });

@@ -17,16 +17,8 @@ export default defineConfig({
   image: {
     layout: 'constrained',
   },
+  // Golos Text and Sofia Sans are self-hosted single files (src/styles/fonts.css); only the LED face comes from here
   fonts: [
-    {
-      provider: fontProviders.fontsource(),
-      name: 'Golos Text',
-      cssVariable: '--font-text',
-      weights: ['400 700'],
-      styles: ['normal'],
-      subsets: ['latin', 'latin-ext', 'cyrillic'],
-      fallbacks: ['Arial', 'sans-serif'],
-    },
     {
       provider: fontProviders.fontsource(),
       name: 'Handjet',

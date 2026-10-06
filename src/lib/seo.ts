@@ -7,10 +7,10 @@ export const metrikaOn = import.meta.env.PUBLIC_METRIKA === '1' && !isPreview;
 export const seo = {
   title: `Хоккейные сборы для детей в Сириусе, ${camp.datesHuman} — Ice Hockey Life`,
   description:
-    'Зимний хоккейный кэмп в Сочи на льду ЛД «Большой»: 9 часов льда и 16 часов вне льда, группы по 5–6 детей, ' +
-    '12 тренеров, психолог, гимнастика и растяжка. Ранняя цена 43 680 ₽ — первым 15 участникам до 8 ноября.',
+    'Зимние хоккейные сборы в Сириусе (Сочи) на льду ЛД «Большой»: 9 часов льда и 16 часов вне льда, группы по 5–6 детей, ' +
+    '12 тренеров, психолог, гимнастика и растяжка. Ранняя цена 43 680 ₽ — первым 15 участникам до 8 ноября включительно.',
   keywords:
-    'хоккейный лагерь, хоккейные сборы, детские хоккейные сборы, хоккейные сборы Сириус, хоккейный лагерь Сочи, зимние хоккейные сборы 2027, хоккейный кэмп, сборы для вратарей',
+    'хоккейные сборы, детские хоккейные сборы, хоккейные сборы Сириус, хоккейные сборы Сочи, зимние хоккейные сборы 2027, хоккейный кэмп, сборы для вратарей',
 };
 
 /** schema.org markup: the camp as a SportsEvent with two price offers, organised by the camp. */
@@ -18,7 +18,7 @@ export function eventJsonLd(siteUrl: string, image: string) {
   const offers = [
     {
       '@type': 'Offer',
-      name: 'Ранняя цена — первым 15 участникам до 8 ноября',
+      name: 'Ранняя цена — первым 15 участникам до 8 ноября включительно',
       price: camp.price.early,
       priceCurrency: 'RUB',
       validThrough: camp.price.earlyUntil,
@@ -27,7 +27,7 @@ export function eventJsonLd(siteUrl: string, image: string) {
     },
     {
       '@type': 'Offer',
-      name: 'Стоимость после 8 ноября',
+      name: 'Стоимость с 9 ноября',
       price: camp.price.regular,
       priceCurrency: 'RUB',
       validFrom: '2026-11-09T00:00:00+03:00',

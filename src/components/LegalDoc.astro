@@ -1,0 +1,68 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from './Header.astro';
+import Footer from './Footer.astro';
+import { revisionText, domain, type LegalDoc } from '../data/legal';
+import { rich } from '../lib/rich';
+import { t } from '../lib/typo';
+
+type Props = { doc: LegalDoc; description: string; other: { href: string; label: string } };
+const { doc, description, other } = Astro.props;
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+---
+
+<Base title={`${doc.title} — Ice Hockey Life`} description={description}>
+  <Header />
+  <main id="main" class="doc">
+    <div class="wrap doc__wrap">
+      <p class="doc__back"><a href={base}>На главную</a></p>
+      <h1 class="doc__title display">{t(doc.title)}</h1>
+      <p class="doc__meta" set:html={rich(`Редакция от ${revisionText}. Адрес документа: https://${domain}/${doc.slug}/`)} />
+      {doc.lead && <p class="doc__lead">{t(doc.lead)}</p>}
+      {
+        doc.sections.map((s) => (
+          <section class="doc__sec" id={s.id}>
+            <h2>{t(s.title)}</h2>
+            {s.blocks.map((b) =>
+              Array.isArray(b) ? (
+                <ul>
+                  {b.map((li) => (
+                    <li set:html={rich(li)} />
+                  ))}
+                </ul>
+              ) : (
+                <p set:html={rich(b)} />
+              ),
+            )}
+          </section>
+        ))
+      }
+      <p class="doc__other"><a href={other.href}>{other.label}</a></p>
+    </div>
+  </main>
+  <Footer />
+</Base>
+
+<script>
+  import { initDialogs } from '../scripts/dialogs';
+  initDialogs();
+</script>
+
+<style>
+  .doc { padding-block: clamp(32px, 5vw, 80px) clamp(56px, 8vw, 120px); }
+  .doc__wrap { max-width: 50rem; }
+  .doc__back a, .doc__other a { font-weight: 600; color: var(--c-blue-line); }
+  .doc__title { margin-top: 20px; font-size: clamp(2.4rem, 1.6rem + 3.4vw, 4.4rem); color: var(--c-blue-deep); }
+  .doc__meta { margin-top: 12px; color: var(--c-ink-3); font-size: var(--fs-small); }
+  .doc__meta :global(a) { color: inherit; }
+  .doc__lead { margin-top: 20px; color: var(--c-ink-2); }
+  .doc__sec { margin-top: 36px; }
+  .doc__sec h2 { font-family: var(--f-display); font-weight: 800; font-size: 1.7rem; line-height: 1.05; padding-bottom: 10px; border-bottom: 1px solid var(--c-hair-2); }
+  .doc__sec p, .doc__sec ul { margin-top: 12px; color: var(--c-ink-2); }
+  .doc__sec ul { padding-left: 1.2em; }
+  .doc__sec li + li { margin-top: 6px; }
+  .doc__sec :global(a) { color: var(--c-blue-line); overflow-wrap: anywhere; }
+  .doc__other { margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--c-hair); }
+  /* what the owner still has to fill in: visible on the preview, impossible to miss */
+  .doc :global(mark.todo) { background: var(--c-kick); color: var(--c-ink); padding: 0 .2em; border-radius: 3px; }
+</style>

@@ -1,6 +1,6 @@
 ---
 // Share-image composition (1200×630). scripts/make-og.mjs screenshots this page into public/og.jpg.
-import { Image, Font } from 'astro:assets';
+import { Image } from 'astro:assets';
 import '../styles/base.css';
 import skater from '../assets/cutouts/skater.png';
 import logo from '../assets/brand/logo.svg?raw';
@@ -12,7 +12,6 @@ import logo from '../assets/brand/logo.svg?raw';
     <meta charset="utf-8" />
     <meta name="robots" content="noindex, nofollow" />
     <title>og</title>
-    <Font cssVariable="--font-text" />
     <style is:global>
       html, body { margin: 0; background: var(--c-ice); }
       .og { position: relative; width: 1200px; height: 630px; overflow: hidden; background: var(--c-ice); }

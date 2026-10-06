@@ -2,7 +2,6 @@
 import { Image } from 'astro:assets';
 import { camp } from '../data/camp';
 import { t } from '../lib/typo';
-import logo from '../assets/brand/logo.svg?raw';
 import lockers from '../assets/photos/lockers-jerseys.jpg';
 ---
 
@@ -13,12 +12,12 @@ import lockers from '../assets/photos/lockers-jerseys.jpg';
     <!-- centre ice: the red line splits the price into «before» and «after» 8 November -->
     <div class="ice" data-until={camp.price.earlyUntil}>
       <div class="ice__early">
-        <p class="ice__when">{t('До 8 ноября, первые 15 участников')}</p>
+        <p class="ice__when">{t('До 8 ноября включительно, первые 15 участников')}</p>
         <p class="ice__sum num">43&nbsp;680&nbsp;₽</p>
       </div>
       <div class="ice__line" aria-hidden="true">
         <span class="ice__tag">8 ноября — красная линия</span>
-        <span class="ice__circle" set:html={logo}></span>
+        <span class="ice__circle"><span class="ice__crest"></span></span>
       </div>
       <div class="ice__late">
         <p class="ice__when">{t('С 9 ноября, или когда закончатся 15 мест по ранней цене')}</p>
@@ -45,27 +44,32 @@ import lockers from '../assets/photos/lockers-jerseys.jpg';
         <h3 class="terms__h terms__h--no">Не входят</h3>
         <ul class="terms__list" role="list">
           <li>{t('Проживание и питание. Отель-партнёр — «Сочи Парк Отель», цену для участников сборов назовёт координатор')}</li>
+          <li>{t('Проезд до Сириуса и трансфер')}</li>
           <li>{t('Дневное пребывание с питанием между тренировками — оплачивается отдельно')}</li>
         </ul>
       </div>
       <div class="terms__col">
         <div class="terms__crease">
           <h3>Вратарям — скидка</h3>
-          <p>{t('Размер скидки и условия рассрочки назовёт координатор.')}</p>
+          <p>{t('Размер скидки назовёт координатор.')}</p>
         </div>
-        <p class="terms__pay">{t('Оплатить сборы можно в рассрочку.')}</p>
-        <a class="btn btn--red" href="#zapis">Забронировать место</a>
+        <p class="terms__pay">{t('Можно оплатить в рассрочку — условия назовёт координатор.')}</p>
+        <a class="btn btn--red" href="#zapis">Записаться</a>
       </div>
       <figure class="terms__photo">
         <Image src={lockers} alt="Подарки участникам в шкафчиках раздевалки: фирменные джерси, кепки и форма" widths={[480, 800, 1100]} sizes="(min-width: 1000px) 40vw, 92vw" loading="lazy" />
         <figcaption>{t('Так раздевалка выглядит в первый день: у каждого своё место, джерси и форма.')}</figcaption>
       </figure>
     </div>
+    <p class="price__fine">
+      {t('Цена — за тренировочную программу для одного участника, в рублях. Специальная цена 43 680 ₽ действует для первых 15 участников, записавшихся до 8 ноября 2026 года включительно; затем — 48 860 ₽. Как закрепить место по ранней цене, расскажет координатор. Сведения на сайте носят информационный характер и не являются публичной офертой: условия участия фиксируются в договоре.')}
+    </p>
   </div>
 </section>
 
 <style>
   .price__title { font-size: var(--fs-h2); color: var(--c-blue-deep); max-width: 14ch; }
+  .price__fine { margin-top: clamp(28px, 4vw, 48px); max-width: 72ch; font-size: .875rem; line-height: 1.5; color: var(--c-ink-3); }
 
   .ice {
     position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 340px); grid-template-rows: auto auto auto;
@@ -93,10 +97,14 @@ import lockers from '../assets/photos/lockers-jerseys.jpg';
     position: absolute; left: 62%; top: 50%; translate: -50% -50%;
     width: clamp(140px, 18vw, 260px); aspect-ratio: 1; border-radius: 50%;
     border: 3px solid var(--c-blue-line); background: var(--c-ice);
-    display: grid; place-items: center; fill: var(--c-blue-line);
+    display: grid; place-items: center;
   }
-  /* percent padding would resolve against the long red line, so size the badge directly */
-  .ice__circle :global(svg) { width: 70%; height: auto; }
+  /* percent padding would resolve against the long red line, so size the crest directly */
+  .ice__crest {
+    width: 70%; aspect-ratio: 3114 / 3150; background: var(--c-blue-line);
+    -webkit-mask: url('../assets/brand/logo.svg') center / contain no-repeat;
+    mask: url('../assets/brand/logo.svg') center / contain no-repeat;
+  }
 
   /* the Bolshoy has an LED roof that works as a giant scoreboard — the countdown borrows that */
   .ice__led {

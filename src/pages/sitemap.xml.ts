@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 
-const pages = ['', 'policy/'];
+const pages = ['', 'politika/', 'soglasie/'];
 
 export const GET: APIRoute = ({ site }) => {
   const base = new URL(import.meta.env.BASE_URL, site);

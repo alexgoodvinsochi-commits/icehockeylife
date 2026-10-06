@@ -22,7 +22,7 @@ import { t } from '../lib/typo';
       <div class="hero__price">
         <p data-until={camp.price.earlyUntil}>
           <b class="num">43&nbsp;680&nbsp;₽</b>
-          <span>{t('для первых 15 участников, кто забронирует место до 8 ноября. С 9 ноября —')} <span class="nowrap">48&nbsp;860&nbsp;₽</span></span>
+          <span>{t('для первых 15 участников, кто запишется до 8 ноября включительно. С 9 ноября —')} <span class="nowrap">48&nbsp;860&nbsp;₽</span></span>
         </p>
         <p data-from={camp.price.earlyUntil} hidden>
           <b class="num">48&nbsp;860&nbsp;₽</b>
@@ -31,7 +31,7 @@ import { t } from '../lib/typo';
       </div>
 
       <div class="hero__cta">
-        <a class="btn btn--red" href="#zapis">Забронировать место</a>
+        <a class="btn btn--red" href="#zapis">Записаться</a>
         <p class="hero__call">
           {t('или позвоните Олегу, координатору:')}
           <a class="nowrap" href={`tel:${contacts.coordinator.tel}`}>{contacts.coordinator.phone}</a>

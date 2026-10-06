@@ -1,9 +1,11 @@
 ---
 import { Font } from 'astro:assets';
 import displayFont from '../assets/fonts/ihl-sofia-xc.woff2?url';
+import textFont from '../assets/fonts/ihl-golos.woff2?url';
 import '../styles/base.css';
 import { seo, isPreview, metrikaOn, eventJsonLd } from '../lib/seo';
-import { metrikaId } from '../data/camp';
+import CookieBanner from '../components/CookieBanner.astro';
+import { missing } from '../data/legal';
 
 type Props = {
   title?: string;
@@ -20,6 +22,8 @@ const siteUrl = new URL(base, Astro.site).href;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const ogImage = Astro.props.ogImage ?? new URL('og.jpg', siteUrl).href;
 const closed = isPreview || noindex;
+// the real site must not go live with [placeholders] in the policy, the consent and the footer
+if (metrikaOn && missing.length && process.env.IHL_TEST_PROD !== "1") throw new Error(`src/data/legal.ts: fill in ${missing.join(', ')} before the production build`);
 ---
 
 <!doctype html>
@@ -49,40 +53,22 @@ const closed = isPreview || noindex;
     <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
 
+    <!-- opened with an anchor (/#cena): measure the real page before the browser jumps, see base.css -->
+    <script is:inline>
+      if (location.hash.length > 1) document.documentElement.classList.add('cv-all');
+      // touch screen or a phone browser: offer SMS next to WhatsApp (media queries alone misreport on some phones)
+      if (matchMedia('(pointer: coarse)').matches || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent)) document.documentElement.classList.add('is-phone');
+    </script>
     <link rel="preload" href={displayFont} as="font" type="font/woff2" crossorigin />
-    <Font cssVariable="--font-text" preload />
+    <link rel="preload" href={textFont} as="font" type="font/woff2" crossorigin />
     <Font cssVariable="--font-led" />
 
     {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(eventJsonLd(siteUrl, ogImage))} />}
 
-    {
-      metrikaOn && (
-        <script is:inline define:vars={{ metrikaId }}>
-          window.__metrikaId = metrikaId;
-          window.addEventListener('load', function () {
-            setTimeout(function () {
-              (function (m, e, t, r, i, k, a) {
-                m[i] = m[i] || function () { (m[i].a = m[i].a || []).push(arguments); };
-                m[i].l = 1 * new Date();
-                k = e.createElement(t); a = e.getElementsByTagName(t)[0];
-                k.async = 1; k.src = r; a.parentNode.insertBefore(k, a);
-              })(window, document, 'script', 'https://mc.yandex.ru/metrika/tag.js', 'ym');
-              window.ym(metrikaId, 'init', { clickmap: true, trackLinks: true, accurateTrackBounce: true, webvisor: true });
-            }, 1500);
-          });
-        </script>
-      )
-    }
   </head>
   <body>
     <a class="skip-link" href="#main">К содержанию</a>
     <slot />
-    {
-      metrikaOn && (
-        <noscript>
-          <div><img src={`https://mc.yandex.ru/watch/${metrikaId}`} style="position:absolute; left:-9999px;" alt="" /></div>
-        </noscript>
-      )
-    }
+    {metrikaOn && <CookieBanner />}
   </body>
 </html>

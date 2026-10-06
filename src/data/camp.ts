@@ -44,7 +44,7 @@ export const camp = {
 } as const;
 
 export const contacts = {
-  coordinator: { name: 'Олег', role: 'координатор лагеря', phone: '+7 938 457-89-82', tel: '+79384578982' },
+  coordinator: { name: 'Олег', role: 'координатор сборов', phone: '+7 938 457-89-82', tel: '+79384578982' },
   headCoach: { name: 'Максим Сергеевич', role: 'главный тренер', phone: '+7 938 438-91-63', tel: '+79384389163' },
   whatsapp: '79384389163',
   telegram: 'https://t.me/icehockeylife',

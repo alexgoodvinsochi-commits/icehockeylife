@@ -1,0 +1,82 @@
+---
+// Production only (metrikaOn). Yandex Metrica loads after the visitor taps «Разрешить», never before:
+// the counter's own terms make the site owner the operator of visitors' personal data.
+// Settings follow the legal review: no link tracking (wa.me and sms: links carry the sign-up text), no Webvisor.
+import { metrikaId } from '../data/camp';
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+---
+
+<div class="cookie" data-cookie hidden role="region" aria-label="Cookie">
+  <p class="cookie__text">
+    <span class="cookie__long">Мы используем cookie и Яндекс Метрику, чтобы видеть общую статистику посещений и делать сайт удобнее. Сайт работает и без них.</span>
+    <span class="cookie__short">Разрешить cookie и Яндекс Метрику для статистики посещений?</span>
+    <a href={`${base}politika/#cookie`}>Подробнее</a>
+  </p>
+  <div class="cookie__btns">
+    <button type="button" class="cookie__yes" data-cookie-yes>Разрешить</button>
+    <button type="button" class="cookie__no" data-cookie-no>Запретить</button>
+  </div>
+</div>
+
+<script is:inline define:vars={{ metrikaId }}>
+  (function () {
+    var KEY = 'ihl-cookie';
+    var box = document.querySelector('[data-cookie]');
+    if (!box) return;
+    var read = function () { try { return localStorage.getItem(KEY); } catch (e) { return null; } };
+    var save = function (v) { try { if (v) localStorage.setItem(KEY, v); else localStorage.removeItem(KEY); } catch (e) {} };
+    var loaded = false;
+    var load = function () {
+      if (loaded) return;
+      loaded = true;
+      window.__metrikaId = metrikaId;
+      (function (m, e, t, r, i, k, a) {
+        m[i] = m[i] || function () { (m[i].a = m[i].a || []).push(arguments); };
+        m[i].l = 1 * new Date();
+        k = e.createElement(t); a = e.getElementsByTagName(t)[0];
+        k.async = 1; k.src = r; a.parentNode.insertBefore(k, a);
+      })(window, document, 'script', 'https://mc.yandex.ru/metrika/tag.js', 'ym');
+      window.ym(metrikaId, 'init', { clickmap: true, trackLinks: false, accurateTrackBounce: true, webvisor: false });
+    };
+    box.querySelector('[data-cookie-yes]').addEventListener('click', function () { save('yes'); box.hidden = true; load(); });
+    box.querySelector('[data-cookie-no]').addEventListener('click', function () { save('no'); box.hidden = true; });
+    document.addEventListener('click', function (e) {
+      var b = e.target.closest && e.target.closest('[data-cookie-settings]');
+      if (!b) return;
+      save(null);
+      box.hidden = false;
+      box.querySelector('[data-cookie-yes]').focus();
+    });
+    var choice = read();
+    if (choice === 'yes') {
+      // keep the counter off the critical path
+      if (document.readyState === 'complete') setTimeout(load, 1500);
+      else window.addEventListener('load', function () { setTimeout(load, 1500); });
+    } else if (choice !== 'no') {
+      box.hidden = false;
+    }
+  })();
+</script>
+
+<style>
+  .cookie {
+    position: fixed; z-index: 60; left: 16px; right: 16px; bottom: 16px; margin-inline: auto; max-width: 760px;
+    display: flex; gap: 14px 20px; align-items: center; flex-wrap: wrap;
+    background: var(--c-ink); color: #fff; border-radius: var(--r-s); padding: 14px 16px;
+    box-shadow: 0 8px 28px rgb(11 30 63 / .28);
+  }
+  .cookie__text { flex: 1 1 320px; font-size: .9rem; line-height: 1.4; color: rgb(255 255 255 / .9); }
+  .cookie__text a { color: #fff; font-weight: 600; }
+  .cookie__short { display: none; }
+  .cookie__btns { display: flex; gap: 8px; }
+  .cookie__btns button { min-height: 44px; padding: 0 18px; border-radius: var(--r-s); font-weight: 600; font-size: .95rem; cursor: pointer; }
+  .cookie__yes { border: 0; background: #fff; color: var(--c-ink); }
+  .cookie__no { border: 1.5px solid rgb(255 255 255 / .6); background: none; color: #fff; }
+  @media (max-width: 560px) {
+    .cookie { left: 8px; right: 8px; bottom: 8px; }
+    .cookie__long { display: none; }
+    .cookie__short { display: inline; }
+    .cookie__btns { width: 100%; }
+    .cookie__btns button { flex: 1; }
+  }
+</style>

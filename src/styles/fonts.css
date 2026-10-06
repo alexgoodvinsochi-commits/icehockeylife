@@ -1,3 +1,22 @@
+/* Text face: Golos Text (OFL), one self-built file for Russian + Basic Latin + the site's punctuation and ₽,
+   so a page load swaps fonts once instead of once per unicode-range subset. Weights 400–700 only. */
+@font-face {
+  font-family: 'IHL Golos';
+  src: url('../assets/fonts/ihl-golos.woff2') format('woff2');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+/* Arial tuned to Golos metrics, so the swap does not move the text */
+@font-face {
+  font-family: 'IHL Golos fallback';
+  src: local('Arial');
+  size-adjust: 108.5687%;
+  ascent-override: 90.2654%;
+  descent-override: 20.2637%;
+  line-gap-override: 0%;
+}
+
 /* Display face: Sofia Sans Extra Condensed (OFL), self-built with Russian letterforms frozen into the default
    glyphs (stock builds draw Bulgarian forms unless the browser applies locl from lang="ru").
    Sofia has no ₽, so the rouble sign comes from Fira Sans Extra Condensed (OFL): a one-glyph family that sits
@@ -5,7 +24,7 @@
 @font-face {
   font-family: 'IHL Sofia XC';
   src: url('../assets/fonts/ihl-sofia-xc.woff2') format('woff2');
-  font-weight: 1 1000;
+  font-weight: 600 1000;
   font-style: normal;
   font-display: swap;
 }

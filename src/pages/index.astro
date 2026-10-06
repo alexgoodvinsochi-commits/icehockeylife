@@ -40,6 +40,10 @@ import MobileBar from '../components/MobileBar.astro';
 <script>
   import { initDialogs } from '../scripts/dialogs';
   import { applyDates } from '../scripts/dates';
+  import { initAnchors } from '../scripts/anchors';
+  import { initCallGoals } from '../scripts/goals';
+  initAnchors();
+  initCallGoals();
   initDialogs();
   applyDates();
 </script>

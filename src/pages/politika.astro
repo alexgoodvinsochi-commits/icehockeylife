@@ -1,0 +1,11 @@
+---
+import LegalDoc from '../components/LegalDoc.astro';
+import { policy } from '../data/legal';
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+---
+
+<LegalDoc
+  doc={policy}
+  description="Как Ice Hockey Life обрабатывает и защищает персональные данные из заявки на хоккейные сборы и данные о посещении сайта."
+  other={{ href: `${base}soglasie/`, label: 'Согласие на обработку персональных данных' }}
+/>
