@@ -1,0 +1,53 @@
+---
+import { contacts } from '../data/camp';
+---
+
+<div class="mbar" data-mbar aria-hidden="true" inert>
+  <a class="mbar__call" href={`tel:${contacts.coordinator.tel}`}>
+    <b>Позвонить Олегу</b>
+    <span class="nowrap">{contacts.coordinator.phone}</span>
+  </a>
+  <a class="mbar__cta" href="#zapis">Записаться</a>
+</div>
+
+<script>
+  // phones only: the bar appears after the first screen and steps aside while the form itself is on screen
+  const bar = document.querySelector<HTMLElement>('[data-mbar]');
+  const hero = document.querySelector('#top');
+  const form = document.querySelector('#zapis');
+  if (bar && hero && form && 'IntersectionObserver' in window) {
+    let pastHero = false;
+    let formVisible = false;
+    const sync = () => {
+      const show = pastHero && !formVisible;
+      bar.classList.toggle('is-on', show);
+      bar.toggleAttribute('inert', !show);
+      bar.setAttribute('aria-hidden', String(!show));
+    };
+    new IntersectionObserver(([e]) => { pastHero = !e.isIntersecting; sync(); }).observe(hero);
+    new IntersectionObserver(([e]) => { formVisible = e.isIntersecting; sync(); }, { threshold: 0.15 }).observe(form);
+  }
+</script>
+
+<style>
+  .mbar { display: none; }
+  @media (max-width: 760px) {
+    .mbar {
+      position: fixed; z-index: 30; left: 0; right: 0; bottom: 0;
+      display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center;
+      padding: 10px var(--gutter) max(10px, env(safe-area-inset-bottom));
+      background: var(--c-board); box-shadow: inset 0 3px 0 var(--c-kick), 0 -1px 0 var(--c-hair);
+      translate: 0 110%; transition: translate .25s var(--ease-out);
+    }
+    .mbar.is-on { translate: 0 0; }
+    .mbar__call { display: grid; text-decoration: none; line-height: 1.2; min-height: 44px; align-content: center; }
+    .mbar__call b { font-weight: 600; font-size: .95rem; }
+    .mbar__call span { font-size: .85rem; color: var(--c-ink-2); }
+    .mbar__cta {
+      display: inline-flex; align-items: center; min-height: 48px; padding: 0 20px; border-radius: var(--r-s);
+      background: var(--c-red-line); color: #fff; text-decoration: none;
+      font-family: var(--f-display); font-weight: 850; font-size: 1.2rem; letter-spacing: .04em; text-transform: uppercase;
+    }
+    :global(body) { padding-bottom: calc(72px + env(safe-area-inset-bottom)); }
+  }
+</style>

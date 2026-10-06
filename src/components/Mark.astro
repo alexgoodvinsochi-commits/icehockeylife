@@ -1,0 +1,33 @@
+---
+// The «H» monogram from the Ice Hockey Life badge: left stem topped with a puck,
+// right stem is a stick with a taped blade. Solid version for small sizes.
+type Props = { size?: number; class?: string; title?: string };
+const { size = 40, class: cls, title } = Astro.props;
+---
+
+<svg
+  class:list={['mark', cls]}
+  width={size}
+  height={size}
+  viewBox="0 0 64 64"
+  role={title ? 'img' : undefined}
+  aria-hidden={title ? undefined : 'true'}
+  aria-label={title}
+>
+  <g fill="currentColor">
+    <rect x="12" y="8" width="15" height="9" rx="4"></rect>
+    <rect x="15.5" y="15" width="8" height="41"></rect>
+    <rect x="21" y="31" width="20" height="6.5"></rect>
+    <path d="M38 12a4 4 0 0 1 8 0v33.5l10.6 8.2a3.6 3.6 0 0 1 .7 5l-1.2 1.6a3.6 3.6 0 0 1-5 .7L38 51.2z"></path>
+  </g>
+  <g class="mark__cut" stroke-width="1.4" stroke-linecap="round" fill="none">
+    <path d="M47.6 50.6l-1.8 2.3M51 53.2l-1.8 2.3M54.3 55.8l-1.8 2.3"></path>
+  </g>
+  <rect class="mark__puck" x="12" y="10.6" width="15" height="1.6"></rect>
+</svg>
+
+<style>
+  .mark { flex: none; }
+  .mark__cut { stroke: var(--mark-bg, var(--c-ice)); }
+  .mark__puck { fill: var(--mark-bg, var(--c-ice)); }
+</style>

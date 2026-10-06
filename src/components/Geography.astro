@@ -1,0 +1,140 @@
+---
+import { map } from '../data/map';
+import { cities, countries, farthest } from '../data/cities';
+import { t } from '../lib/typo';
+
+const NBSP = String.fromCharCode(0xa0); // the display face has no narrow no-break space
+const fmt = (n: number) => n.toLocaleString('ru-RU').replace(/\s/g, NBSP);
+const sorted = [...cities].sort((a, b) => b.km - a.km);
+const dubai = cities.find((c) => c.name === 'Дубай')!;
+// labelled on the map: anchor side (start = label to the right of the dot)
+// minor labels are hidden on phones, where the map is small
+const labels: Record<string, { a: 'start' | 'end'; dy?: number; minor?: boolean }> = {
+  'Петропавловск-Камчатский': { a: 'end' },
+  'Новосибирск': { a: 'start' },
+  'Санкт-Петербург': { a: 'start', dy: -6 },
+  'Москва': { a: 'end' },
+  'Тарту': { a: 'end', dy: -10, minor: true },
+  'Минск': { a: 'end' },
+  'Северодвинск': { a: 'start', minor: true },
+  'Ханты-Мансийск': { a: 'start', minor: true },
+  'Екатеринбург': { a: 'start', minor: true },
+};
+---
+
+<section class="geo section" id="geografiya" aria-labelledby="geo-title">
+  <div class="wrap">
+    <div class="geo__head">
+      <h2 class="geo__title display" id="geo-title">{t('От Тарту до Камчатки')}</h2>
+      <p class="geo__lead">
+        {t(`На сборах Ice Hockey Life уже были игроки из ${cities.length} городов и ${countries} стран. Дальше всех ехать из Петропавловска-Камчатского: почти ${fmt(Math.round(farthest.km / 100) * 100)} км по прямой до Сириуса.`)}
+      </p>
+    </div>
+
+    <figure class="geo__map">
+      <svg viewBox={map.viewBox} role="img" aria-label={`Карта: ${cities.length} городов участников сборов и маршруты до Сириуса`}>
+        <g class="geo__land">
+          {Object.entries(map.land).filter(([k]) => k !== 'ru').map(([, d]) => <path class="geo__nb" d={d} />)}
+          <path class="geo__ru" d={map.land.ru} />
+        </g>
+        <g class="geo__routes">
+          {map.cities.filter((c) => c.route).map((c) => <path d={c.route} />)}
+        </g>
+        <g class="geo__dots">
+          {map.cities.map((c) => <circle cx={c.x} cy={c.y} r="4.2" />)}
+        </g>
+        <g class="geo__labels">
+          {
+            map.cities
+              .filter((c) => labels[c.name])
+              .map((c) => (
+                <text class:list={[labels[c.name].minor && 'is-minor']} x={c.x + (labels[c.name].a === 'start' ? 9 : -9)} y={c.y + 4 + (labels[c.name].dy ?? 0)} text-anchor={labels[c.name].a}>
+                  {c.name}
+                </text>
+              ))
+          }
+        </g>
+        <g class="geo__home">
+          <circle cx={map.sirius.x} cy={map.sirius.y} r="13" />
+          <circle cx={map.sirius.x} cy={map.sirius.y} r="5" />
+          <text x={map.sirius.x + 18} y={map.sirius.y + 6}>Сириус</text>
+        </g>
+      </svg>
+      <figcaption class="geo__inset">
+        <span class="geo__dot" aria-hidden="true"></span>
+        <span><b>Дубай, ОАЭ</b> {fmt(dubai.km)}&nbsp;км</span>
+      </figcaption>
+    </figure>
+
+    <details class="geo__all" data-geo-all>
+      <summary>Все {cities.length} городов списком</summary>
+    <ol class="geo__list" role="list">
+      {
+        sorted.map((c) => (
+          <li>
+            <span>
+              {c.name}
+              {c.country && <span class="geo__cc"> ({c.country})</span>}
+            </span>
+            <span class="geo__km num">{fmt(c.km)} км</span>
+          </li>
+        ))
+      }
+    </ol>
+    </details>
+  </div>
+</section>
+
+<script>
+  // the full list is open by default on wide screens; on phones it is one tap away
+  const all = document.querySelector<HTMLDetailsElement>('[data-geo-all]');
+  if (all && matchMedia('(min-width: 861px)').matches) all.open = true;
+</script>
+
+<style>
+  .geo { background: var(--c-board); }
+  .geo__head { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); gap: 20px clamp(24px, 5vw, 80px); align-items: end; }
+  .geo__title { font-size: var(--fs-h2); color: var(--c-blue-deep); }
+  .geo__lead { font-size: var(--fs-lead); line-height: 1.45; color: var(--c-ink-2); max-width: 40ch; }
+
+  .geo__map { position: relative; margin: clamp(24px, 4vw, 48px) 0 0; }
+  .geo__map svg { width: 100%; height: auto; overflow: visible; }
+  .geo__ru { fill: var(--c-ice); stroke: var(--c-hair-2); stroke-width: 1; stroke-linejoin: round; }
+  .geo__nb { fill: var(--c-ice-2); stroke: var(--c-hair); stroke-width: .8; }
+  .geo__routes path { fill: none; stroke: var(--c-blue-line); stroke-width: 1; opacity: .32; }
+  .geo__dots circle { fill: var(--c-red-line); stroke: #fff; stroke-width: 1.5; }
+  .geo__labels text { font-family: var(--f-text); font-size: 13px; font-weight: 500; fill: var(--c-ink); paint-order: stroke; stroke: var(--c-board); stroke-width: 4px; stroke-linejoin: round; }
+  .geo__home circle:first-child { fill: none; stroke: var(--c-blue-line); stroke-width: 3; }
+  .geo__home circle:last-child { fill: var(--c-blue-line); }
+  .geo__home text { font-family: var(--f-display); font-weight: 900; font-size: 26px; fill: var(--c-blue-deep); paint-order: stroke; stroke: var(--c-board); stroke-width: 5px; }
+  .geo__inset {
+    position: absolute; left: 1.5%; bottom: 4%; display: flex; align-items: center; gap: 10px;
+    background: var(--c-ice); border: 1px solid var(--c-hair-2); border-radius: var(--r-s);
+    padding: 10px 14px; font-size: var(--fs-small); color: var(--c-ink-2);
+  }
+  .geo__inset b { color: var(--c-ink); font-weight: 600; }
+  .geo__dot { width: 10px; height: 10px; border-radius: 50%; background: var(--c-red-line); flex: none; }
+  .geo__all summary { display: none; }
+
+  .geo__list { columns: 4 200px; column-gap: clamp(16px, 3vw, 40px); margin-top: clamp(24px, 4vw, 48px); font-size: var(--fs-small); }
+  .geo__list li { display: flex; justify-content: space-between; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--c-hair); break-inside: avoid; }
+  .geo__cc { color: var(--c-ink-3); }
+  .geo__list .geo__km { color: var(--c-ink-3); white-space: nowrap; }
+
+  @media (max-width: 860px) {
+    .geo__head { grid-template-columns: 1fr; }
+    .geo__map { margin-inline: calc(-1 * var(--gutter) + 4px); }
+    .geo__labels text { font-size: 34px; stroke-width: 8px; }
+    .geo__labels .is-minor { display: none; }
+    .geo__home text { font-size: 44px; }
+    .geo__inset { position: static; margin-top: 10px; width: max-content; }
+    .geo__all { margin-top: 18px; border-top: 1px solid var(--c-hair); }
+    .geo__all summary {
+      display: block; cursor: pointer; padding: 16px 0; font-weight: 600; color: var(--c-blue-line);
+      text-decoration: underline; text-underline-offset: .2em; list-style: none;
+    }
+    .geo__all summary::-webkit-details-marker { display: none; }
+    .geo__list { columns: 1; margin-top: 0; font-size: var(--fs-body); }
+    .geo__list li { hyphens: manual; }
+  }
+</style>

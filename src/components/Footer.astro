@@ -1,0 +1,92 @@
+---
+import { contacts, camp } from '../data/camp';
+import logo from '../assets/brand/logo.svg?raw';
+import vitokin from '../assets/brand/vitokin.svg?raw';
+import onetimer from '../assets/brand/onetimer.svg?raw';
+
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+const year = new Date().getFullYear();
+---
+
+<footer class="ftr" id="kontakty" aria-labelledby="ftr-title">
+  <div class="wrap">
+    <div class="ftr__top">
+      <div class="ftr__phones">
+        <h2 class="ftr__h" id="ftr-title">Контакты</h2>
+        <a class="ftr__phone" href={`tel:${contacts.coordinator.tel}`}>
+          <b class="num">{contacts.coordinator.phone}</b>
+          <span>{contacts.coordinator.name}, {contacts.coordinator.role}</span>
+        </a>
+        <a class="ftr__phone" href={`tel:${contacts.headCoach.tel}`}>
+          <b class="num">{contacts.headCoach.phone}</b>
+          <span>{contacts.headCoach.name}, {contacts.headCoach.role}</span>
+        </a>
+      </div>
+      <ul class="ftr__social" role="list">
+        <li><a href={`https://wa.me/${contacts.whatsapp}`} target="_blank" rel="noopener">WhatsApp</a></li>
+        <li><a href={contacts.telegram} target="_blank" rel="noopener">Telegram-канал</a></li>
+        <li><a href={contacts.vk} target="_blank" rel="noopener">ВКонтакте</a></li>
+      </ul>
+      <div class="ftr__badge" set:html={logo} aria-hidden="true" />
+    </div>
+
+    <div class="ftr__boards" aria-label="Партнёры">
+      <div class="ftr__board">
+        <span class="ftr__pnote">Партнёр сборов, российский хоккейный бренд</span>
+        <div class="ftr__plogo ftr__plogo--vitokin" role="img" aria-label="Vitokin" set:html={vitokin} />
+      </div>
+      <div class="ftr__board">
+        <span class="ftr__pnote">Технический партнёр, клюшки One Timer</span>
+        <div class="ftr__plogo" role="img" aria-label="One Timer" set:html={onetimer} />
+      </div>
+      <div class="ftr__board ftr__board--slogan">
+        <p class="display">{camp.slogan}</p>
+      </div>
+    </div>
+
+    <div class="ftr__legal">
+      <p>© 2023–{year} Ice Hockey Life. Цены на сайте — справочные и не являются публичной офертой.</p>
+      <p><a href={`${base}policy/`}>Политика обработки персональных данных</a></p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .ftr { background: var(--c-ink); color: #fff; padding-block: clamp(56px, 7vw, 112px) 32px; }
+  .ftr__top { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 3fr) minmax(0, 3fr); gap: 32px; align-items: start; }
+  .ftr__h { color: var(--c-crease); margin-bottom: 18px; font-size: var(--fs-body); font-weight: 600; }
+  .ftr__phone { display: grid; gap: 4px; text-decoration: none; margin-bottom: 20px; }
+  .ftr__phone b { font-family: var(--f-display); font-weight: 850; font-size: clamp(2.4rem, 1.5rem + 3.6vw, 4.6rem); line-height: .95; letter-spacing: .01em; }
+  .ftr__phone span { color: rgb(255 255 255 / .7); }
+  .ftr__phone:hover b { color: var(--c-kick); }
+  .ftr__social { display: grid; gap: 10px; padding-top: 40px; }
+  .ftr__social a { font-family: var(--f-display); font-weight: 800; font-size: 1.6rem; text-transform: uppercase; text-decoration: none; letter-spacing: .02em; }
+  .ftr__social a:hover { color: var(--c-crease); }
+  .ftr__social sup { font-size: .55em; vertical-align: super; }
+  .ftr__badge { justify-self: end; width: min(100%, 220px); fill: rgb(255 255 255 / .9); }
+
+  /* partners on the dasher boards: white panels over a yellow kick plate */
+  .ftr__boards {
+    display: grid; grid-template-columns: 1fr 1fr 2fr; margin-top: clamp(40px, 6vw, 88px);
+    background: var(--c-board); color: var(--c-ink); border-radius: var(--r-s) var(--r-s) 0 0;
+    border-bottom: 10px solid var(--c-kick); overflow: hidden;
+  }
+  .ftr__board { padding: 18px 22px 22px; display: grid; gap: 10px; align-content: start; min-height: 132px; }
+  .ftr__board + .ftr__board { border-left: 1px solid var(--c-hair); }
+  .ftr__pnote { color: var(--c-ink-3); font-size: .8rem; line-height: 1.3; }
+  .ftr__plogo { width: min(100%, 190px); fill: var(--c-ink); }
+  .ftr__plogo--vitokin { width: min(100%, 210px); padding-top: 18px; }
+  .ftr__board--slogan { align-content: center; background: var(--c-red-line); color: #fff; border-radius: 0 var(--r-s) 0 0; }
+  .ftr__board--slogan p { font-size: clamp(1.8rem, 1.2rem + 2.4vw, 3.4rem); }
+
+  .ftr__legal { display: grid; gap: 8px; margin-top: 40px; font-size: .875rem; color: rgb(255 255 255 / .62); }
+  .ftr__legal a { color: rgb(255 255 255 / .85); }
+
+  @media (max-width: 900px) {
+    .ftr__top { grid-template-columns: 1fr 1fr; }
+    .ftr__phones { grid-column: 1 / -1; }
+    .ftr__social { padding-top: 0; }
+    .ftr__boards { grid-template-columns: 1fr 1fr; }
+    .ftr__board--slogan { grid-column: 1 / -1; border-left: 0 !important; border-top: 1px solid var(--c-hair); border-radius: 0; }
+  }
+</style>

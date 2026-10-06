@@ -1,0 +1,79 @@
+---
+import { faq } from '../data/faq';
+import { contacts } from '../data/camp';
+---
+
+<section class="faq section" id="voprosy" aria-labelledby="faq-title">
+  <div class="wrap faq__grid">
+    <div class="faq__side">
+      <h2 class="faq__title display" id="faq-title">Вопросы<br />родителей</h2>
+      <p class="faq__ask">
+        Не нашли ответа — спросите координатора лагеря:
+        <a href={`tel:${contacts.coordinator.tel}`} class="nowrap">{contacts.coordinator.name}, {contacts.coordinator.phone}</a>
+      </p>
+    </div>
+    <div class="faq__list">
+      {
+        faq.map((item, i) => (
+          <details class="faq__item" open={i === 0}>
+            <summary>
+              <span class="faq__dot" aria-hidden="true" />
+              <span class="faq__q">{item.q}</span>
+            </summary>
+            <div class="faq__a">
+              {item.a.map((p) => <p>{p}</p>)}
+              {item.list && (
+                <ul>
+                  {item.list.map((li) => <li>{li}</li>)}
+                </ul>
+              )}
+              {item.after && item.after.map((p) => <p class="faq__after">{p}</p>)}
+            </div>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq__grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(28px, 5vw, 96px); align-items: start; }
+  .faq__side { position: sticky; top: calc(var(--header-h) + 32px); }
+  .faq__title { font-size: var(--fs-h2); color: var(--c-blue-deep); }
+  .faq__ask { margin-top: 24px; max-width: 26ch; color: var(--c-ink-2); }
+  .faq__ask a { color: var(--c-ink); font-weight: 600; }
+
+  .faq__list { border-top: 2px solid var(--c-ink); }
+  .faq__item { border-bottom: 1px solid var(--c-hair-2); }
+  .faq__item summary {
+    list-style: none; cursor: pointer;
+    display: grid; grid-template-columns: 26px 1fr; gap: 16px; align-items: start;
+    padding: 22px 0;
+  }
+  .faq__item summary::-webkit-details-marker { display: none; }
+  .faq__q { font-size: clamp(1.15rem, 1rem + .6vw, 1.5rem); font-weight: 600; line-height: 1.25; }
+  .faq__item summary:hover .faq__q { color: var(--c-blue-line); }
+
+  /* face-off spot: red disc between two white bands; becomes a hollow circle when open */
+  .faq__dot {
+    width: 22px; height: 22px; margin-top: 2px; border-radius: 50%;
+    border: 2px solid var(--c-red-line);
+    background: linear-gradient(transparent 0 18%, var(--c-red-line) 18% 82%, transparent 82%);
+    transition: background-size .25s var(--ease-out), transform .3s var(--ease-snap);
+    background-size: 100% 100%; background-repeat: no-repeat; background-position: center;
+  }
+  .faq__item[open] .faq__dot { background-size: 100% 0%; transform: rotate(90deg); }
+
+  .faq__a { padding: 0 0 26px 42px; max-width: 62ch; color: var(--c-ink-2); }
+  .faq__a > * + * { margin-top: .75em; }
+  .faq__a ul { padding-left: 1.1em; }
+  .faq__a li + li { margin-top: .35em; }
+  .faq__a li::marker { color: var(--c-red-line); }
+  .faq__after { color: var(--c-ink); font-weight: 500; }
+
+  @media (max-width: 860px) {
+    .faq__grid { grid-template-columns: 1fr; }
+    .faq__side { position: static; }
+    .faq__a { padding-left: 0; }
+  }
+</style>

@@ -1,0 +1,25 @@
+/* Display face: Sofia Sans Extra Condensed (OFL), self-built with Russian letterforms frozen into the default
+   glyphs (stock builds draw Bulgarian forms unless the browser applies locl from lang="ru").
+   Sofia has no ₽, so the rouble sign comes from Fira Sans Extra Condensed (OFL): a one-glyph family that sits
+   right after Sofia in the font stack (faces of one family with different weight ranges would not combine). */
+@font-face {
+  font-family: 'IHL Sofia XC';
+  src: url('../assets/fonts/ihl-sofia-xc.woff2') format('woff2');
+  font-weight: 1 1000;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'IHL Ruble';
+  src: url('../assets/fonts/ihl-ruble-800.woff2') format('woff2');
+  font-weight: 1 849;
+  unicode-range: U+20BD;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'IHL Ruble';
+  src: url('../assets/fonts/ihl-ruble-900.woff2') format('woff2');
+  font-weight: 850 1000;
+  unicode-range: U+20BD;
+  font-display: swap;
+}

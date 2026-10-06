@@ -1,0 +1,171 @@
+---
+import { camp, contacts } from '../data/camp';
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+const ages = Array.from({ length: 14 }, (_, i) => i + 4); // 4–17
+---
+
+<section class="signup section" id="zapis" aria-labelledby="signup-title">
+  <div class="wrap signup__grid">
+    <div class="signup__intro">
+      <h2 class="signup__title display" id="signup-title">Записаться на&nbsp;сборы</h2>
+      <p class="signup__lead">
+        {camp.datesHuman}, {camp.arena}. Заполните четыре поля — откроется WhatsApp с&nbsp;готовым сообщением
+        главному тренеру. Отправьте его, и&nbsp;мы ответим: расскажем программу и&nbsp;условия оплаты.
+      </p>
+      <dl class="signup__facts">
+        <div data-until={camp.price.earlyUntil}><dt>До 8 ноября, первым 15</dt><dd class="num">43&nbsp;680&nbsp;₽</dd></div>
+        <div class="signup__late"><dt>После 8 ноября</dt><dd class="num">48&nbsp;860&nbsp;₽</dd></div>
+      </dl>
+      <p class="signup__alt">
+        Удобнее голосом? <a href={`tel:${contacts.coordinator.tel}`}>{contacts.coordinator.name}, координатор:&nbsp;<span class="nowrap">{contacts.coordinator.phone}</span></a>
+      </p>
+    </div>
+
+    <form class="signup__form" data-lead novalidate>
+      <div class="field">
+        <label for="f-parent">Как к вам обращаться</label>
+        <input id="f-parent" name="parent" type="text" autocomplete="name" required maxlength="80" placeholder="Имя родителя" />
+      </div>
+      <div class="field">
+        <label for="f-phone">Телефон</label>
+        <input id="f-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required placeholder="+7 (___) ___-__-__" />
+      </div>
+      <div class="field">
+        <label for="f-age">Возраст ребёнка</label>
+        <select id="f-age" name="age" required>
+          <option value="" selected disabled>Выберите</option>
+          {ages.map((a) => <option value={`${a}`}>{a}</option>)}
+          <option value="18 и старше">18 и старше</option>
+        </select>
+      </div>
+      <fieldset class="field pos">
+        <legend>Амплуа</legend>
+        <div class="pos__row">
+          <label class="pos__opt">
+            <input type="radio" name="position" value="Нападающий" required />
+            <span>Нападающий</span>
+          </label>
+          <label class="pos__opt">
+            <input type="radio" name="position" value="Защитник" />
+            <span>Защитник</span>
+          </label>
+          <label class="pos__opt">
+            <input type="radio" name="position" value="Вратарь" />
+            <span>Вратарь <em>скидка</em></span>
+          </label>
+        </div>
+      </fieldset>
+
+      <button class="signup__submit" type="submit">
+        <span>Отправить в WhatsApp</span>
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4a.5.5 0 0 0 0-.5l-.8-1.9c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.3c0-.2-.2-.2-.5-.4Z"/></svg>
+      </button>
+      <p class="signup__or">
+        {'WhatsApp не открывается? '}<button type="button" class="signup__sms" data-lead-sms>Отправить заявку по&nbsp;СМС</button>
+      </p>
+      <p class="signup__legal">
+        Нажимая кнопку, вы даёте <a href={`${base}policy/#soglasie`}>согласие на обработку персональных данных</a>
+        и соглашаетесь с <a href={`${base}policy/`}>политикой</a>. Данные не сохраняются на сайте — сообщение отправляете вы сами.
+      </p>
+
+      <div class="signup__done" data-lead-done hidden role="status">
+        <p><b>Сообщение готово.</b> Если WhatsApp не открылся, отправьте его по&nbsp;СМС или скопируйте текст в&nbsp;любой мессенджер:</p>
+        <pre data-lead-preview></pre>
+        <div class="signup__done-actions">
+          <a data-lead-open href="#" target="_blank" rel="noopener">Открыть WhatsApp</a>
+          <a data-lead-sms-link href="#">Отправить СМС</a>
+          <button type="button" data-lead-copy>Скопировать текст</button>
+          <a href={`tel:${contacts.headCoach.tel}`}>Позвонить</a>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+
+<script>
+  import { initLeadForm } from '../scripts/lead';
+  document.querySelectorAll<HTMLFormElement>('form[data-lead]').forEach(initLeadForm);
+</script>
+
+<style>
+  .signup { background: var(--c-blue-deep); color: #fff; }
+  .signup__grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(32px, 6vw, 112px); align-items: start; }
+  .signup__title { font-size: var(--fs-h2); color: #fff; }
+  .signup__lead { margin-top: 24px; font-size: var(--fs-lead); line-height: 1.45; color: rgb(255 255 255 / .86); max-width: 34ch; }
+  .signup__facts { display: flex; flex-wrap: wrap; gap: 12px 40px; margin-top: 32px; }
+  .signup__facts dt { font-size: var(--fs-small); color: var(--c-crease); }
+  .signup__facts dd { font-family: var(--f-display); font-weight: 850; font-size: clamp(2.2rem, 1.6rem + 2vw, 3.4rem); line-height: 1; margin-top: 6px; }
+  .signup__facts div:first-child:not([hidden]) + .signup__late dd { color: rgb(255 255 255 / .62); }
+  .signup__alt { margin-top: 32px; color: rgb(255 255 255 / .78); }
+  .signup__alt a { color: #fff; font-weight: 600; }
+
+  .signup__form {
+    background: var(--c-board); color: var(--c-ink);
+    border-radius: var(--r-rink); padding: clamp(22px, 3vw, 40px);
+    display: grid; gap: 20px;
+    box-shadow: inset 0 -6px 0 var(--c-kick);
+  }
+  .field { display: grid; gap: 8px; border: 0; padding: 0; min-width: 0; }
+  .field label, .field legend { font-weight: 600; font-size: var(--fs-small); }
+  .field legend { margin-bottom: 8px; }
+  .field input, .field select {
+    width: 100%; min-height: 56px; padding: 14px 16px; font-size: 1.125rem;
+    border: 1.5px solid var(--c-hair-2); border-radius: var(--r-s); background: var(--c-ice);
+    transition: border-color .15s, background-color .15s;
+  }
+  .field select {
+    appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, var(--c-ink) 50%), linear-gradient(135deg, var(--c-ink) 50%, transparent 50%);
+    background-position: calc(100% - 22px) 50%, calc(100% - 16px) 50%;
+    background-size: 6px 6px; background-repeat: no-repeat;
+  }
+  .field input:focus, .field select:focus { outline: none; border-color: var(--c-blue-line); background-color: #fff; box-shadow: 0 0 0 3px var(--c-crease-tint); }
+  .field input:user-invalid, .field select:user-invalid { border-color: var(--c-red-line); }
+  .field input::placeholder { color: var(--c-ink-3); }
+
+  .pos__row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .pos__opt { position: relative; }
+  .pos__opt input { position: absolute; opacity: 0; inset: 0; }
+  .pos__opt span {
+    display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
+    min-height: 64px; padding: 8px 6px; border: 1.5px solid var(--c-hair-2); border-radius: var(--r-s);
+    font-family: var(--f-display); font-weight: 800; font-size: 1.2rem; text-transform: uppercase; letter-spacing: .02em; line-height: 1.05;
+    background: var(--c-ice); cursor: pointer; transition: all .15s;
+  }
+  .pos__opt em { font-style: normal; font-family: var(--f-text); font-weight: 600; font-size: .72rem; text-transform: none; letter-spacing: 0; color: var(--c-red-line); margin-top: 3px; }
+  .pos__opt input:checked + span { background: var(--c-blue-deep); border-color: var(--c-blue-deep); color: #fff; }
+  .pos__opt input:checked + span em { color: var(--c-kick); }
+  .pos__opt input:focus-visible + span { outline: 2px solid var(--c-red-line); outline-offset: 2px; }
+
+  .signup__submit {
+    display: flex; align-items: center; justify-content: center; gap: 12px;
+    min-height: 60px; border: 0; border-radius: var(--r-s);
+    background: var(--c-red-line); color: #fff;
+    font-family: var(--f-display); font-weight: 850; font-size: 1.45rem; letter-spacing: .04em; text-transform: uppercase;
+    transition: background-color .2s, transform .15s;
+  }
+  .signup__submit:hover { background: var(--c-red-deep); }
+  .signup__submit:active { transform: translateY(1px); }
+  .signup__or { margin-top: -8px; color: var(--c-ink-2); font-size: var(--fs-small); }
+  .signup__sms { border: 0; background: none; padding: 4px 0; font-weight: 600; color: var(--c-blue-line); text-decoration: underline; text-underline-offset: .18em; }
+  .signup__legal { font-size: .8125rem; color: var(--c-ink-3); line-height: 1.45; }
+  .signup__legal a { color: var(--c-ink-2); }
+
+  .signup__done { border-top: 1px solid var(--c-hair); padding-top: 18px; display: grid; gap: 12px; }
+  .signup__done pre {
+    white-space: pre-wrap; font: inherit; font-size: .9rem; background: var(--c-ice); border-radius: var(--r-s);
+    padding: 12px 14px; color: var(--c-ink-2);
+  }
+  .signup__done-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+  .signup__done-actions > * {
+    border: 1.5px solid var(--c-ink); background: none; border-radius: var(--r-s);
+    padding: 10px 14px; font-weight: 600; text-decoration: none; font-size: .95rem;
+  }
+
+  @media (max-width: 900px) {
+    .signup__grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 400px) {
+    .pos__opt span { font-size: 1.02rem; }
+  }
+</style>

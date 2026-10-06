@@ -1,0 +1,43 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+import Program from '../components/Program.astro';
+import Coaches from '../components/Coaches.astro';
+import Price from '../components/Price.astro';
+import Reviews from '../components/Reviews.astro';
+import Geography from '../components/Geography.astro';
+import Logistics from '../components/Logistics.astro';
+import Video from '../components/Video.astro';
+import Gallery from '../components/Gallery.astro';
+import Faq from '../components/Faq.astro';
+import Signup from '../components/Signup.astro';
+import Footer from '../components/Footer.astro';
+import MobileBar from '../components/MobileBar.astro';
+---
+
+<Base jsonLd>
+  <Header />
+  <main id="main">
+    <Hero />
+    <Program />
+    <Coaches />
+    <Price />
+    <Video />
+    <Gallery />
+    <Reviews />
+    <Geography />
+    <Logistics />
+    <Faq />
+    <Signup />
+  </main>
+  <Footer />
+  <MobileBar />
+</Base>
+
+<script>
+  import { initDialogs } from '../scripts/dialogs';
+  import { applyDates } from '../scripts/dates';
+  initDialogs();
+  applyDates();
+</script>

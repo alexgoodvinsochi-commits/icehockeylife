@@ -1,0 +1,138 @@
+---
+import { Image } from 'astro:assets';
+import { camp } from '../data/camp';
+import { t } from '../lib/typo';
+import logo from '../assets/brand/logo.svg?raw';
+import lockers from '../assets/photos/lockers-jerseys.jpg';
+---
+
+<section class="price section" id="cena" aria-labelledby="price-title">
+  <div class="wrap">
+    <h2 class="price__title display" id="price-title">{t('Сколько стоит и что входит')}</h2>
+
+    <!-- centre ice: the red line splits the price into «before» and «after» 8 November -->
+    <div class="ice" data-until={camp.price.earlyUntil}>
+      <div class="ice__early">
+        <p class="ice__when">{t('До 8 ноября, первые 15 участников')}</p>
+        <p class="ice__sum num">43&nbsp;680&nbsp;₽</p>
+      </div>
+      <div class="ice__line" aria-hidden="true">
+        <span class="ice__tag">8 ноября — красная линия</span>
+        <span class="ice__circle" set:html={logo}></span>
+      </div>
+      <div class="ice__late">
+        <p class="ice__when">{t('С 9 ноября, или когда закончатся 15 мест по ранней цене')}</p>
+        <p class="ice__sum ice__sum--late num">48&nbsp;860&nbsp;₽</p>
+      </div>
+      <div class="ice__led" data-countdown={camp.price.earlyUntil} role="timer" aria-live="off">
+        <span class="ice__led-cap">До конца ранней цены</span>
+        <span class="ice__led-num"><span data-countdown-num>…</span> <span data-countdown-word>дней</span></span>
+      </div>
+    </div>
+
+    <div class="ice ice--after" data-from={camp.price.earlyUntil} hidden>
+      <p class="ice__when">{t('Стоимость тренировок')}</p>
+      <p class="ice__sum num">48&nbsp;860&nbsp;₽</p>
+    </div>
+
+    <div class="terms">
+      <div class="terms__col">
+        <h3 class="terms__h">В стоимость входят</h3>
+        <ul class="terms__list" role="list">
+          <li>{t('Тренировки: 9 часов на льду и 16 часов вне льда за семь дней')}</li>
+          <li>{t('Форма для ОФП, фирменные джерси, шапки и подарки от IceHockeyLife — каждому участнику')}</li>
+        </ul>
+        <h3 class="terms__h terms__h--no">Не входят</h3>
+        <ul class="terms__list" role="list">
+          <li>{t('Проживание и питание. Отель-партнёр — «Сочи Парк Отель», цену для участников сборов назовёт координатор')}</li>
+          <li>{t('Дневное пребывание с питанием между тренировками — оплачивается отдельно')}</li>
+        </ul>
+      </div>
+      <div class="terms__col">
+        <div class="terms__crease">
+          <h3>Вратарям — скидка</h3>
+          <p>{t('Размер скидки и условия рассрочки назовёт координатор.')}</p>
+        </div>
+        <p class="terms__pay">{t('Оплатить сборы можно в рассрочку.')}</p>
+        <a class="btn btn--red" href="#zapis">Забронировать место</a>
+      </div>
+      <figure class="terms__photo">
+        <Image src={lockers} alt="Подарки участникам в шкафчиках раздевалки: фирменные джерси, кепки и форма" widths={[480, 800, 1100]} sizes="(min-width: 1000px) 40vw, 92vw" loading="lazy" />
+        <figcaption>{t('Так раздевалка выглядит в первый день: у каждого своё место, джерси и форма.')}</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<style>
+  .price__title { font-size: var(--fs-h2); color: var(--c-blue-deep); max-width: 14ch; }
+
+  .ice {
+    position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 340px); grid-template-rows: auto auto auto;
+    column-gap: clamp(24px, 4vw, 64px); margin-top: clamp(28px, 4vw, 56px);
+  }
+  .ice__early { grid-column: 1; grid-row: 1; padding-bottom: clamp(18px, 2vw, 28px); }
+  .ice__late { grid-column: 1; grid-row: 3; padding-top: clamp(18px, 2vw, 28px); }
+  .ice__when { font-weight: 600; color: var(--c-ink-2); max-width: 40ch; }
+  .ice__sum { font-family: var(--f-display); font-weight: 900; line-height: .85; font-size: clamp(4.5rem, 2.6rem + 7vw, 9.5rem); color: var(--c-red-line); margin-top: 8px; }
+  .ice__sum--late { color: var(--c-ink); font-size: clamp(3.4rem, 2.2rem + 4.6vw, 6.6rem); }
+
+  /* centre red line with white interval notches (NHL rule 1.5), centre circle with the IHL badge */
+  .ice__line {
+    grid-column: 1 / -1; grid-row: 2; position: relative; height: 14px; margin-inline: calc(-1 * var(--gutter));
+    background:
+      repeating-linear-gradient(90deg, transparent 0 46px, #fff 46px 62px) center / 100% 4px no-repeat,
+      var(--c-red-line);
+  }
+  .ice__tag {
+    position: absolute; left: var(--gutter); top: 50%; translate: 0 -50%;
+    background: var(--c-red-line); color: #fff; padding: 7px 14px 6px; border-radius: var(--r-s);
+    font-family: var(--f-display); font-weight: 800; font-size: clamp(1.1rem, .95rem + .5vw, 1.45rem); letter-spacing: .01em; white-space: nowrap;
+  }
+  .ice__circle {
+    position: absolute; left: 62%; top: 50%; translate: -50% -50%;
+    width: clamp(140px, 18vw, 260px); aspect-ratio: 1; border-radius: 50%;
+    border: 3px solid var(--c-blue-line); background: var(--c-ice);
+    display: grid; place-items: center; fill: var(--c-blue-line);
+  }
+  /* percent padding would resolve against the long red line, so size the badge directly */
+  .ice__circle :global(svg) { width: 70%; height: auto; }
+
+  /* the Bolshoy has an LED roof that works as a giant scoreboard — the countdown borrows that */
+  .ice__led {
+    grid-column: 2; grid-row: 1; align-self: start; justify-self: end; width: 100%;
+    background: #0b1119; color: #ffb43a; border-radius: var(--r-s); padding: 14px 18px 12px;
+    display: grid; gap: 4px;
+  }
+  .ice__led-cap { font-size: .8rem; color: rgb(255 180 58 / .78); }
+  .ice__led-num { font-family: var(--f-led); font-weight: 700; font-size: clamp(2.6rem, 2rem + 2vw, 3.6rem); line-height: 1; }
+
+  .ice--after { display: block; }
+
+  .terms { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 3fr) minmax(0, 5fr); gap: clamp(24px, 3.4vw, 56px); margin-top: clamp(48px, 6vw, 96px); align-items: start; }
+  .terms__h { font-family: var(--f-display); font-weight: 800; font-size: 1.6rem; line-height: 1; padding-bottom: 10px; border-bottom: 3px solid var(--c-blue-line); }
+  .terms__h--no { margin-top: 28px; border-color: var(--c-hair-2); }
+  .terms__list li { padding: 12px 0; border-bottom: 1px solid var(--c-hair); color: var(--c-ink-2); }
+  .terms__crease {
+    background: var(--c-crease-tint); border-top: 3px solid var(--c-red-line);
+    border-radius: 0 0 50% 50% / 0 0 30% 30%; padding: 18px 20px 30px;
+  }
+  .terms__crease h3 { font-family: var(--f-display); font-weight: 850; font-size: 2rem; line-height: 1; color: var(--c-blue-deep); }
+  .terms__crease p { margin-top: 8px; color: var(--c-ink); }
+  .terms__pay { margin: 22px 0; color: var(--c-ink-2); }
+  .terms__photo img { width: 100%; height: auto; border-radius: var(--r-s); display: block; }
+  .terms__photo figcaption { margin-top: 10px; font-size: var(--fs-small); color: var(--c-ink-2); }
+
+  @media (max-width: 1000px) {
+    .terms { grid-template-columns: 1fr 1fr; }
+    .terms__photo { grid-column: 1 / -1; grid-row: 1; }
+  }
+  @media (max-width: 720px) {
+    .ice { grid-template-columns: 1fr; }
+    .ice__led { grid-column: 1; grid-row: 4; margin-top: 20px; justify-self: stretch; }
+    .ice__circle { display: none; }
+    .ice__tag { font-size: .95rem; }
+    .terms { grid-template-columns: 1fr; }
+    .terms__photo { grid-row: auto; }
+  }
+</style>

@@ -1,0 +1,116 @@
+---
+import { Image } from 'astro:assets';
+import { camp, contacts } from '../data/camp';
+import { venue } from '../data/venue';
+import { t } from '../lib/typo';
+import photo from '../assets/photos/workout-mountains.jpg';
+
+const bring = [
+  'Страховка спортсмена, справка о здоровье, медицинский полис',
+  'Полный комплект хоккейной формы',
+  'На каждую тренировку: головной убор, кроссовки, бутылка воды',
+  '2 комплекта сменного нательного белья',
+];
+---
+
+<section class="log section" id="roditelyam" aria-labelledby="log-title">
+  <div class="wrap">
+    <div class="log__head">
+      <h2 class="log__title display" id="log-title">{t('Как всё устроено в Сириусе')}</h2>
+      <p class="log__lead">{t('В Сириусе ребёнок живёт с вами, а на тренировки вы его привозите. Есть два варианта дня.')}</p>
+    </div>
+
+    <div class="days">
+      <div class="day">
+        <h3 class="day__h">{t('Привозите сами')}</h3>
+        <ol class="day__line" role="list">
+          <li><b>Утро</b><span>{t('привезли к началу тренировок')}</span></li>
+          <li><b>Обед</b><span>{t('забрали пообедать')}</span></li>
+          <li><b>После обеда</b><span>{t('привезли на вторую часть')}</span></li>
+          <li><b>Вечер</b><span>{t('забрали после тренировок')}</span></li>
+        </ol>
+      </div>
+      <div class="day day--stay">
+        <h3 class="day__h">{t('Дневное пребывание')}</h3>
+        <ol class="day__line" role="list">
+          <li><b>Утро</b><span>{t('привезли на утреннюю тренировку')}</span></li>
+          <li class="day__long"><b>Весь день</b><span>{t('ребёнок остаётся с нами, питание включено')}</span></li>
+          <li><b>Вечер</b><span>{t('забрали после всех тренировок')}</span></li>
+        </ol>
+        <p class="day__note">{t('Дневное пребывание оплачивается отдельно.')}</p>
+      </div>
+    </div>
+
+    <div class="log__grid">
+      <div class="log__block">
+        <h3>Где</h3>
+        <p>{t(`${camp.arena}, ${venue.address}.`)}</p>
+        {venue.note && <p class="log__muted">{t(venue.note)}</p>}
+      </div>
+      <div class="log__block">
+        <h3>Жильё</h3>
+        <p>{t(`Проживание и питание в стоимость не входят. Отель-партнёр — «${camp.hotel.name}»: напишите нам, пришлём цены на проживание и питание для участника и семьи.`)}</p>
+      </div>
+      <div class="log__block">
+        <h3>Расписание</h3>
+        <p>{t('Точное расписание пришлём за 2 недели до сборов. Примерный распорядок дня можем прислать уже сейчас.')}</p>
+        <p><a href={`tel:${contacts.coordinator.tel}`}>{contacts.coordinator.name}, координатор: <span class="nowrap">{contacts.coordinator.phone}</span></a></p>
+      </div>
+      <div class="log__block log__block--bring">
+        <h3>Что взять с собой</h3>
+        <ul role="list">
+          {bring.map((b) => <li>{t(b)}</li>)}
+        </ul>
+      </div>
+    </div>
+
+    <figure class="log__photo">
+      <Image src={photo} alt="ОФП на открытом воздухе в Сириусе, на фоне гор и Олимпийского парка" widths={[640, 1024, 1600]} sizes="(min-width: 92rem) 88rem, 94vw" loading="lazy" />
+      <figcaption>{t('ОФП на улице — в Сириусе с видом на горы.')}</figcaption>
+    </figure>
+  </div>
+</section>
+
+<style>
+  .log__head { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 20px clamp(24px, 5vw, 80px); align-items: end; }
+  .log__title { font-size: var(--fs-h2); color: var(--c-blue-deep); }
+  .log__lead { font-size: var(--fs-lead); line-height: 1.45; color: var(--c-ink-2); max-width: 38ch; }
+
+  .days { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(16px, 3vw, 48px); margin-top: clamp(32px, 4vw, 56px); }
+  .day { background: var(--c-board); border-radius: var(--r-s); padding: clamp(18px, 2.4vw, 32px); box-shadow: inset 0 -6px 0 var(--c-kick); }
+  .day__h { font-family: var(--f-display); font-weight: 850; font-size: clamp(1.7rem, 1.3rem + 1.2vw, 2.4rem); line-height: 1; color: var(--c-ink); }
+  /* a real sequence of the day — drawn as a line with stops */
+  .day__line { position: relative; margin-top: 22px; display: grid; gap: 14px; padding-left: 28px; }
+  .day__line::before { content: ''; position: absolute; left: 8px; top: 8px; bottom: 8px; width: 3px; background: var(--c-blue-line); border-radius: 2px; }
+  .day__line li { position: relative; display: grid; grid-template-columns: 7.2em 1fr; gap: 12px; align-items: baseline; }
+  .day__line li::before {
+    content: ''; position: absolute; left: -26px; top: .35em; width: 14px; height: 14px; border-radius: 50%;
+    background: var(--c-board); border: 3px solid var(--c-blue-line);
+  }
+  .day__line b { font-weight: 600; }
+  .day__line span { color: var(--c-ink-2); }
+  .day--stay .day__line::before { background: var(--c-red-line); }
+  .day--stay .day__line li::before { border-color: var(--c-red-line); }
+  .day__long { padding-block: 10px; }
+  .day__note { margin-top: 18px; font-size: var(--fs-small); color: var(--c-ink-2); }
+
+  .log__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(20px, 3vw, 40px); margin-top: clamp(40px, 5vw, 72px); }
+  .log__block h3 { font-family: var(--f-display); font-weight: 800; font-size: 1.6rem; line-height: 1; padding-bottom: 10px; border-bottom: 3px solid var(--c-blue-line); margin-bottom: 12px; }
+  .log__block p + p { margin-top: 10px; }
+  .log__block p, .log__block li { color: var(--c-ink-2); }
+  .log__block a { color: var(--c-ink); font-weight: 600; }
+  .log__muted { font-size: var(--fs-small); }
+  .log__block li { padding: 6px 0; border-bottom: 1px solid var(--c-hair); }
+
+  .log__photo { margin-top: clamp(40px, 5vw, 72px); }
+  .log__photo img { width: 100%; height: clamp(240px, 36vw, 560px); object-fit: cover; border-radius: var(--r-s); }
+  .log__photo figcaption { margin-top: 10px; font-size: var(--fs-small); color: var(--c-ink-2); }
+
+  @media (max-width: 1000px) {
+    .log__grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 760px) {
+    .log__head, .days, .log__grid { grid-template-columns: 1fr; }
+    .day__line li { grid-template-columns: 1fr; gap: 2px; }
+  }
+</style>

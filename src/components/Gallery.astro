@@ -1,0 +1,122 @@
+---
+import { Image, getImage } from 'astro:assets';
+import { photos } from '../data/photos';
+
+// eager-load every photo in src/assets/photos so they are processed at build time
+const files = import.meta.glob<{ default: ImageMetadata }>('../assets/photos/*.jpg', { eager: true });
+const bySlug = Object.fromEntries(
+  Object.entries(files).map(([path, mod]) => [path.split('/').pop()!.replace('.jpg', ''), mod.default]),
+);
+
+// curated order: the story of a week, alternating ice and off-ice, people first
+// photos already used elsewhere on the page (program, price, video poster, cut-outs) are not repeated here;
+// 30 photos tile the 12-photo blocks exactly (12 + 12 + 6)
+const order = [
+  'huddle-coaches', 'smiling-boy-closeup', 'two-kids-skating', 'stretching-outdoor', 'coach-teaching', 'two-kids-battle',
+  'gymnastics-bridge', 'goalies-huddle', 'tps-shooting', 'wide-stance-boards', 'two-kids-smiling', 'mfr-roller',
+  'hands-up-game', 'coach-with-goalie', 'little-skaters', 'shooting-office', 'group-puck-battle', 'two-goalies',
+  'coaches-lineup-ice', 'ball-game-indoor', 'boy-red-jersey', 'goalies-net', 'stickhandling-office', 'goalie-stance',
+  'locker-room', 'team-photo-arena', 'coaches-at-arena', 'team-at-arena', 'coach-tracksuit', 'kids-at-table',
+];
+const meta = Object.fromEntries(photos.map((p) => [p.file, p]));
+const items = await Promise.all(
+  order
+    .filter((f) => bySlug[f])
+    .map(async (f) => {
+      const src = bySlug[f];
+      const full = await getImage({ src, widths: [960, 1680], format: 'webp' });
+      return { file: f, src, alt: meta[f]?.alt ?? '', full };
+    }),
+);
+const FIRST = 12;
+---
+
+<section class="gal section" id="foto" aria-labelledby="gal-title">
+  <div class="wrap">
+    <div class="gal__head">
+      <h2 class="gal__title display" id="gal-title">Как это было</h2>
+      <p class="gal__note">Фотографии с прошлых смен Ice Hockey Life. Нажмите, чтобы открыть крупно.</p>
+    </div>
+    <ul class="gal__grid" role="list" data-gal>
+      {
+        items.map((it, i) => (
+          <li class:list={['gal__item', i % 12 === 0 && 'gal__item--big', i % 12 === 6 && 'gal__item--big gal__item--right']} hidden={i >= FIRST} data-more={i >= FIRST ? '' : undefined}>
+            <a
+              href={it.full.src}
+              data-lightbox
+              data-srcset={it.full.srcSet.attribute}
+              data-sizes="100vw"
+            >
+              <Image src={it.src} alt={it.alt} widths={[360, 560, 840]} sizes="(min-width: 1100px) 30vw, (min-width: 640px) 45vw, 92vw" loading="lazy" />
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <button class="gal__more" type="button" data-gal-more>Показать все {items.length} фото</button>
+  </div>
+
+  <dialog class="lb" data-lightbox-dialog aria-label="Просмотр фотографий">
+    <img data-lb-img alt="" />
+    <div class="lb__bar">
+      <span class="lb__count num" data-lb-count></span>
+      <p class="lb__cap" data-lb-caption></p>
+      <div class="lb__nav">
+        <button type="button" data-lb-prev aria-label="Предыдущее фото">←</button>
+        <button type="button" data-lb-next aria-label="Следующее фото">→</button>
+        <button type="button" data-lb-close aria-label="Закрыть">×</button>
+      </div>
+    </div>
+  </dialog>
+</section>
+
+<script>
+  import { initLightbox } from '../scripts/lightbox';
+  initLightbox();
+  const more = document.querySelector<HTMLButtonElement>('[data-gal-more]');
+  more?.addEventListener('click', () => {
+    document.querySelectorAll<HTMLElement>('[data-gal] [data-more]').forEach((li) => (li.hidden = false));
+    more.remove();
+  });
+</script>
+
+<style>
+  .gal__head { display: flex; justify-content: space-between; align-items: end; gap: 24px; flex-wrap: wrap; margin-bottom: clamp(20px, 3vw, 40px); }
+  .gal__title { font-size: var(--fs-h2); color: var(--c-blue-deep); }
+  .gal__note { max-width: 32ch; color: var(--c-ink-2); }
+  /* 12-photo blocks tile the 6-column grid exactly: big left + 2 small, 3 small, big right + 2 small, 3 small */
+  .gal__grid { display: grid; grid-template-columns: repeat(6, 1fr); grid-auto-flow: dense; gap: clamp(6px, .8vw, 12px); }
+  .gal__item { grid-column: span 2; aspect-ratio: 3 / 2; }
+  .gal__item--big { grid-column: span 4; grid-row: span 2; aspect-ratio: auto; }
+  .gal__item--right { grid-column: 3 / span 4; }
+  .gal__item a { display: block; height: 100%; border-radius: var(--r-s); overflow: hidden; background: var(--c-ice-2); }
+  .gal__item img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s var(--ease-out); }
+  @media (hover: hover) { .gal__item a:hover img { transform: scale(1.03); } }
+  .gal__more {
+    display: block; margin: clamp(20px, 3vw, 32px) auto 0; padding: 14px 26px; border-radius: var(--r-s);
+    border: 2px solid var(--c-ink); background: none;
+    font-family: var(--f-display); font-weight: 800; font-size: 1.15rem; text-transform: uppercase; letter-spacing: .04em;
+  }
+  @media (hover: hover) { .gal__more:hover { background: var(--c-ink); color: #fff; } }
+
+  @media (max-width: 760px) {
+    .gal__grid { grid-template-columns: repeat(2, 1fr); }
+    .gal__item { grid-column: span 1; }
+    .gal__item--big, .gal__item--right { grid-column: 1 / -1; grid-row: auto; aspect-ratio: 3 / 2; }
+  }
+
+  .lb { border: 0; padding: 0; margin: 0; width: 100vw; height: 100dvh; max-width: none; max-height: none; background: rgb(6 12 24 / .96); color: #fff; }
+  .lb[open] { display: grid; grid-template-rows: 1fr auto; }
+  .lb img { width: 100%; height: 100%; object-fit: contain; padding: 12px; min-height: 0; }
+  .lb__bar { display: grid; grid-template-columns: auto 1fr auto; gap: 16px; align-items: center; padding: 12px var(--gutter) max(14px, env(safe-area-inset-bottom)); }
+  .lb__count { font-family: var(--f-led); font-size: 1.4rem; color: var(--c-kick); }
+  .lb__cap { font-size: var(--fs-small); color: rgb(255 255 255 / .8); }
+  .lb__nav { display: flex; gap: 6px; }
+  .lb__nav button { width: 48px; height: 48px; border-radius: 50%; border: 1.5px solid rgb(255 255 255 / .35); background: none; color: #fff; font-size: 1.3rem; }
+  .lb__nav button:hover { background: rgb(255 255 255 / .12); }
+  @media (max-width: 560px) {
+    .lb__bar { grid-template-columns: auto 1fr; }
+    .lb__cap { grid-column: 1 / -1; grid-row: 1; }
+    .lb__nav { justify-self: end; }
+  }
+</style>

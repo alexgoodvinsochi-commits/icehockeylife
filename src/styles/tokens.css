@@ -1,0 +1,54 @@
+/* Design tokens. Colours come from the rink itself: NHL/IIHF rule-book paint codes
+   (red lines PMS 186, blue lines PMS 286, goal crease PMS 298, white boards, light-yellow kick plate),
+   which happen to match the red / white / royal-blue Ice Hockey Life jerseys. */
+
+:root {
+  /* rink */
+  --c-ice: #f4f7fa;          /* «Лёд» — page background */
+  --c-ice-2: #e9eff4;        /* shaded ice, alternate surfaces */
+  --c-board: #ffffff;        /* «Борт» — cards, header */
+  --c-red-line: #c8102e;     /* «Красная линия» PMS 186 — action colour */
+  --c-red-deep: #a10c25;
+  --c-blue-line: #0033a0;    /* «Синяя линия» PMS 286 */
+  --c-blue-deep: #0b2a6f;    /* jersey royal, dark surfaces */
+  --c-crease: #41b6e6;       /* «Вратарская» PMS 298 — fills only, never text */
+  --c-crease-tint: #dcf1fa;
+  --c-kick: #f2e27d;         /* «Плинтус» — the yellow kick plate, rare accent */
+
+  /* ink */
+  --c-ink: #0b1e3f;          /* text on ice: 15.4:1 */
+  --c-ink-2: #3c4d66;        /* secondary text: 8.0:1 on ice */
+  --c-ink-3: #52627a;        /* tertiary: 5.6:1 on ice, 5.2:1 on shaded ice */
+  --c-hair: #d3dce5;         /* hairlines */
+  --c-hair-2: #b9c6d3;
+
+  /* type */
+  --f-display: 'IHL Sofia XC', 'IHL Ruble', 'Arial Narrow', sans-serif;
+  --f-text: var(--font-text), Arial, sans-serif;
+  --f-led: var(--font-led), ui-monospace, monospace;
+
+  --fs-mega: clamp(4.25rem, 2.2rem + 10.5vw, 13.5rem);   /* hero line */
+  --fs-h2: clamp(2.75rem, 1.6rem + 5.6vw, 7.5rem);       /* section titles */
+  --fs-h3: clamp(1.625rem, 1.25rem + 1.6vw, 2.5rem);
+  --fs-num: clamp(4.5rem, 3rem + 7vw, 11rem);            /* jersey numerals */
+  --fs-lead: clamp(1.1875rem, 1.05rem + 0.55vw, 1.5rem);
+  --fs-body: clamp(1rem, 0.96rem + 0.18vw, 1.125rem);
+  --fs-small: 0.9375rem;
+  --fs-label: 0.8125rem;
+
+  /* space */
+  --gutter: clamp(1rem, 0.5rem + 2.4vw, 3rem);
+  --section: clamp(4.5rem, 3rem + 7vw, 10rem);
+  --maxw: 92rem;
+  --measure: 38rem;
+
+  /* shape: the rink corner (8.5 m on a 30 m wide rink) is the only rounding we use */
+  --r-rink: 28px;
+  --r-s: 6px;
+
+  --ease-out: cubic-bezier(.2, .8, .2, 1);
+  --ease-snap: cubic-bezier(.3, 1.4, .4, 1);
+
+  --header-h: 64px;
+  color-scheme: light;
+}

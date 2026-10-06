@@ -1,0 +1,142 @@
+---
+import { Image } from 'astro:assets';
+import { onIce, offIce } from '../data/program';
+import { camp } from '../data/camp';
+import { t } from '../lib/typo';
+import goalie from '../assets/cutouts/goalie-net.png';
+import psych from '../assets/photos/psychologist-kids.jpg';
+import tps from '../assets/photos/tps-station.jpg';
+import video from '../assets/photos/video-analysis.jpg';
+
+const hours = [...Array(camp.hoursIce).fill('ice'), ...Array(camp.hoursOffIce).fill('off')];
+---
+
+<section class="prog section" id="programma" aria-labelledby="prog-title">
+  <div class="wrap">
+    <header class="prog__head">
+      <h2 class="prog__title display" id="prog-title">{t('25 часов тренировок за неделю')}</h2>
+      <div class="prog__bar" role="img" aria-label="9 часов на льду и 16 часов вне льда">
+        {hours.map((h) => <span class:list={['prog__hour', `prog__hour--${h}`]} />)}
+      </div>
+      <p class="prog__lead">
+        {t('На льду — мини-группы по 5–6 человек, у каждой свой тренер. Вне льда — растяжка и МФР, координация, гимнастика, психолог и видеоразбор, и каждое занятие ведёт свой специалист.')}
+      </p>
+    </header>
+
+    <div class="prog__cols">
+      <div class="prog__col">
+        <h3 class="prog__h"><b class="num">{camp.hoursIce}</b> {t('часов на льду')}</h3>
+        <ul class="prog__list" role="list">
+          {
+            onIce.map((it) => (
+              <li>
+                <h4>{it.title}</h4>
+                {it.text && <p>{t(it.text)}</p>}
+                {it.who && <p class="prog__who">{t(it.who)}</p>}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <div class="prog__col prog__col--off">
+        <h3 class="prog__h"><b class="num">{camp.hoursOffIce}</b> {t('часов вне льда')}</h3>
+        <ul class="prog__list prog__list--two" role="list">
+          {
+            offIce.map((it) => (
+              <li>
+                <h4>{it.title}</h4>
+                {it.text && <p>{t(it.text)}</p>}
+                {it.who && <p class="prog__who">{t(it.who)}</p>}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+
+    <ul class="prog__photos" role="list">
+      <li>
+        <Image src={tps} alt="Бросковая зона: тренажёр для бросков" widths={[400, 700]} sizes="(min-width: 900px) 30vw, 80vw" loading="lazy" />
+        <span>Бросковая зона</span>
+      </li>
+      <li>
+        <Image src={psych} alt="Психолог сборов разговаривает с детьми в раздевалке" widths={[400, 700]} sizes="(min-width: 900px) 30vw, 80vw" loading="lazy" />
+        <span>Занятие с психологом</span>
+      </li>
+      <li>
+        <Image src={video} alt="Видеоанализ: дети смотрят разбор игры на большом экране" widths={[400, 700]} sizes="(min-width: 900px) 30vw, 80vw" loading="lazy" />
+        <span>Видеоразбор</span>
+      </li>
+    </ul>
+
+    <aside class="goal" aria-labelledby="goal-title">
+      <div class="goal__text">
+        <h3 class="goal__title display" id="goal-title">Вратарям — своя программа и&nbsp;скидка</h3>
+        <p>
+          {t('С вратарями работают тренеры вратарей Алексей Красильников и Алексей Берестнев. С 2007 по 2021 год Красильников был старшим тренером и тренером вратарей Волгоградской спортивной школы по зимним видам спорта; его воспитанники Богдан Нефёдов и Ростислав Глущенко — члены сборной России.')}
+        </p>
+        <p class="goal__note">{t('Размер скидки для вратарей назовёт координатор.')}</p>
+      </div>
+      <div class="goal__art" aria-hidden="true">
+        <Image src={goalie} alt="" widths={[500, 800, 1200]} sizes="(min-width: 900px) 40vw, 90vw" loading="lazy" />
+      </div>
+    </aside>
+  </div>
+</section>
+
+<style>
+  .prog__head { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 20px clamp(24px, 5vw, 80px); align-items: end; }
+  .prog__title { font-size: var(--fs-h2); color: var(--c-blue-deep); grid-column: 1; }
+  .prog__lead { grid-column: 2; grid-row: 1 / span 2; align-self: end; color: var(--c-ink-2); font-size: var(--fs-lead); line-height: 1.45; }
+
+  /* one cell per hour: 9 ice (blue), 16 off-ice (red) */
+  .prog__bar { grid-column: 1; display: grid; grid-template-columns: repeat(25, 1fr); gap: 3px; max-width: 760px; }
+  .prog__hour { aspect-ratio: 1 / 1.6; border-radius: 2px; }
+  .prog__hour--ice { background: var(--c-blue-line); }
+  .prog__hour--off { background: var(--c-red-line); }
+  .prog__hour--ice:nth-child(9) { margin-right: 6px; }
+
+  .prog__cols { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: clamp(28px, 4vw, 64px); margin-top: clamp(40px, 5vw, 72px); }
+  .prog__h { display: flex; align-items: baseline; gap: 12px; font-family: var(--f-display); font-weight: 800; font-size: clamp(1.5rem, 1.2rem + 1vw, 2.2rem); line-height: 1; padding-bottom: 14px; border-bottom: 4px solid var(--c-blue-line); }
+  .prog__h b { font-weight: 900; font-size: 2.6em; line-height: .8; color: var(--c-blue-line); }
+  .prog__col--off .prog__h { border-color: var(--c-red-line); }
+  .prog__col--off .prog__h b { color: var(--c-red-line); }
+
+  .prog__list { margin-top: 6px; }
+  .prog__list li { padding: 18px 0; border-bottom: 1px solid var(--c-hair); }
+  .prog__list h4 { font-family: var(--f-display); font-weight: 800; font-size: 1.55rem; line-height: 1.05; }
+  .prog__list p { margin-top: 6px; color: var(--c-ink-2); }
+  .prog__list .prog__who { margin-top: 8px; color: var(--c-ink); font-size: var(--fs-small); font-weight: 500; padding-left: 14px; border-left: 3px solid var(--c-kick); }
+  .prog__list--two { display: grid; grid-template-columns: 1fr 1fr; column-gap: clamp(20px, 3vw, 48px); }
+
+  .prog__photos { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(8px, 1vw, 14px); margin-top: clamp(32px, 4vw, 56px); }
+  .prog__photos li { display: grid; gap: 8px; }
+  .prog__photos img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--r-s); }
+  .prog__photos span { font-size: var(--fs-small); color: var(--c-ink-2); }
+
+  /* the goal crease: the goalie's own zone on the rink */
+  .goal {
+    position: relative; display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); align-items: end; gap: 24px;
+    margin-top: clamp(48px, 6vw, 96px); background: var(--c-crease-tint);
+    border-top: 4px solid var(--c-red-line); border-radius: 0 0 50% 50% / 0 0 18% 18%;
+    padding: clamp(24px, 4vw, 56px) clamp(20px, 4vw, 56px) 0; overflow: hidden;
+  }
+  .goal__text { padding-bottom: clamp(28px, 5vw, 72px); }
+  .goal__title { font-size: clamp(2.2rem, 1.4rem + 3vw, 4.4rem); color: var(--c-blue-deep); }
+  .goal__text p { margin-top: 16px; max-width: 46ch; color: var(--c-ink); }
+  .goal__text .goal__note { color: var(--c-ink-2); font-size: var(--fs-small); }
+  .goal__art img { width: 100%; height: auto; display: block; }
+
+  @media (max-width: 900px) {
+    .prog__head { grid-template-columns: 1fr; }
+    .prog__lead { grid-column: 1; grid-row: auto; }
+    .prog__cols { grid-template-columns: 1fr; }
+    .prog__photos { grid-template-columns: repeat(3, 72%); overflow-x: auto; scroll-snap-type: x mandatory; margin-inline: calc(-1 * var(--gutter)); padding-inline: var(--gutter); }
+    .prog__photos li { scroll-snap-align: start; }
+    .goal { grid-template-columns: 1fr; border-radius: 0 0 50% 50% / 0 0 8% 8%; }
+    .goal__text { padding-bottom: 0; }
+  }
+  @media (max-width: 560px) {
+    .prog__list--two { grid-template-columns: 1fr; }
+  }
+</style>
