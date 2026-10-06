@@ -35,9 +35,12 @@ check('bio sheet opens', bioOpen);
 check('bio sheet has NHL pupils', await page.locator('#trener-stulov').innerText().then((t) => t.includes('Самсонов')));
 check('bio sheet hash', page.url().endsWith('#trener-stulov'));
 await page.screenshot({ path: `${out}/bio.png` });
+await page.locator('#trener-stulov [data-sheet-swap="trener-azimov"]').click();
+await page.waitForTimeout(400);
+check('«Следующий» swaps to the next bio', (await page.locator('#trener-azimov').evaluate((d) => d.open)) && !(await page.locator('#trener-stulov').evaluate((d) => d.open)) && page.url().endsWith('#trener-azimov'));
 await page.goBack();
 await page.waitForTimeout(300);
-check('Back closes bio', !(await page.locator('#trener-stulov').evaluate((d) => d.open)));
+check('Back closes bio', !(await page.locator('#trener-stulov').evaluate((d) => d.open)) && !(await page.locator('#trener-azimov').evaluate((d) => d.open)));
 
 // 1b. after an in-page jump (#zapis in the URL) closing a bio must not jump the page back to the anchor
 await page.locator('.hero__cta .btn').click();

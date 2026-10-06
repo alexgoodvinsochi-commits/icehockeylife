@@ -40,6 +40,19 @@ export function initDialogs() {
       }
       return;
     }
+    // «предыдущий / следующий» inside a sheet: swap sheets within the same history entry,
+    // so Back still closes the sheet instead of walking back through every bio that was opened
+    const swap = t.closest<HTMLElement>('[data-sheet-swap]');
+    if (swap) {
+      const from = swap.closest('dialog') as HTMLDialogElement | null;
+      const to = document.getElementById(swap.dataset.sheetSwap!) as HTMLDialogElement | null;
+      if (from && to && from !== to) {
+        from.close();
+        open(to, false);
+        history.replaceState({ dialog: to.id }, '', `#${to.id}`);
+      }
+      return;
+    }
     const closer = t.closest<HTMLElement>('[data-sheet-close]');
     if (closer) {
       const d = closer.closest('dialog') as HTMLDialogElement | null;

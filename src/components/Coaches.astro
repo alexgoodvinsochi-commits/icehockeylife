@@ -12,6 +12,7 @@ const portrait = (slug: string) => files[`../assets/staff/${slug}.png`].default;
 const head = coaches.filter((c) => c.group === 'head');
 const rest = coaches.filter((c) => c.group !== 'head');
 const maxim = coaches.find((c) => c.slug === 'kreidikov-maxim')!;
+const withBio = [...coaches, ...specialists].filter((p) => p.bio);
 
 // the card link says what the sheet holds instead of a generic «Подробнее»
 const more = (p: Person) =>
@@ -143,7 +144,12 @@ const split = (p: Person) => {
     <p class="team__note">{t(`Состав тренеров на смену ${camp.datesHuman} года подтвердит координатор.`)}</p>
   </div>
 
-  {[...coaches, ...specialists].filter((p) => p.bio).map((p) => <BioSheet person={p} portrait={portrait(p.photo)} />)}
+  {
+    // one sheet per person with a bio; «предыдущий / следующий» walk through all of them in roster order
+    withBio.map((p, i) => (
+      <BioSheet person={p} portrait={portrait(p.photo)} prev={withBio[(i - 1 + withBio.length) % withBio.length]} next={withBio[(i + 1) % withBio.length]} />
+    ))
+  }
 </section>
 
 <style>

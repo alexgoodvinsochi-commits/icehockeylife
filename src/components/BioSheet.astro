@@ -3,9 +3,10 @@ import { Image } from 'astro:assets';
 import type { Person } from '../data/staff';
 import { t } from '../lib/typo';
 
-type Props = { person: Person; portrait: ImageMetadata };
-const { person, portrait } = Astro.props;
+type Props = { person: Person; portrait: ImageMetadata; prev?: Person; next?: Person };
+const { person, portrait, prev, next } = Astro.props;
 const [surname, ...rest] = person.name.split(' ');
+const surnameOf = (p: Person) => p.name.split(' ')[0];
 // what a parent opens the sheet for comes first: pupils and coaching work; the playing career goes last
 const rank = (title: string) =>
   /^Воспитанники/.test(title) ? 0
@@ -47,6 +48,14 @@ const sections = [...(person.bio ?? [])].sort((a, b) => rank(a.title) - rank(b.t
           </section>
         ))
       }
+      {
+        prev && next && (
+          <nav class="bio__nav" aria-label="Другие тренеры">
+            <button type="button" data-sheet-swap={`trener-${prev.slug}`} aria-label={`Предыдущий: ${surnameOf(prev)}`}><span aria-hidden="true">←</span> {surnameOf(prev)}</button>
+            <button type="button" data-sheet-swap={`trener-${next.slug}`} aria-label={`Следующий: ${surnameOf(next)}`}>{surnameOf(next)} <span aria-hidden="true">→</span></button>
+          </nav>
+        )
+      }
     </div>
   </div>
 </dialog>
@@ -83,6 +92,12 @@ const sections = [...(person.bio ?? [])].sort((a, b) => rank(a.title) - rank(b.t
   .bio__sec h4 { font-family: var(--f-display); font-weight: 800; font-size: 1.45rem; line-height: 1; color: var(--c-ink); margin-bottom: 10px; }
   .bio__sec li { padding: 9px 0; border-top: 1px solid var(--c-hair); line-height: 1.45; }
   .bio__sec li:first-child { border-top: 0; padding-top: 0; }
+  .bio__nav { display: flex; justify-content: space-between; gap: 12px; padding-top: 18px; border-top: 1px solid var(--c-hair); }
+  .bio__nav button {
+    min-height: 44px; padding: 0 14px; border: 1.5px solid var(--c-hair-2); border-radius: var(--r-s); background: none;
+    font: 600 .95rem/1.2 var(--f-text); color: var(--c-ink); cursor: pointer;
+  }
+  @media (hover: hover) { .bio__nav button:hover { border-color: var(--c-ink); } }
 
   @media (max-width: 640px) {
     .bio { width: 100%; margin: auto 0 0; }
