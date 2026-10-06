@@ -49,6 +49,7 @@ import { camp, contacts } from '../data/camp';
       background: var(--c-red-line); color: #fff; text-decoration: none;
       font-family: var(--f-display); font-weight: 850; font-size: 1.2rem; letter-spacing: .04em; text-transform: uppercase;
     }
-    :global(body) { padding-bottom: calc(72px + env(safe-area-inset-bottom)); }
+    /* room for the bar under the footer, in the footer colour (not a light strip under the dark footer) */
+    :global(.ftr) { padding-bottom: calc(32px + 72px + env(safe-area-inset-bottom)) !important; }
   }
 </style>
