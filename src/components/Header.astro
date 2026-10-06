@@ -49,7 +49,11 @@ const to = (hash: string) => (onHome || hash === '#kontakty' ? hash : base + has
     const io = new IntersectionObserver(
       (entries) => {
         for (const e of entries) {
-          if (!e.isIntersecting) continue;
+          if (!e.isIntersecting) {
+            // leaving a section clears its own link: on the legal pages no other section would
+            links.forEach((a) => a.hash === `#${e.target.id}` && a.setAttribute('aria-current', 'false'));
+            continue;
+          }
           links.forEach((a) => a.setAttribute('aria-current', String(a.hash === `#${e.target.id}`)));
         }
       },

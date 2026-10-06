@@ -30,7 +30,9 @@ export function t(text: string): string {
       .replace(/Ice Hockey Life/g, 'Ice\u00a0Hockey\u00a0Life')
       // short prepositions Typograf leaves at line ends; a first name stays with the surname
       .replace(/(^|[\s«(])(вне|для|без|при|под|над|про)\s/gi, '$1$2\u00a0')
-      .replace(/(^|[\s«(])(Алексей|Анна|Богдан|Валерий|Дмитрий|Егор|Илья|Инна|Максим|Наталья|Никита|Николай|Олег|Павел|Роберт|Ростислав|Рустам|Светлана|Степан|Татьяна)\s(?=[А-ЯЁ])/g, '$1$2\u00a0');
+      .replace(/(^|[\s«(])(Алексей|Анна|Богдан|Валерий|Дмитрий|Егор|Илья|Инна|Максим|Наталья|Никита|Николай|Олег|Павел|Роберт|Ростислав|Рустам|Светлана|Степан|Татьяна)\s(?=[А-ЯЁ])/g, '$1$2\u00a0')
+      // legal references keep the number with its unit: «ч. 2 ст. 18.1», «п. 1 ч. 1 ст. 6»
+      .replace(/(^|[\s(])(ч|п|пп|ст)\.\s(?=\d)/g, '$1$2.\u00a0');
     // no break after the hyphen of «отеле-партнёре», «U-14» or «152-ФЗ», or the dash of «5–6» (U+2060 word joiner: invisible
     // in both faces); web and e-mail addresses keep their exact characters
     out = out
