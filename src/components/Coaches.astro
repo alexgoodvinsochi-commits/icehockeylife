@@ -4,6 +4,7 @@ import { coaches, specialists, type Person } from '../data/staff';
 import { contacts } from '../data/camp';
 import { t } from '../lib/typo';
 import BioSheet from './BioSheet.astro';
+import lineup from '../assets/photos/coaches-lineup-ice.jpg';
 
 const files = import.meta.glob<{ default: ImageMetadata }>('../assets/staff/*.png', { eager: true });
 const portrait = (slug: string) => files[`../assets/staff/${slug}.png`].default;
@@ -37,6 +38,11 @@ const split = (p: Person) => {
         </div>
       </div>
     </div>
+
+    <figure class="team__photo">
+      <Image src={lineup} alt="Тренеры Ice Hockey Life в строю на льду арены" widths={[640, 1024, 1600]} sizes="(min-width: 92rem) 88rem, 94vw" loading="lazy" />
+      <figcaption>{t('Тренерский штаб на льду: за каждой группой из 5–6 игроков закреплён свой тренер.')}</figcaption>
+    </figure>
 
     <ul class="team__head" role="list">
       {
@@ -166,6 +172,9 @@ const split = (p: Person) => {
   button.card:focus-visible { outline: none; }
   button.card:focus-visible .card__photo { outline: 3px solid var(--c-red-line); outline-offset: 3px; }
 
+  .team__photo { margin-top: clamp(32px, 4vw, 56px); }
+  .team__photo img { width: 100%; height: clamp(220px, 34vw, 520px); object-fit: cover; object-position: center 40%; border-radius: var(--r-s); }
+  .team__photo figcaption { margin-top: 10px; font-size: var(--fs-small); color: var(--c-ink-2); }
   .team__head { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(16px, 2.4vw, 36px); margin-top: clamp(40px, 5vw, 72px); }
   .card--big .card__name b { font-size: clamp(2.4rem, 1.8rem + 2vw, 3.6rem); }
   .card--big .card__fact { font-size: var(--fs-body); color: var(--c-ink); }

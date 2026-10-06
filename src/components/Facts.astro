@@ -1,0 +1,62 @@
+---
+import { camp } from '../data/camp';
+import { t } from '../lib/typo';
+
+// one place where a parent can compare the camp with others: the facts, nothing else
+const NB = String.fromCharCode(0xa0); // no-break space
+const rows: { k: string; v: string; href?: string; until?: string; from?: string }[] = [
+  { k: 'Даты', v: '4–10 января 2027 года, семь дней. Точное расписание пришлём за 2 недели до сборов' },
+  { k: 'Где', v: 'Ледовый дворец «Большой», Сириус (Сочи) — хоккейная арена Олимпиады-2014' },
+  { k: 'Тренировки', v: '9 часов на льду и 16 часов вне льда: ОФП и СФП, бросковая зона, растяжка и МФР, гимнастика, координация, психолог, видеоанализ' },
+  { k: 'Группы', v: '5–6 человек по возрасту и уровню, за каждой группой закреплён тренер', href: '#trenery' },
+  { k: 'Вратари', v: 'Отдельная программа с тренерами вратарей и скидка' },
+  { k: 'Стоимость', v: `43${NB}680${NB}₽ для первых 15, кто забронирует до 8 ноября, затем 48${NB}860${NB}₽. Только тренировки, можно в рассрочку`, href: '#cena', until: camp.price.earlyUntil },
+  { k: 'Стоимость', v: `48${NB}860${NB}₽ — только тренировки, можно в рассрочку`, href: '#cena', from: camp.price.earlyUntil },
+  { k: 'Каждому', v: 'Форма для ОФП, фирменные джерси, шапки и подарки от IceHockeyLife' },
+  { k: 'Жильё', v: `Не входит в стоимость. Отель-партнёр — «${camp.hotel.name}», цену назовёт координатор`, href: '#roditelyam' },
+];
+---
+
+<section class="facts" aria-labelledby="facts-title">
+  <div class="wrap facts__grid">
+    <h2 class="facts__title display" id="facts-title">Коротко о&nbsp;сборах</h2>
+    <dl class="facts__list">
+      {
+        rows.map((r) => (
+          <div class="facts__row" data-until={r.until} data-from={r.from} hidden={!!r.from}>
+            <dt>{r.k}</dt>
+            <dd>
+              {t(r.v)}
+              {r.href && (
+                <>
+                  {' '}
+                  <a href={r.href} aria-label={`Подробнее: ${r.k.toLowerCase()}`}>Подробнее</a>
+                </>
+              )}
+            </dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</section>
+
+<style>
+  .facts { padding-block: clamp(8px, 2vw, 24px) var(--section); }
+  .facts__grid { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 9fr); gap: clamp(20px, 4vw, 64px); align-items: start; }
+  .facts__title { font-size: var(--fs-h3); color: var(--c-blue-deep); padding-top: 14px; }
+  .facts__list { border-top: 3px solid var(--c-ink); display: grid; grid-template-columns: 1fr 1fr; column-gap: clamp(20px, 3vw, 48px); }
+  .facts__row { display: grid; grid-template-columns: 7.5em 1fr; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--c-hair-2); }
+  .facts__row dt { font-weight: 600; color: var(--c-ink); }
+  .facts__row dd { margin: 0; color: var(--c-ink-2); }
+  .facts__row a { color: var(--c-blue-line); font-weight: 600; white-space: nowrap; }
+
+  @media (max-width: 900px) {
+    .facts__grid { grid-template-columns: 1fr; }
+    .facts__title { padding-top: 0; }
+    .facts__list { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 420px) {
+    .facts__row { grid-template-columns: 1fr; gap: 2px; }
+  }
+</style>
