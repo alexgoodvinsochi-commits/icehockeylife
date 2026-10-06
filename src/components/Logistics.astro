@@ -91,6 +91,8 @@ const bring = [
   }
   .day__line b { font-weight: 600; }
   .day__line span { color: var(--c-ink-2); }
+  /* the line stops at the last stop: below it the card colour covers it, however tall the last item is */
+  .day__line li:last-child::after { content: ''; position: absolute; left: -21px; top: calc(.35em + 14px); bottom: 0; width: 5px; background: var(--c-board); }
   .day--stay .day__line::before { background: var(--c-red-line); }
   .day--stay .day__line li::before { border-color: var(--c-red-line); }
   .day__long { padding-block: 10px; }
@@ -108,6 +110,7 @@ const bring = [
   .log__map { padding-block: 10px; }
   .log__muted { font-size: var(--fs-small); }
   .log__block li { padding: 6px 0; border-bottom: 1px solid var(--c-hair); }
+  .log__block li:first-child { padding-top: 0; }
 
   .log__photo { margin-top: clamp(28px, 4vw, 48px); }
   .log__photo img { width: 100%; height: clamp(240px, 36vw, 560px); object-fit: cover; object-position: 50% 80%; border-radius: var(--r-s); }

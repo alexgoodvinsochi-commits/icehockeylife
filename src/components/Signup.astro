@@ -11,8 +11,8 @@ const consentUrl = new URL(`${base}soglasie/`, Astro.site).href.replace(/^https?
     <div class="signup__intro">
       <h2 class="signup__title display" id="signup-title">Записаться на&nbsp;сборы</h2>
       <p class="signup__lead">
-        {camp.datesHuman}, {camp.arena}.<span data-until={camp.overAfter}> Заполните четыре поля — откроется WhatsApp с&nbsp;готовым сообщением
-        главному тренеру. Отправьте его — в&nbsp;ответ расскажем о&nbsp;программе и&nbsp;условиях оплаты<span data-until={camp.price.earlyUntil}>, а&nbsp;заодно скажем,
+        {camp.datesHuman}, {camp.arena}.<span data-until={camp.overAfter}> Заполните четыре поля&nbsp;— откроется WhatsApp с&nbsp;готовым сообщением
+        главному тренеру. Отправьте его&nbsp;— в&nbsp;ответ расскажем о&nbsp;программе и&nbsp;условиях оплаты<span data-until={camp.price.earlyUntil}>, а&nbsp;заодно скажем,
         осталось&nbsp;ли место по&nbsp;ранней цене</span>.</span>
       </p>
       <dl class="signup__facts" data-until={camp.overAfter}>
@@ -25,14 +25,14 @@ const consentUrl = new URL(`${base}soglasie/`, Astro.site).href.replace(/^https?
     </div>
 
     <div class="signup__over" data-from={camp.overAfter} hidden>
-      <p><b>{`Сборы ${camp.datesHuman} года прошли.`}</b> О&nbsp;следующих сборах рассказываем в&nbsp;Telegram-канале и&nbsp;ВКонтакте, ссылки — внизу страницы.</p>
+      <p><b>{`Сборы ${camp.datesHuman} года прошли.`}</b> О&nbsp;следующих сборах рассказываем в&nbsp;Telegram-канале и&nbsp;ВКонтакте, ссылки&nbsp;— внизу страницы.</p>
       <p>Или позвоните координатору: <a class="nowrap" href={`tel:${contacts.coordinator.tel}`}>{contacts.coordinator.phone}</a>, {contacts.coordinator.name}.</p>
     </div>
 
     <form class="signup__form" data-lead data-consent-url={consentUrl} data-revision={revision} data-until={camp.overAfter} novalidate>
       <p class="signup__nudge" data-lead-back hidden role="status">
         <b>Сообщение ушло?</b> Если рядом с&nbsp;ним в&nbsp;WhatsApp часики, позвоните координатору:
-        <a class="nowrap" href={`tel:${contacts.coordinator.tel}`}>{contacts.coordinator.phone}</a> — или заполните форму ещё раз<span class="only-touch"> и&nbsp;отправьте заявку по&nbsp;СМС</span>.
+        <a class="nowrap" href={`tel:${contacts.coordinator.tel}`}>{contacts.coordinator.phone}</a>&nbsp;— или заполните форму ещё раз<span class="only-touch"> и&nbsp;отправьте заявку по&nbsp;СМС</span>.
       </p>
       <div class="field">
         <label for="f-parent">Как к вам обращаться</label>
@@ -41,11 +41,11 @@ const consentUrl = new URL(`${base}soglasie/`, Astro.site).href.replace(/^https?
       <div class="field">
         <label for="f-phone">Телефон</label>
         <input id="f-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required placeholder="+7 (___) ___-__-__" aria-describedby="f-phone-note" />
-        <p class="field__note" id="f-phone-note">Номер другой страны — начните с&nbsp;«+» и&nbsp;кода страны</p>
+        <p class="field__note" id="f-phone-note">Номер другой страны&nbsp;— начните с&nbsp;«+» и&nbsp;кода страны</p>
       </div>
       <div class="field">
         <label for="f-age">Год рождения или возраст ребёнка</label>
-        <input id="f-age" name="age" type="text" required maxlength="20" placeholder="Например, 2016 или 10 лет" />
+        <input id="f-age" name="age" type="text" required maxlength="20" placeholder="2016 или 10 лет" />
       </div>
       <fieldset class="field pos">
         <legend>Амплуа</legend>
@@ -69,7 +69,7 @@ const consentUrl = new URL(`${base}soglasie/`, Astro.site).href.replace(/^https?
         <label class="consent__box">
           <input type="checkbox" name="consent" required data-lead-consent />
           <span>
-            Даю согласие на&nbsp;обработку персональных данных — моих и&nbsp;моего ребёнка — на&nbsp;условиях
+            Даю согласие на&nbsp;обработку персональных данных&nbsp;— моих и&nbsp;моего ребёнка&nbsp;— на&nbsp;условиях
             <a href={`${base}soglasie/#zayavka`} target="_blank" rel="noopener">Согласия на&nbsp;обработку персональных данных</a>
           </span>
         </label>
@@ -84,7 +84,7 @@ const consentUrl = new URL(`${base}soglasie/`, Astro.site).href.replace(/^https?
         <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4a.5.5 0 0 0 0-.5l-.8-1.9c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.3c0-.2-.2-.2-.5-.4Z"/></svg>
       </button>
       <p class="signup__or">
-        WhatsApp — иностранный сервис, в&nbsp;России он может работать с&nbsp;перебоями.
+        WhatsApp&nbsp;— иностранный сервис, в&nbsp;России он может работать с&nbsp;перебоями.
         <span class="only-touch">Тогда <button type="button" class="signup__sms" data-lead-sms>отправьте заявку по&nbsp;СМС</button> или позвоните {contacts.coordinator.dat}: <a class="nowrap" href={`tel:${contacts.coordinator.tel}`}>{contacts.coordinator.phone}</a>.</span>
         <span class="only-desk">Тогда позвоните {contacts.coordinator.dat}, координатору: <a class="nowrap" href={`tel:${contacts.coordinator.tel}`}>{contacts.coordinator.phone}</a>.</span>
       </p>
@@ -111,7 +111,7 @@ const consentUrl = new URL(`${base}soglasie/`, Astro.site).href.replace(/^https?
 
       <p class="signup__legal">
         Заявка не сохраняется на сайте и не отправляется на наш сервер: после нажатия кнопки откроется WhatsApp
-        (или СМС) с&nbsp;готовым текстом — отправлять&nbsp;ли его, решаете вы. Как мы обращаемся с&nbsp;данными — в&nbsp;<a href={`${base}politika/`} target="_blank" rel="noopener">Политике обработки персональных данных</a>.
+        (или СМС) с&nbsp;готовым текстом&nbsp;— отправлять&nbsp;ли его, решаете вы. Как мы обращаемся с&nbsp;данными&nbsp;— в&nbsp;<a href={`${base}politika/`} target="_blank" rel="noopener">Политике обработки персональных данных</a>.
       </p>
     </form>
   </div>
@@ -215,5 +215,10 @@ const consentUrl = new URL(`${base}soglasie/`, Astro.site).href.replace(/^https?
   }
   @media (max-width: 400px) {
     .pos__opt span { font-size: 1.02rem; }
+  }
+  @media (max-width: 360px) {
+    .pos__row { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+    .pos__opt span { font-size: .92rem; letter-spacing: 0; padding-inline: 2px; }
+    .signup__submit { font-size: 1.22rem; gap: 10px; }
   }
 </style>

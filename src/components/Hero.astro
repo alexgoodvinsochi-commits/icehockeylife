@@ -22,7 +22,7 @@ import { t } from '../lib/typo';
       <div class="hero__price" data-until={camp.overAfter}>
         <p data-until={camp.price.earlyUntil}>
           <b class="num">{rub(camp.price.early)}</b>
-          <span>{t(`первым ${camp.price.earlySeats} участникам, которые забронируют место до ${camp.price.earlyUntilHuman} включительно. С ${camp.price.regularFromHuman} —`)} <span class="nowrap">{rub(camp.price.regular)}</span>.</span>
+          <span>{t(`первым ${camp.price.earlySeats} участникам, которые забронируют место до ${camp.price.earlyUntilHuman} включительно. С ${camp.price.regularFromHuman}\u00a0—`)} <span class="nowrap">{rub(camp.price.regular)}</span>.</span>
         </p>
         <p data-from={regularFrom} hidden>
           <b class="num">{rub(camp.price.regular)}</b>

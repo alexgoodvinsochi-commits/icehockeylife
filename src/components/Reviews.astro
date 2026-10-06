@@ -4,7 +4,8 @@ import { t } from '../lib/typo';
 
 const lead = reviews.find((r) => r.by === 'Мама Дани')!;
 const others = [...reviews.filter((r) => r.featured && r !== lead), ...reviews.filter((r) => !r.featured)];
-const FIRST = 3;
+// four, not three: two even columns on computers (the first four run 818 and 895 characters)
+const FIRST = 4;
 ---
 
 <section class="rev section" id="otzyvy" aria-labelledby="rev-title">
@@ -32,7 +33,7 @@ const FIRST = 3;
         ))
       }
     </ul>
-    <button class="rev__more" type="button" data-rev-more>Показать все отзывы — ещё {others.length - FIRST}</button>
+    <button class="rev__more" type="button" data-rev-more>Показать все отзывы&nbsp;— ещё&nbsp;{others.length - FIRST}</button>
   </div>
 </section>
 

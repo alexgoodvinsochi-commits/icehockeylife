@@ -17,7 +17,7 @@ const labels: Record<string, { a: 'start' | 'end'; dy?: number; minor?: boolean 
   'Тарту': { a: 'end', dy: -10, minor: true },
   'Минск': { a: 'end' },
   'Северодвинск': { a: 'start', minor: true },
-  'Ханты-Мансийск': { a: 'start', minor: true },
+  'Ханты-Мансийск': { a: 'end', minor: true },
   'Екатеринбург': { a: 'start', minor: true },
 };
 ---
@@ -62,7 +62,7 @@ const labels: Record<string, { a: 'start' | 'end'; dy?: number; minor?: boolean 
       </svg>
       <figcaption class="geo__inset">
         <span class="geo__dot" aria-hidden="true"></span>
-        <span><b>Ещё Дубай (ОАЭ)</b> — {fmt(dubai.km)}&nbsp;км, за&nbsp;пределами карты</span>
+        <span><b>Ещё Дубай (ОАЭ)</b>&nbsp;— {fmt(dubai.km)}&nbsp;км, за&nbsp;пределами карты</span>
       </figcaption>
     </figure>
 
@@ -126,6 +126,9 @@ const labels: Record<string, { a: 'start' | 'end'; dy?: number; minor?: boolean 
   .geo__cc { color: var(--c-ink-3); }
   .geo__list .geo__km { color: var(--c-ink-3); white-space: nowrap; }
 
+  @media (min-width: 861px) and (max-width: 1100px) {
+    .geo__labels text { font-size: 17px; }
+  }
   @media (max-width: 860px) {
     .geo__map { margin-inline: calc(-1 * var(--gutter) + 4px); }
     .geo__labels text { font-size: 34px; stroke-width: 8px; }

@@ -39,11 +39,15 @@ WhatsApp в России блокируется с февраля 2026 года,
 
 ```bash
 npm run build
-node scripts/smoke.mjs shots/smoke   # 41 проверка: карточки тренеров, меню, форма и её запасные каналы,
-                                     # галерея, видео, цены до и после 8 ноября, после сборов, документы
+node scripts/smoke.mjs shots/smoke   # 47 проверок: карточки тренеров, меню, форма и её запасные каналы,
+                                     # «Назад» на фото и биографиях, перезагрузка вкладки, галерея, видео,
+                                     # цены до и после 8 ноября, после сборов, документы
 node scripts/a11y.mjs                # axe-core: главная, /politika/, /soglasie/ на телефоне и компьютере
 node scripts/shoot.mjs dist shots --full --widths=390,1440   # снимки страниц
 ```
+
+Все скрипты читают `dist`; другую папку сборки можно указать переменной `DIST`
+(`npx astro build --outDir scripts/tmp-dist && DIST=scripts/tmp-dist node scripts/smoke.mjs`).
 
 Картинка для соцсетей (`public/og.jpg`) — снимок служебной страницы /og/: `npm run build && node scripts/make-og.mjs`,
 затем снова `npm run build`. В боевой сборке страницы /og/ нет.

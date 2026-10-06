@@ -41,7 +41,7 @@ import { camp } from '../data/camp';
         <circle r="450" fill="none" stroke="#C8102E" stroke-width="9"></circle>
         <g stroke="#C8102E" stroke-width="9">
           <line x1="-85" y1="-450" x2="-85" y2="-520"></line><line x1="85" y1="-450" x2="85" y2="-520"></line>
-          <line x1="-85" y1="450" x2="-85" y2="520"></line><line x1="85" y1="450" x2="85" y2="520"></line>
+          <!-- no lower hash marks: they would cross the line of text at the bottom -->
         </g>
         <circle r="30" fill="#C8102E"></circle>
       </svg>
@@ -52,7 +52,7 @@ import { camp } from '../data/camp';
       </div>
       <div class="og__brand">
         <div set:html={logo}></div>
-        <p><b>Ice Hockey Life</b> · {camp.hoursIce} часов льда, {camp.hoursOffIce} часов вне льда, группы по {camp.groupSize} человек</p>
+        <p><b>Ice Hockey Life</b>: {camp.hoursIce} часов на льду и {camp.hoursOffIce} вне льда, группы по {camp.groupSize} человек</p>
       </div>
       <div class="og__kick"></div>
     </div>

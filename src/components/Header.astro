@@ -1,6 +1,7 @@
 ---
 import Mark from './Mark.astro';
 import { camp, contacts } from '../data/camp';
+import { t } from '../lib/typo';
 
 const nav = [
   { href: '#programma', label: 'Программа' },
@@ -70,11 +71,11 @@ const to = (hash: string) => (onHome || hash === '#kontakty' ? hash : base + has
     </ul>
     <div class="menu__contacts">
       <a href={`tel:${contacts.coordinator.tel}`}>
-        <span>{contacts.coordinator.name}, {contacts.coordinator.role}: {contacts.coordinator.remit}</span>
+        <span>{t(`${contacts.coordinator.name}, ${contacts.coordinator.role}: ${contacts.coordinator.remit}`)}</span>
         <b>{contacts.coordinator.phone}</b>
       </a>
       <a href={`tel:${contacts.headCoach.tel}`}>
-        <span>{contacts.headCoach.name}, {contacts.headCoach.role}: {contacts.headCoach.remit}</span>
+        <span>{t(`${contacts.headCoach.name}, ${contacts.headCoach.role}: ${contacts.headCoach.remit}`)}</span>
         <b>{contacts.headCoach.phone}</b>
       </a>
     </div>
