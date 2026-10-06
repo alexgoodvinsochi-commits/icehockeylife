@@ -20,7 +20,9 @@ export function t(text: string): string {
     out = tp.execute(text).replace(/(\d)\s(января|февраля|марта|апреля|мая|июня|июля|августа|сентября|октября|ноября|декабря)/g, '$1\u00a0$2')
       // «43 680 ₽» and «5–6 человек» stay whole
       .replace(/(\d)\s(\d{3})\s?₽/g, '$1\u00a0$2\u00a0₽')
-      .replace(/(\d+–\d+)\s(?=[а-яё])/g, '$1\u00a0');
+      .replace(/(\d+–\d+)\s(?=[а-яё])/g, '$1\u00a0')
+      // the brand never splits across lines
+      .replace(/Ice Hockey Life/g, 'Ice\u00a0Hockey\u00a0Life');
     cache.set(text, out);
   }
   return out;

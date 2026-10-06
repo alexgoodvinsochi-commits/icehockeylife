@@ -30,7 +30,13 @@ const split = (p: Person) => {
 <section class="team section" id="trenery" aria-labelledby="team-title">
   <div class="wrap">
     <div class="team__intro">
-      <h2 class="team__title display" id="team-title">Кто тренирует</h2>
+      <div class="team__lead">
+        <h2 class="team__title display" id="team-title">Кто тренирует</h2>
+        <figure class="team__photo">
+          <Image src={lineup} alt="Тренеры Ice Hockey Life в строю на льду арены" widths={[640, 1024, 1600]} sizes="(min-width: 901px) 40vw, 94vw" loading="lazy" />
+          <figcaption>{t('Тренерский штаб Ice Hockey Life на льду арены в Сириусе')}</figcaption>
+        </figure>
+      </div>
       <div class="letter">
         <div class="letter__photo" aria-hidden="true">
           <Image src={portrait(maxim.photo)} alt="" widths={[200, 400]} sizes="200px" loading="lazy" />
@@ -49,11 +55,6 @@ const split = (p: Person) => {
         </div>
       </div>
     </div>
-
-    <figure class="team__photo">
-      <Image src={lineup} alt="Тренеры Ice Hockey Life в строю на льду арены" widths={[640, 1024, 1600]} sizes="(min-width: 92rem) 88rem, 94vw" loading="lazy" />
-      <figcaption>{t('Тренерский штаб Ice Hockey Life на льду арены в Сириусе')}</figcaption>
-    </figure>
 
     <ul class="team__head" role="list">
       {
@@ -187,8 +188,9 @@ const split = (p: Person) => {
   button.card:focus-visible { outline: none; }
   button.card:focus-visible .card__photo { outline: 3px solid var(--c-red-line); outline-offset: 3px; }
 
-  .team__photo { margin-top: clamp(32px, 4vw, 56px); }
-  .team__photo img { width: 100%; height: clamp(220px, 34vw, 520px); object-fit: cover; object-position: center 40%; border-radius: var(--r-s); }
+  /* the staff photo fills the column under the heading instead of leaving it empty */
+  .team__photo { margin-top: clamp(24px, 3vw, 40px); }
+  .team__photo img { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; object-position: center 92%; border-radius: var(--r-s); }
   .team__photo figcaption { margin-top: 10px; font-size: var(--fs-small); color: var(--c-ink-2); }
   .team__head { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(16px, 2.4vw, 36px); margin-top: clamp(40px, 5vw, 72px); }
   .card--big .card__name b { font-size: clamp(2.4rem, 1.8rem + 2vw, 3.6rem); }
