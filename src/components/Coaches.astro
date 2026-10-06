@@ -11,7 +11,6 @@ const portrait = (slug: string) => files[`../assets/staff/${slug}.png`].default;
 
 const head = coaches.filter((c) => c.group === 'head');
 const rest = coaches.filter((c) => c.group !== 'head');
-const maxim = coaches.find((c) => c.slug === 'kreidikov-maxim')!;
 const withBio = [...coaches, ...specialists].filter((p) => p.bio);
 
 // the card link says what the sheet holds instead of a generic «Подробнее»
@@ -39,10 +38,6 @@ const split = (p: Person) => {
         </figure>
       </div>
       <div class="letter">
-        <div class="letter__photo" aria-hidden="true">
-          <Image src={portrait(maxim.photo)} alt="" widths={[200, 400]} sizes="200px" loading="lazy" />
-        </div>
-        <p class="letter__sign">Максим Крейдиков<br /><span>главный тренер сборов</span></p>
         <div class="letter__text">
           <p>{t('Сборы ведёт Максим Сергеевич Крейдиков. С 2018 года он тренирует детские команды в Сочи — «Союз», потом «Черномор» — и провёл больше 30 смен в хоккейных кэмпах тренером и главным тренером.')}</p>
           <blockquote class="letter__quote">
@@ -96,7 +91,7 @@ const split = (p: Person) => {
                 data-sheet-open={p.bio ? `trener-${p.slug}` : undefined}
                 aria-haspopup={p.bio ? 'dialog' : undefined}
               >
-                <span class="card__photo">
+                <span class="card__photo" style={p.zoom ? `--zoom: ${p.zoom}` : undefined}>
                   <Image src={portrait(p.photo)} alt="" widths={[240, 400]} sizes="(min-width: 1100px) 22vw, (min-width: 640px) 30vw, 46vw" loading="lazy" />
                 </span>
                 <span class="card__body">
@@ -156,13 +151,7 @@ const split = (p: Person) => {
   .team__intro { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(24px, 5vw, 88px); align-items: start; }
   .team__title { font-size: var(--fs-h2); color: var(--c-blue-deep); }
 
-  .letter { display: grid; grid-template-columns: 120px 1fr; grid-template-rows: auto 1fr; gap: 12px 22px; align-items: start; }
-  .letter__photo { grid-column: 1; grid-row: 1; }
-  .letter__sign { grid-column: 1; grid-row: 2; font-weight: 600; line-height: 1.25; font-size: var(--fs-small); }
-  .letter__sign span { font-weight: 400; color: var(--c-ink-2); }
-  .letter__text { grid-column: 2; grid-row: 1 / span 2; }
-  .letter__photo { background: var(--c-blue-deep); border-radius: var(--r-s); overflow: hidden; }
-  .letter__photo img { width: 100%; height: auto; display: block; }
+  .letter { display: block; }
   .letter__text { display: grid; gap: 12px; font-size: var(--fs-lead); line-height: 1.5; color: var(--c-ink); max-width: 52ch; }
   .letter__text a { font-weight: 600; }
   .letter__quote { margin: 4px 0; padding-left: 18px; border-left: 2px solid var(--c-red-line); }
@@ -177,6 +166,8 @@ const split = (p: Person) => {
   button.card { cursor: pointer; }
   .card__photo { display: block; background: var(--c-blue-deep); border-radius: var(--r-s); overflow: hidden; aspect-ratio: 4 / 5; }
   .card__photo img { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
+  /* source crops differ: --zoom brings every head in the 3 × 3 roster to the same size (staff.ts) */
+  .team__grid--row .card__photo img { transform: scale(var(--zoom, 1)); transform-origin: 50% 8.5%; }
   .card__body { display: grid; align-content: start; gap: 6px; padding-top: 14px; }
   .card__role { font-size: var(--fs-small); font-weight: 600; color: var(--c-red-line); line-height: 1.3; }
   .card__name { display: grid; }
@@ -230,9 +221,6 @@ const split = (p: Person) => {
     .team__grid .card__fact, .team__grid .card__name span, .team__grid .card__more { display: none; }
     .team__grid .card__name b { font-size: 1.3rem; }
     .team__grid .card__role { font-size: .78rem; }
-    .letter { grid-template-columns: 72px 1fr; grid-template-rows: auto auto; gap: 14px 14px; align-items: center; }
-    .letter__photo { grid-row: 1; }
-    .letter__sign { grid-column: 2; grid-row: 1; font-size: var(--fs-body); }
-    .letter__text { grid-column: 1 / -1; grid-row: 2; font-size: var(--fs-body); }
+    .letter__text { font-size: var(--fs-body); }
   }
 </style>

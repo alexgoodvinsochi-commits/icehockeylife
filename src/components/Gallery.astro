@@ -10,11 +10,12 @@ const load = (slug: string) => files[`../assets/photos/${slug}.jpg`]?.default;
 // curated order: the story of a week, alternating ice and off-ice, people first
 // photos already used elsewhere on the page (program, price, coaches, video poster, cut-outs) are not repeated;
 // 24 photos = two 12-photo blocks that tile the 6-column grid exactly
+// big tiles (positions 0, 6, 12, 18) are always hockey
 const order = [
-  'huddle-coaches', 'smiling-boy-closeup', 'two-kids-skating', 'stretching-outdoor', 'coach-teaching', 'two-kids-battle',
-  'gymnastics-bridge', 'goalies-huddle', 'ball-game-indoor', 'wide-stance-boards', 'two-kids-smiling', 'mfr-roller',
-  'hands-up-game', 'coach-with-goalie', 'little-skaters', 'stickhandling-office', 'group-puck-battle', 'two-goalies',
-  'team-photo-arena', 'boy-red-jersey', 'goalies-net', 'locker-room', 'coaches-at-arena', 'team-at-arena',
+  'huddle-coaches', 'smiling-boy-closeup', 'two-kids-skating', 'stretching-outdoor', 'goalies-huddle', 'ball-game-indoor',
+  'two-kids-battle', 'gymnastics-bridge', 'wide-stance-boards', 'mfr-roller', 'two-kids-smiling', 'kids-at-table',
+  'little-skaters', 'coach-with-goalie', 'stickhandling-office', 'hands-up-game', 'two-goalies', 'boy-red-jersey',
+  'goalie-butterfly', 'workout-mountains', 'video-analysis', 'locker-room', 'goalies-net', 'coaches-at-arena',
 ];
 const meta = Object.fromEntries(photos.map((p) => [p.file, p]));
 const loaded = await Promise.all(

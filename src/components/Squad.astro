@@ -1,0 +1,27 @@
+---
+// The whole camp on the ice, right after the first screen: the frame that says «real club» at a glance.
+// Bottom-anchored crop: every player, the goalies and the ice stay; the venue banners above fall outside.
+import { Image } from 'astro:assets';
+import squad from '../assets/photos/team-photo-arena.jpg';
+import { t } from '../lib/typo';
+---
+
+<figure class="squad">
+  <Image
+    src={squad}
+    alt="Участники и тренеры Ice Hockey Life на льду арены в Сириусе"
+    widths={[640, 1024, 1680]}
+    sizes="100vw"
+    loading="lazy"
+  />
+  <figcaption class="wrap">{t('Участники и тренеры прошлых сборов — на льду в Сириусе')}</figcaption>
+</figure>
+
+<style>
+  .squad { margin: 0 0 clamp(8px, 2vw, 24px); }
+  .squad img { display: block; width: 100%; height: auto; aspect-ratio: 2 / 1; object-fit: cover; object-position: 50% 100%; }
+  .squad figcaption { margin-top: 10px; font-size: var(--fs-small); color: var(--c-ink-2); }
+  @media (min-width: 1100px) {
+    .squad img { aspect-ratio: 21 / 9; object-position: 50% 82%; }
+  }
+</style>

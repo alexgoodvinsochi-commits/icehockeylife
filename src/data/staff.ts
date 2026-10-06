@@ -10,6 +10,8 @@ export type Person = {
   name: string; // Фамилия Имя Отчество
   role: string;
   group: 'head' | 'coach' | 'goalie' | 'assistant' | 'specialist';
+  /** portrait scale in the roster grid, so every head reads at the same size (1 = as cropped) */
+  zoom?: number;
   photo: string; // file name in src/assets/staff
   born?: string;
   /** One line for the card: a fact from the bio, worded no stronger than the bio and the old site */
@@ -211,6 +213,7 @@ export const coaches: Person[] = [
   },
   {
     slug: 'krasilnikov',
+    zoom: 1.09,
     name: 'Красильников Алексей Геннадьевич',
     role: 'Тренер вратарей',
     group: 'goalie',
@@ -361,6 +364,7 @@ export const coaches: Person[] = [
   },
   {
     slug: 'larin',
+    zoom: 1.14,
     name: 'Ларин Дмитрий Олегович',
     role: 'Тренер',
     group: 'coach',
@@ -368,6 +372,7 @@ export const coaches: Person[] = [
   },
   {
     slug: 'grigorov',
+    zoom: 1.21,
     name: 'Григоров Николай Геннадьевич',
     role: 'Тренер',
     group: 'coach',
@@ -375,6 +380,7 @@ export const coaches: Person[] = [
   },
   {
     slug: 'kopylov',
+    zoom: 1.10,
     name: 'Копылов Валерий Сергеевич',
     role: 'Помощник тренера',
     group: 'assistant',
@@ -396,6 +402,7 @@ export const coaches: Person[] = [
   },
   {
     slug: 'frolov',
+    zoom: 1.17,
     name: 'Фролов Никита Игоревич',
     role: 'Помощник тренера',
     group: 'assistant',

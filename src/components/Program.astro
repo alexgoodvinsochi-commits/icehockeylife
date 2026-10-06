@@ -6,7 +6,8 @@ import { t } from '../lib/typo';
 import goalie from '../assets/cutouts/goalie-net.png';
 import psych from '../assets/photos/psychologist-kids.jpg';
 import tps from '../assets/photos/tps-station.jpg';
-import video from '../assets/photos/video-analysis.jpg';
+import iceCoach from '../assets/photos/coach-teaching.jpg';
+import iceGame from '../assets/photos/group-puck-battle.jpg';
 
 const hours = [...Array(camp.hoursIce).fill('ice'), ...Array(camp.hoursOffIce).fill('off')];
 const files = import.meta.glob<{ default: ImageMetadata }>('../assets/staff/*.png', { eager: true });
@@ -55,18 +56,22 @@ const lists = [
       }
     </div>
 
-    <ul class="prog__photos" role="list" aria-label="Фотографии занятий вне льда" data-scroll-strip>
+    <ul class="prog__photos" role="list" aria-label="Фотографии занятий" data-scroll-strip>
       <li>
-        <Image src={tps} alt="Бросковая зона: тренажёр для бросков" widths={[400, 700, 960]} sizes="(min-width: 900px) 30vw, 80vw" loading="lazy" />
+        <Image src={iceCoach} alt="Тренер показывает упражнение юному хоккеисту на льду" widths={[400, 700, 960]} sizes="(min-width: 900px) 23vw, 72vw" loading="lazy" />
+        <span>Лёд: тренер показывает упражнение</span>
+      </li>
+      <li>
+        <Image src={iceGame} alt="Группа отрабатывает игровое упражнение у ворот" widths={[400, 700, 960]} sizes="(min-width: 900px) 23vw, 72vw" loading="lazy" />
+        <span>Игровое упражнение у ворот</span>
+      </li>
+      <li>
+        <Image src={tps} alt="Бросковая зона: тренажёр для бросков" widths={[400, 700, 960]} sizes="(min-width: 900px) 23vw, 72vw" loading="lazy" />
         <span>Бросковая зона</span>
       </li>
       <li>
-        <Image src={psych} alt="Психолог сборов разговаривает с детьми в раздевалке" widths={[400, 700, 960]} sizes="(min-width: 900px) 30vw, 80vw" loading="lazy" />
+        <Image src={psych} alt="Психолог сборов разговаривает с детьми в раздевалке" widths={[400, 700, 960]} sizes="(min-width: 900px) 23vw, 72vw" loading="lazy" />
         <span>Занятие с психологом</span>
-      </li>
-      <li>
-        <Image src={video} alt="Видеоанализ: дети смотрят разбор игры на большом экране" widths={[400, 700, 960]} sizes="(min-width: 900px) 30vw, 80vw" loading="lazy" />
-        <span>Видеоанализ</span>
       </li>
     </ul>
 
@@ -122,19 +127,28 @@ const lists = [
   @media (hover: hover) { .who:hover span { color: var(--c-blue-line); text-decoration-thickness: 2px; } }
   .prog__list--two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: clamp(20px, 3vw, 48px); }
 
-  .prog__photos { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(8px, 1vw, 14px); margin-top: clamp(32px, 4vw, 56px); }
+  .prog__photos { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(8px, 1vw, 14px); margin-top: clamp(32px, 4vw, 56px); }
   .prog__photos li { display: grid; gap: 8px; }
   .prog__photos img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--r-s); }
   .prog__photos span { font-size: var(--fs-small); color: var(--c-ink-2); }
 
-  /* the goal crease: the goalie's own zone on the rink */
+  /* the goalie's block: the net stands on the red goal line with its crease painted in front of it, as on the ice */
   .goal {
     position: relative; display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); align-items: end; gap: 24px;
-    margin-top: clamp(48px, 6vw, 96px); background: var(--c-crease-tint);
-    border-top: 4px solid var(--c-red-line); border-radius: 0 0 50% 50% / 0 0 18% 18%;
-    padding: clamp(24px, 4vw, 56px) clamp(20px, 4vw, 56px) 0; overflow: hidden;
+    margin-top: clamp(48px, 6vw, 96px); padding-bottom: clamp(36px, 5vw, 64px);
   }
   .goal__text { padding-bottom: clamp(28px, 5vw, 72px); }
+  .goal__art { position: relative; isolation: isolate; }
+  /* goal line through the posts' feet (the cut-out's own base bar merges into it) */
+  .goal__art::after {
+    content: ''; position: absolute; z-index: -1; left: -12%; right: -4%; top: calc(92% - 2px); height: 4px; background: var(--c-red-line);
+  }
+  /* crease: a foreshortened half-disc in front of the goal, crease blue with a red outline */
+  .goal__art::before {
+    content: ''; position: absolute; z-index: -1; top: 92%; left: -6%; width: 96%; height: 16%;
+    background: color-mix(in srgb, var(--c-crease) 35%, transparent);
+    border: 3px solid var(--c-red-line); border-top: 0; border-radius: 0 0 50% 50% / 0 0 100% 100%;
+  }
   .goal__title { font-size: clamp(2.2rem, 1.4rem + 3vw, 4.4rem); color: var(--c-blue-deep); }
   .goal__text p { margin-top: 16px; max-width: 46ch; color: var(--c-ink); }
   .goal__text .goal__note { color: var(--c-ink-2); font-size: var(--fs-small); }
@@ -143,9 +157,9 @@ const lists = [
   @media (max-width: 900px) {
     .prog__head { grid-template-columns: 1fr; }
     .prog__cols { grid-template-columns: 1fr; }
-    .prog__photos { grid-template-columns: repeat(3, 72%); overflow-x: auto; scroll-snap-type: x mandatory; margin-inline: calc(-1 * var(--gutter)); padding-inline: var(--gutter); }
+    .prog__photos { grid-template-columns: repeat(4, 72%); overflow-x: auto; scroll-snap-type: x mandatory; margin-inline: calc(-1 * var(--gutter)); padding-inline: var(--gutter); }
     .prog__photos li { scroll-snap-align: start; }
-    .goal { grid-template-columns: 1fr; border-radius: 0 0 50% 50% / 0 0 8% 8%; }
+    .goal { grid-template-columns: 1fr; }
     .goal__text { padding-bottom: 0; }
   }
   @media (max-width: 560px) {

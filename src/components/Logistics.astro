@@ -4,7 +4,7 @@ import { camp, contacts } from '../data/camp';
 import { venue } from '../data/venue';
 import { t } from '../lib/typo';
 import { withPhones } from '../lib/rich';
-import photo from '../assets/photos/workout-mountains.jpg';
+import photo from '../assets/photos/team-at-arena.jpg';
 
 const bring = [
   'Страховка спортсмена, справка о здоровье, медицинский полис',
@@ -22,8 +22,8 @@ const bring = [
     </div>
 
     <figure class="log__photo">
-      <Image src={photo} alt="ОФП на открытом воздухе в Сириусе, на фоне гор и Олимпийского парка" widths={[640, 1024, 1600]} sizes="(min-width: 92rem) 88rem, 94vw" loading="lazy" />
-      <figcaption>{t('ОФП на улице — в Сириусе с видом на горы.')}</figcaption>
+      <Image src={photo} alt="Участники сборов в форме Ice Hockey Life у ледовой арены в Сириусе" widths={[640, 1024, 1600]} sizes="(min-width: 92rem) 88rem, 94vw" loading="lazy" />
+      <figcaption>{t('Участники сборов у арены в Сириусе.')}</figcaption>
     </figure>
 
     <div class="days">
@@ -106,7 +106,7 @@ const bring = [
   .log__block li { padding: 6px 0; border-bottom: 1px solid var(--c-hair); }
 
   .log__photo { margin-top: clamp(28px, 4vw, 48px); }
-  .log__photo img { width: 100%; height: clamp(240px, 36vw, 560px); object-fit: cover; border-radius: var(--r-s); }
+  .log__photo img { width: 100%; height: clamp(240px, 36vw, 560px); object-fit: cover; object-position: 50% 80%; border-radius: var(--r-s); }
   .log__photo figcaption { margin-top: 10px; font-size: var(--fs-small); color: var(--c-ink-2); }
 
   @media (max-width: 1000px) {
