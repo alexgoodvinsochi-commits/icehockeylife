@@ -24,7 +24,7 @@ const items = await Promise.all(
     .map(async (f) => {
       const src = bySlug[f];
       const full = await getImage({ src, widths: [960, 1680], format: 'webp' });
-      return { file: f, src, alt: meta[f]?.alt ?? '', full };
+      return { file: f, src, alt: meta[f]?.alt ?? '', caption: meta[f]?.caption, full };
     }),
 );
 const FIRST = 12;
@@ -33,8 +33,8 @@ const FIRST = 12;
 <section class="gal section" id="foto" aria-labelledby="gal-title">
   <div class="wrap">
     <div class="gal__head">
-      <h2 class="gal__title display" id="gal-title">Как это было</h2>
-      <p class="gal__note">Фотографии с прошлых смен Ice Hockey Life. Нажмите, чтобы открыть крупно.</p>
+      <h2 class="gal__title display" id="gal-title">{items.length} фотографии с&nbsp;прошлых смен</h2>
+      <p class="gal__note">Лёд, зал, растяжка и&nbsp;перерывы между тренировками.</p>
     </div>
     <ul class="gal__grid" role="list" data-gal>
       {
@@ -43,6 +43,7 @@ const FIRST = 12;
             <a
               href={it.full.src}
               data-lightbox
+              data-caption={it.caption}
               data-srcset={it.full.srcSet.attribute}
               data-sizes="100vw"
             >
@@ -81,7 +82,7 @@ const FIRST = 12;
 
 <style>
   .gal__head { display: flex; justify-content: space-between; align-items: end; gap: 24px; flex-wrap: wrap; margin-bottom: clamp(20px, 3vw, 40px); }
-  .gal__title { font-size: var(--fs-h2); color: var(--c-blue-deep); }
+  .gal__title { font-size: var(--fs-h2s); color: var(--c-blue-deep); }
   .gal__note { max-width: 32ch; color: var(--c-ink-2); }
   /* 12-photo blocks tile the 6-column grid exactly: big left + 2 small, 3 small, big right + 2 small, 3 small */
   .gal__grid { display: grid; grid-template-columns: repeat(6, 1fr); grid-auto-flow: dense; gap: clamp(6px, .8vw, 12px); }
@@ -89,12 +90,12 @@ const FIRST = 12;
   .gal__item--big { grid-column: span 4; grid-row: span 2; aspect-ratio: auto; }
   .gal__item--right { grid-column: 3 / span 4; }
   .gal__item a { display: block; height: 100%; border-radius: var(--r-s); overflow: hidden; background: var(--c-ice-2); }
-  .gal__item img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s var(--ease-out); }
-  @media (hover: hover) { .gal__item a:hover img { transform: scale(1.03); } }
+  .gal__item img { width: 100%; height: 100%; object-fit: cover; }
+  @media (hover: hover) { .gal__item a:hover { outline: 2px solid var(--c-ink); outline-offset: 2px; } }
   .gal__more {
     display: block; margin: clamp(20px, 3vw, 32px) auto 0; padding: 14px 26px; border-radius: var(--r-s);
     border: 2px solid var(--c-ink); background: none;
-    font-family: var(--f-display); font-weight: 800; font-size: 1.15rem; text-transform: uppercase; letter-spacing: .04em;
+    font-weight: 600; font-size: 1rem;
   }
   @media (hover: hover) { .gal__more:hover { background: var(--c-ink); color: #fff; } }
 
@@ -108,7 +109,7 @@ const FIRST = 12;
   .lb[open] { display: grid; grid-template-rows: 1fr auto; }
   .lb img { width: 100%; height: 100%; object-fit: contain; padding: 12px; min-height: 0; }
   .lb__bar { display: grid; grid-template-columns: auto 1fr auto; gap: 16px; align-items: center; padding: 12px var(--gutter) max(14px, env(safe-area-inset-bottom)); }
-  .lb__count { font-family: var(--f-led); font-size: 1.4rem; color: var(--c-kick); }
+  .lb__count { font-variant-numeric: tabular-nums; color: rgb(255 255 255 / .8); }
   .lb__cap { font-size: var(--fs-small); color: rgb(255 255 255 / .8); }
   .lb__nav { display: flex; gap: 6px; }
   .lb__nav button { width: 48px; height: 48px; border-radius: 50%; border: 1.5px solid rgb(255 255 255 / .35); background: none; color: #fff; font-size: 1.3rem; }

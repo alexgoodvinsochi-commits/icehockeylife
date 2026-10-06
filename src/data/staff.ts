@@ -12,7 +12,7 @@ export type Person = {
   group: 'head' | 'coach' | 'goalie' | 'assistant' | 'specialist';
   photo: string; // file name in src/assets/staff
   born?: string;
-  /** One line for the card — the strongest fact from the bio */
+  /** One line for the card: a fact from the bio, worded no stronger than the bio and the old site */
   highlight?: string;
   bio?: BioSection[];
 };
@@ -21,11 +21,13 @@ export const coaches: Person[] = [
   {
     slug: 'kreidikov-maxim',
     name: 'Крейдиков Максим Сергеевич',
-    role: 'Главный тренер',
+    // the organisers' Telegram posts call him «главный тренер лагеря»; the old site's card, pop-up and contacts say «Главный тренер»
+    role: 'Главный тренер сборов',
     group: 'head',
     photo: 'kreidikov-maxim',
     born: '9 июля 1992',
-    highlight: 'Более 30 смен в хоккейных кэмпах тренером и главным тренером',
+    // not the «30 смен» line: the letter right above the cards already says it (Coaches.astro)
+    highlight: '2023 — тренер сборной ЮФО U-14 на первенстве федеральных округов',
     bio: [
       {
         title: 'Образование',
@@ -74,7 +76,7 @@ export const coaches: Person[] = [
   {
     slug: 'stulov',
     name: 'Стулов Дмитрий Георгиевич',
-    role: 'Главный тренер',
+    role: 'Главный тренер', // as on the old card (his pop-up has no title); owner to confirm next to «Главный тренер сборов»
     group: 'head',
     photo: 'stulov',
     born: '5 декабря 1973',
@@ -127,7 +129,7 @@ export const coaches: Person[] = [
   {
     slug: 'azimov',
     name: 'Азимов Рустам Шухратович',
-    role: 'Главный тренер',
+    role: 'Главный тренер', // as on the old card; his own pop-up says «Тренер» and the bio lists no head-coach post — owner to confirm
     group: 'head',
     photo: 'azimov',
     born: '26 января 1991',
@@ -169,7 +171,7 @@ export const coaches: Person[] = [
     group: 'coach',
     photo: 'murduskin',
     born: '9 апреля 1983',
-    highlight: 'Главный тренер ДЮСШ ХК «Сочи», команда 2014 г. р.',
+    highlight: 'Главный тренер команды 2014 г. р. в ДЮСШ ХК «Сочи»',
     bio: [
       {
         title: 'Карьера игрока, 1999–2011',
@@ -214,7 +216,7 @@ export const coaches: Person[] = [
     group: 'goalie',
     photo: 'krasilnikov',
     born: '26 марта 1975',
-    highlight: 'Готовил вратарей для сборной России: Богдан Нефёдов, Ростислав Глущенко',
+    highlight: 'Воспитанники — члены сборной России: Богдан Нефёдов, Ростислав Глущенко',
     bio: [
       {
         title: 'Образование',
@@ -225,6 +227,8 @@ export const coaches: Person[] = [
         items: [
           'Воспитанник череповецкой ДЮСШ по хоккею',
           'Неоднократно привлекался в сборную региона, призёр финалов по регионам СССР',
+          // «ВХЛ» is verbatim from the old site, but the league dates from 2010 and his career ended in 1998
+          // (the 1990s «высшая лига»?) — owner to confirm
           'Чемпион СНГ среди молодёжи, бронзовый призёр чемпионата ВХЛ',
           '1992–1996 — система «Северстали», Череповец',
           '1995–1998 — «Горняк», Оленегорск',
@@ -312,7 +316,7 @@ export const coaches: Person[] = [
     role: 'Тренер',
     group: 'coach',
     photo: 'korshak',
-    highlight: 'Мастер спорта, трёхкратный чемпион России, 11 лет — судья КХЛ, ВХЛ и МХЛ',
+    highlight: 'Мастер спорта, трёхкратный чемпион России, судья всероссийской категории, стаж 11 лет',
     bio: [
       {
         title: 'Образование',
@@ -333,7 +337,7 @@ export const coaches: Person[] = [
   {
     slug: 'kreidikov-oleg',
     name: 'Крейдиков Олег Сергеевич',
-    role: 'Тренер',
+    role: 'Тренер', // as on the old card; his own pop-up says «Помощник тренера» — owner to confirm
     group: 'coach',
     photo: 'kreidikov-oleg',
     born: '1996',
@@ -396,7 +400,7 @@ export const coaches: Person[] = [
     role: 'Помощник тренера',
     group: 'assistant',
     photo: 'frolov',
-    highlight: 'Двукратный победитель чемпионата Москвы, воспитанник Академии Б. П. Михайлова',
+    highlight: 'Двукратный победитель чемпионата Москвы, играл за «Академию Б. П. Михайлова»',
     bio: [
       {
         title: 'Образование',
@@ -435,7 +439,9 @@ export const specialists: Person[] = [
     role: 'Спортивный психолог',
     group: 'specialist',
     photo: 'ostrikova',
-    highlight: '19 лет в психологии, 9 из них — с юными спортсменами и их родителями',
+    // the old site's «19 лет» and «9 лет» come from one undated snapshot, so both are stale by 2026;
+    // the card keeps only the dated fact (МЧС since 2005) — owner to confirm current figures
+    highlight: 'С 2005 года — психолог МЧС; детский психолог: спортсмены и их родители',
     bio: [
       {
         title: 'Опыт',
@@ -474,7 +480,7 @@ export const specialists: Person[] = [
     role: 'Тренер по растяжке, ОФП, СФП и реабилитации после травм',
     group: 'specialist',
     photo: 'zakharchenko',
-    highlight: 'Пилатес, стрейчинг, TRX, МФР — международные сертификаты',
+    highlight: 'Сертифицированный инструктор пилатеса, стрейча и TRX',
     bio: [
       {
         title: 'Квалификация',

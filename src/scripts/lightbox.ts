@@ -22,7 +22,8 @@ export function initLightbox() {
     if (a.dataset.srcset) img.srcset = a.dataset.srcset;
     img.sizes = a.dataset.sizes ?? '100vw';
     img.alt = thumb?.alt ?? '';
-    if (caption) caption.textContent = thumb?.alt ?? '';
+    // the caption names the part of the programme when it is known; the alt text stays for screen readers
+    if (caption) caption.textContent = a.dataset.caption ?? '';
     if (count) count.textContent = `${i + 1} / ${links.length}`;
     // warm up the neighbours
     for (const k of [i + 1, i - 1]) {

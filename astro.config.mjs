@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig, fontProviders } from 'astro/config';
+import { defineConfig } from 'astro/config';
 
 // Preview (GitHub Pages) and production (icehockeylife.ru) differ only by these env variables.
 const site = process.env.SITE_URL ?? 'https://icehockeylife.ru';
@@ -17,16 +17,4 @@ export default defineConfig({
   image: {
     layout: 'constrained',
   },
-  // Golos Text and Sofia Sans are self-hosted single files (src/styles/fonts.css); only the LED face comes from here
-  fonts: [
-    {
-      provider: fontProviders.fontsource(),
-      name: 'Handjet',
-      cssVariable: '--font-led',
-      weights: ['400 700'],
-      styles: ['normal'],
-      subsets: ['latin', 'cyrillic', 'cyrillic-ext'],
-      fallbacks: ['monospace'],
-    },
-  ],
 });

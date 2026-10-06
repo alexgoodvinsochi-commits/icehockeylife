@@ -54,7 +54,7 @@ export function buildMessage(l: Lead, c: Consent): string {
     '',
     `Родитель: ${l.parent.trim()}`,
     `Телефон: ${l.phone}`,
-    `Возраст ребёнка: ${l.age}`,
+    `Год рождения или возраст ребёнка: ${l.age.trim()}`,
     `Амплуа: ${l.position}`,
     '',
     consentLine(c),
@@ -73,7 +73,7 @@ export function buildSms(l: Lead, c: Consent): string {
   const phone = isForeign(l.phone) ? l.phone : '+' + digits(l.phone);
   return (
     `Заявка на сборы IHL ${shortDates()} (${camp.place}): ${l.parent.trim()}, ${phone}, ` +
-    `ребёнку ${l.age}, ${l.position.toLowerCase()}. Согласие на обработку ПД: ${c.url}`
+    `ребёнок: ${l.age.trim()}, ${l.position.toLowerCase()}. Согласие на обработку ПД: ${c.url}`
   );
 }
 

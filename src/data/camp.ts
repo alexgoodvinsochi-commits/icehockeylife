@@ -20,8 +20,6 @@ export const camp = {
   hoursIce: 9,
   hoursOffIce: 16,
   groupSize: '5–6',
-  summerHoursIce: 16,
-  summerHoursOffIce: 25,
 
   price: {
     early: 43680,
@@ -35,7 +33,7 @@ export const camp = {
     goalieDiscount: true,
   },
 
-  gifts: ['Форма для ОФП', 'Фирменные джерси', 'Шапки', 'Подарки от IceHockeyLife'],
+  gifts: ['Форма для ОФП', 'Фирменные джерси', 'Шапки', 'Подарки от Ice Hockey Life'],
 
   hotel: {
     name: 'Сочи Парк Отель',
@@ -49,8 +47,6 @@ export const contacts = {
   whatsapp: '79384389163',
   telegram: 'https://t.me/icehockeylife',
   vk: 'https://vk.com/icehockeyliferu',
-  instagram: 'https://instagram.com/icehockeylife.ru',
-  instagramHandle: '@icehockeylife.ru',
 } as const;
 
 export const video = {

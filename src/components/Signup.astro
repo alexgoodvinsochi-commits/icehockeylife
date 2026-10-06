@@ -2,7 +2,6 @@
 import { camp, contacts } from '../data/camp';
 import { revision } from '../data/legal';
 const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
-const ages = Array.from({ length: 14 }, (_, i) => i + 4); // 4–17
 // every message quotes the consent document it was sent under (there is no server to keep the checkbox)
 const consentUrl = new URL(`${base}soglasie/`, Astro.site).href.replace(/^https?:\/\//, '');
 ---
@@ -13,8 +12,8 @@ const consentUrl = new URL(`${base}soglasie/`, Astro.site).href.replace(/^https?
       <h2 class="signup__title display" id="signup-title">Записаться на&nbsp;сборы</h2>
       <p class="signup__lead">
         {camp.datesHuman}, {camp.arena}. Заполните четыре поля — откроется WhatsApp с&nbsp;готовым сообщением
-        главному тренеру. Отправьте его: в&nbsp;ответ расскажем программу и&nbsp;условия оплаты и&nbsp;скажем, осталось&nbsp;ли
-        место по&nbsp;ранней цене.
+        главному тренеру. Отправьте его — в&nbsp;ответ расскажем о&nbsp;программе и&nbsp;условиях оплаты, а&nbsp;заодно скажем,
+        осталось&nbsp;ли место по&nbsp;ранней цене.
       </p>
       <dl class="signup__facts">
         <div data-until={camp.price.earlyUntil}><dt>До 8 ноября включительно, первым&nbsp;15</dt><dd class="num">43&nbsp;680&nbsp;₽</dd></div>
@@ -36,12 +35,8 @@ const consentUrl = new URL(`${base}soglasie/`, Astro.site).href.replace(/^https?
         <p class="field__note" id="f-phone-note">Номер другой страны — начните с&nbsp;«+» и&nbsp;кода страны</p>
       </div>
       <div class="field">
-        <label for="f-age">Возраст ребёнка</label>
-        <select id="f-age" name="age" required>
-          <option value="" selected disabled>Выберите</option>
-          {ages.map((a) => <option value={`${a}`}>{a}</option>)}
-          <option value="18 и старше">18 и старше</option>
-        </select>
+        <label for="f-age">Год рождения или возраст ребёнка</label>
+        <input id="f-age" name="age" type="text" required maxlength="20" placeholder="Например, 2016 или 10 лет" />
       </div>
       <fieldset class="field pos">
         <legend>Амплуа</legend>
@@ -99,7 +94,7 @@ const consentUrl = new URL(`${base}soglasie/`, Astro.site).href.replace(/^https?
 
       <p class="signup__legal">
         Заявка не сохраняется на сайте и не отправляется на наш сервер: после нажатия кнопки откроется WhatsApp
-        (или СМС) с&nbsp;готовым текстом — отправить его решаете вы. Как мы обращаемся с&nbsp;данными — в&nbsp;<a href={`${base}politika/`} target="_blank" rel="noopener">Политике обработки персональных данных</a>.
+        (или СМС) с&nbsp;готовым текстом — отправлять&nbsp;ли его, решаете вы. Как мы обращаемся с&nbsp;данными — в&nbsp;<a href={`${base}politika/`} target="_blank" rel="noopener">Политике обработки персональных данных</a>.
       </p>
     </form>
   </div>
@@ -124,9 +119,8 @@ const consentUrl = new URL(`${base}soglasie/`, Astro.site).href.replace(/^https?
 
   .signup__form {
     background: var(--c-board); color: var(--c-ink);
-    border-radius: var(--r-rink); padding: clamp(22px, 3vw, 40px);
+    border-radius: var(--r-s); padding: clamp(22px, 3vw, 40px);
     display: grid; gap: 20px;
-    box-shadow: inset 0 -6px 0 var(--c-kick);
   }
   .field { display: grid; gap: 8px; border: 0; padding: 0; min-width: 0; }
   .field label, .field legend { font-weight: 600; font-size: var(--fs-small); }

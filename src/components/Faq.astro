@@ -1,6 +1,8 @@
 ---
 import { faq } from '../data/faq';
 import { contacts } from '../data/camp';
+import { t } from '../lib/typo';
+import { withPhones } from '../lib/rich';
 ---
 
 <section class="faq section" id="voprosy" aria-labelledby="faq-title">
@@ -18,16 +20,11 @@ import { contacts } from '../data/camp';
           <details class="faq__item" open={i === 0}>
             <summary>
               <span class="faq__dot" aria-hidden="true" />
-              <span class="faq__q">{item.q}</span>
+              <span class="faq__q">{t(item.q)}</span>
             </summary>
             <div class="faq__a">
-              {item.a.map((p) => <p>{p}</p>)}
-              {item.list && (
-                <ul>
-                  {item.list.map((li) => <li>{li}</li>)}
-                </ul>
-              )}
-              {item.after && item.after.map((p) => <p class="faq__after">{p}</p>)}
+              {item.a.map((p) => <p set:html={withPhones(p)} />)}
+              {item.link && <p class="faq__link"><a href={item.link.href}>{item.link.label}</a></p>}
             </div>
           </details>
         ))
@@ -39,7 +36,7 @@ import { contacts } from '../data/camp';
 <style>
   .faq__grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(28px, 5vw, 96px); align-items: start; }
   .faq__side { position: sticky; top: calc(var(--header-h) + 32px); }
-  .faq__title { font-size: var(--fs-h2); color: var(--c-blue-deep); }
+  .faq__title { font-size: var(--fs-h2s); color: var(--c-blue-deep); }
   .faq__ask { margin-top: 24px; max-width: 26ch; color: var(--c-ink-2); }
   .faq__ask a { color: var(--c-ink); font-weight: 600; }
 
@@ -54,22 +51,20 @@ import { contacts } from '../data/camp';
   .faq__q { font-size: clamp(1.15rem, 1rem + .6vw, 1.5rem); font-weight: 600; line-height: 1.25; }
   .faq__item summary:hover .faq__q { color: var(--c-blue-line); }
 
-  /* face-off spot: red disc between two white bands; becomes a hollow circle when open */
+  /* plus that turns into a minus: says «this opens» without inventing a rink metaphor for a control */
   .faq__dot {
-    width: 22px; height: 22px; margin-top: 2px; border-radius: 50%;
-    border: 2px solid var(--c-red-line);
-    background: linear-gradient(transparent 0 18%, var(--c-red-line) 18% 82%, transparent 82%);
-    transition: background-size .25s var(--ease-out), transform .3s var(--ease-snap);
-    background-size: 100% 100%; background-repeat: no-repeat; background-position: center;
+    width: 18px; height: 18px; margin-top: 6px;
+    background:
+      linear-gradient(var(--c-ink), var(--c-ink)) center / 100% 2px no-repeat,
+      linear-gradient(var(--c-ink), var(--c-ink)) center / 2px 100% no-repeat;
+    transition: background-size .2s var(--ease-out);
   }
-  .faq__item[open] .faq__dot { background-size: 100% 0%; transform: rotate(90deg); }
+  .faq__item[open] .faq__dot { background-size: 100% 2px, 2px 0; }
 
   .faq__a { padding: 0 0 26px 42px; max-width: 62ch; color: var(--c-ink-2); }
   .faq__a > * + * { margin-top: .75em; }
-  .faq__a ul { padding-left: 1.1em; }
-  .faq__a li + li { margin-top: .35em; }
-  .faq__a li::marker { color: var(--c-red-line); }
-  .faq__after { color: var(--c-ink); font-weight: 500; }
+  .faq__a :global(a) { color: var(--c-ink); font-weight: 600; }
+  .faq__link a { color: var(--c-blue-line) !important; }
 
   @media (max-width: 860px) {
     .faq__grid { grid-template-columns: 1fr; }

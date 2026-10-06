@@ -51,6 +51,7 @@ export function eventJsonLd(siteUrl: string, image: string) {
       name: camp.arena,
       address: {
         '@type': 'PostalAddress',
+        streetAddress: 'Олимпийский проспект, 7',
         addressLocality: 'Сириус',
         addressRegion: 'Краснодарский край',
         addressCountry: 'RU',

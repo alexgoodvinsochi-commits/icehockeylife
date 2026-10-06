@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import { video } from '../data/camp';
+import { t } from '../lib/typo';
 import poster from '../assets/photos/shot-on-goalie.jpg';
 ---
 
@@ -8,14 +9,12 @@ import poster from '../assets/photos/shot-on-goalie.jpg';
   <div class="wrap">
     <div class="vid__head">
       <h2 class="vid__title display" id="vid-title">Один день<br />на сборах</h2>
-      <p class="vid__meta">Фильм «Один день из жизни нашего кэмпа», 3 минуты 56 секунд</p>
+      <p class="vid__meta">{t('Фильм «Один день из жизни нашего кэмпа», 3 минуты 56 секунд')}</p>
     </div>
     <div class="vid__frame" data-video data-oid={video.oid} data-vid={video.id} data-title={video.title}>
-      <button class="vid__play" type="button" data-video-play aria-label="Смотреть фильм «Один день из жизни нашего кэмпа», 3 минуты 56 секунд">
+      <button class="vid__play" type="button" data-video-play>
         <Image src={poster} alt="" widths={[640, 1024, 1600]} sizes="(min-width: 92rem) 88rem, 94vw" loading="lazy" />
-        <span class="vid__puck" aria-hidden="true">
-          <svg viewBox="0 0 120 84"><ellipse cx="60" cy="58" rx="58" ry="24" fill="#05070b"/><rect x="2" y="30" width="116" height="28" fill="#0d1118"/><ellipse cx="60" cy="30" rx="58" ry="24" fill="#1b2230"/><path d="M50 18 72 30 50 42z" fill="#fff"/></svg>
-        </span>
+        <span class="vid__label"><span class="vid__tri" aria-hidden="true"></span>Смотреть фильм, 3:56</span>
       </button>
     </div>
     <p class="vid__alt">Не открывается? <a href={video.page} target="_blank" rel="noopener">Смотреть на VK Видео</a></p>
@@ -29,21 +28,20 @@ import poster from '../assets/photos/shot-on-goalie.jpg';
 
 <style>
   .vid__head { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: clamp(20px, 3vw, 36px); flex-wrap: wrap; }
-  .vid__title { font-size: var(--fs-h2); color: var(--c-blue-deep); }
+  .vid__title { font-size: var(--fs-h2s); color: var(--c-blue-deep); }
   .vid__meta { color: var(--c-ink-2); max-width: 30ch; }
-  .vid__frame { position: relative; aspect-ratio: 16 / 9; border-radius: var(--r-rink); overflow: hidden; background: var(--c-ink); }
+  .vid__frame { position: relative; aspect-ratio: 16 / 9; border-radius: var(--r-s); overflow: hidden; background: var(--c-ink); }
   .vid__frame :global(iframe) { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
   .vid__play { position: absolute; inset: 0; border: 0; padding: 0; background: none; display: block; width: 100%; }
-  .vid__play img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s var(--ease-out), filter .3s; filter: saturate(1.05); }
-  .vid__play::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 40%, rgb(11 30 63 / .45)); }
-  .vid__puck {
-    position: absolute; z-index: 1; left: 50%; top: 50%; width: clamp(96px, 12vw, 150px);
-    transform: translate(-50%, -50%); transition: transform .35s var(--ease-snap);
-    filter: drop-shadow(0 16px 18px rgb(0 0 0 / .35));
+  .vid__play img { width: 100%; height: 100%; object-fit: cover; }
+  .vid__label {
+    position: absolute; left: clamp(12px, 2vw, 24px); bottom: clamp(12px, 2vw, 24px);
+    display: inline-flex; align-items: center; gap: 12px; min-height: 48px; padding: 0 18px 0 16px;
+    background: var(--c-ink); color: #fff; border-radius: var(--r-s); font: 600 1rem/1 var(--f-text);
   }
-  .vid__play:focus-visible .vid__puck { transform: translate(-50%, -54%) scale(1.06); }
-  @media (hover: hover) {
-    .vid__play:hover .vid__puck { transform: translate(-50%, -54%) scale(1.06); }
-  }
+  .vid__tri { width: 0; height: 0; border-style: solid; border-width: 7px 0 7px 12px; border-color: transparent transparent transparent #fff; }
+  .vid__play:focus-visible { outline: none; }
+  .vid__play:focus-visible .vid__label { outline: 3px solid var(--c-red-line); outline-offset: 2px; }
+  @media (hover: hover) { .vid__play:hover .vid__label { background: var(--c-red-line); } }
   .vid__alt { margin-top: 14px; font-size: var(--fs-small); color: var(--c-ink-3); }
 </style>

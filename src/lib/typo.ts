@@ -7,6 +7,8 @@ const tp = new Typograf({ locale: ['ru', 'en-US'] });
 tp.enableRule('common/nbsp/afterNumber');
 tp.disableRule('common/number/digitGrouping');
 tp.disableRule('ru/other/phone-number');
+// «ознакомлен(а)», «сам(а)» in the legal texts must keep the bracket glued to the word
+tp.disableRule('common/space/beforeBracket');
 
 const cache = new Map<string, string>();
 
@@ -14,7 +16,11 @@ export function t(text: string): string {
   if (!text) return text;
   let out = cache.get(text);
   if (out === undefined) {
-    out = tp.execute(text);
+    // a day and its month stay on one line («5 декабря»), Typograf only glues short words
+    out = tp.execute(text).replace(/(\d)\s(января|февраля|марта|апреля|мая|июня|июля|августа|сентября|октября|ноября|декабря)/g, '$1\u00a0$2')
+      // «43 680 ₽» and «5–6 человек» stay whole
+      .replace(/(\d)\s(\d{3})\s?₽/g, '$1\u00a0$2\u00a0₽')
+      .replace(/(\d+–\d+)\s(?=[а-яё])/g, '$1\u00a0');
     cache.set(text, out);
   }
   return out;

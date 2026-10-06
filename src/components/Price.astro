@@ -14,18 +14,17 @@ import lockers from '../assets/photos/lockers-jerseys.jpg';
       <div class="ice__early">
         <p class="ice__when">{t('До 8 ноября включительно, первые 15 участников')}</p>
         <p class="ice__sum num">43&nbsp;680&nbsp;₽</p>
+        <p class="ice__left" data-countdown={camp.price.earlyUntil} data-countdown-last="Сегодня последний день ранней цены">
+          До 8 ноября осталось <b><span data-countdown-num>…</span>&nbsp;<span data-countdown-word>дней</span></b>
+        </p>
       </div>
       <div class="ice__line" aria-hidden="true">
         <span class="ice__tag">8 ноября — красная линия</span>
         <span class="ice__circle"><span class="ice__crest"></span></span>
       </div>
       <div class="ice__late">
-        <p class="ice__when">{t('С 9 ноября, или когда закончатся 15 мест по ранней цене')}</p>
+        <p class="ice__when">{t('С 9 ноября — или раньше, если 15 мест по ранней цене закончатся')}</p>
         <p class="ice__sum ice__sum--late num">48&nbsp;860&nbsp;₽</p>
-      </div>
-      <div class="ice__led" data-countdown={camp.price.earlyUntil} role="timer" aria-live="off">
-        <span class="ice__led-cap">До конца ранней цены</span>
-        <span class="ice__led-num"><span data-countdown-num>…</span> <span data-countdown-word>дней</span></span>
       </div>
     </div>
 
@@ -39,36 +38,36 @@ import lockers from '../assets/photos/lockers-jerseys.jpg';
         <h3 class="terms__h">В стоимость входят</h3>
         <ul class="terms__list" role="list">
           <li>{t('Тренировки: 9 часов на льду и 16 часов вне льда за семь дней')}</li>
-          <li>{t('Форма для ОФП, фирменные джерси, шапки и подарки от IceHockeyLife — каждому участнику')}</li>
+          <li>{t('Форма для ОФП, фирменные джерси, шапки и подарки от Ice Hockey Life — каждому участнику')}</li>
         </ul>
         <h3 class="terms__h terms__h--no">Не входят</h3>
         <ul class="terms__list" role="list">
-          <li>{t('Проживание и питание. Отель-партнёр — «Сочи Парк Отель», цену для участников сборов назовёт координатор')}</li>
+          <li>{t('Проживание и питание. В отеле-партнёре «Сочи Парк Отель» для участников специальная цена — её назовёт координатор')}</li>
           <li>{t('Проезд до Сириуса и трансфер')}</li>
           <li>{t('Дневное пребывание с питанием между тренировками — оплачивается отдельно')}</li>
         </ul>
       </div>
       <div class="terms__col">
-        <div class="terms__crease">
-          <h3>Вратарям — скидка</h3>
-          <p>{t('Размер скидки назовёт координатор.')}</p>
-        </div>
-        <p class="terms__pay">{t('Можно оплатить в рассрочку — условия назовёт координатор.')}</p>
-        <a class="btn btn--red" href="#zapis">Записаться</a>
+        <h3 class="terms__h">Скидки и&nbsp;оплата</h3>
+        <ul class="terms__list" role="list">
+          <li>{t('Вратарям — скидка, её размер назовёт координатор')}</li>
+          <li>{t('Можно оплатить в рассрочку — условия назовёт координатор')}</li>
+        </ul>
+        <a class="btn btn--red terms__cta" href="#zapis">Записаться</a>
       </div>
       <figure class="terms__photo">
         <Image src={lockers} alt="Подарки участникам в шкафчиках раздевалки: фирменные джерси, кепки и форма" widths={[480, 800, 1100]} sizes="(min-width: 1000px) 40vw, 92vw" loading="lazy" />
-        <figcaption>{t('Так раздевалка выглядит в первый день: у каждого своё место, джерси и форма.')}</figcaption>
+        <figcaption>{t('Подарки участникам ждут в шкафчиках раздевалки.')}</figcaption>
       </figure>
     </div>
     <p class="price__fine">
-      {t('Цена — за тренировочную программу для одного участника, в рублях. Специальная цена 43 680 ₽ действует для первых 15 участников, записавшихся до 8 ноября 2026 года включительно; затем — 48 860 ₽. Как закрепить место по ранней цене, расскажет координатор. Сведения на сайте носят информационный характер и не являются публичной офертой: условия участия фиксируются в договоре.')}
+      {t('Цена — за тренировочную программу для одного участника, в рублях. Специальная цена 43 680 ₽ действует для первых 15 участников, забронировавших место до 8 ноября 2026 года включительно; затем — 48 860 ₽. Как закрепить место по ранней цене, расскажет координатор. Сведения на сайте носят информационный характер и не являются публичной офертой: условия участия уточнит координатор.')}
     </p>
   </div>
 </section>
 
 <style>
-  .price__title { font-size: var(--fs-h2); color: var(--c-blue-deep); max-width: 14ch; }
+  .price__title { font-size: var(--fs-h2s); color: var(--c-blue-deep); max-width: 14ch; }
   .price__fine { margin-top: clamp(28px, 4vw, 48px); max-width: 72ch; font-size: .875rem; line-height: 1.5; color: var(--c-ink-3); }
 
   .ice {
@@ -106,28 +105,15 @@ import lockers from '../assets/photos/lockers-jerseys.jpg';
     mask: url('../assets/brand/logo.svg') center / contain no-repeat;
   }
 
-  /* the Bolshoy has an LED roof that works as a giant scoreboard — the countdown borrows that */
-  .ice__led {
-    grid-column: 2; grid-row: 1; align-self: start; justify-self: end; width: 100%;
-    background: #0b1119; color: #ffb43a; border-radius: var(--r-s); padding: 14px 18px 12px;
-    display: grid; gap: 4px;
-  }
-  .ice__led-cap { font-size: .8rem; color: rgb(255 180 58 / .78); }
-  .ice__led-num { font-family: var(--f-led); font-weight: 700; font-size: clamp(2.6rem, 2rem + 2vw, 3.6rem); line-height: 1; }
+  .ice__left { margin-top: 14px; font-weight: 600; color: var(--c-red-deep); }
 
   .ice--after { display: block; }
 
   .terms { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 3fr) minmax(0, 5fr); gap: clamp(24px, 3.4vw, 56px); margin-top: clamp(48px, 6vw, 96px); align-items: start; }
-  .terms__h { font-family: var(--f-display); font-weight: 800; font-size: 1.6rem; line-height: 1; padding-bottom: 10px; border-bottom: 3px solid var(--c-blue-line); }
+  .terms__h { font-family: var(--f-display); font-weight: 800; font-size: 1.6rem; line-height: 1; padding-bottom: 10px; border-bottom: 1px solid var(--c-hair-2); }
   .terms__h--no { margin-top: 28px; border-color: var(--c-hair-2); }
   .terms__list li { padding: 12px 0; border-bottom: 1px solid var(--c-hair); color: var(--c-ink-2); }
-  .terms__crease {
-    background: var(--c-crease-tint); border-top: 3px solid var(--c-red-line);
-    border-radius: 0 0 50% 50% / 0 0 30% 30%; padding: 18px 20px 30px;
-  }
-  .terms__crease h3 { font-family: var(--f-display); font-weight: 850; font-size: 2rem; line-height: 1; color: var(--c-blue-deep); }
-  .terms__crease p { margin-top: 8px; color: var(--c-ink); }
-  .terms__pay { margin: 22px 0; color: var(--c-ink-2); }
+  .terms__cta { margin-top: 24px; }
   .terms__photo img { width: 100%; height: auto; border-radius: var(--r-s); display: block; }
   .terms__photo figcaption { margin-top: 10px; font-size: var(--fs-small); color: var(--c-ink-2); }
 
@@ -137,10 +123,10 @@ import lockers from '../assets/photos/lockers-jerseys.jpg';
   }
   @media (max-width: 720px) {
     .ice { grid-template-columns: 1fr; }
-    .ice__led { grid-column: 1; grid-row: 4; margin-top: 20px; justify-self: stretch; }
     .ice__circle { display: none; }
     .ice__tag { font-size: .95rem; }
     .terms { grid-template-columns: 1fr; }
     .terms__photo { grid-row: auto; }
+    .terms__cta { width: 100%; }
   }
 </style>

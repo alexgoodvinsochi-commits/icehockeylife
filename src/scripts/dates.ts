@@ -1,7 +1,8 @@
 // Date-aware content for a static site that is not rebuilt every day.
 // [data-until="ISO"]  — shown only before the moment, removed after it
 // [data-from="ISO"]   — hidden before the moment, shown after it
-// [data-countdown="ISO"] — text becomes «N дней» until the moment
+// [data-countdown="ISO"] — text becomes «N дней» until the moment (today counts: on the last day it is 1,
+//                          and data-countdown-last, if given, replaces the whole line)
 
 const plural = (n: number, forms: [string, string, string]) => {
   const n10 = n % 10;
@@ -30,6 +31,10 @@ export function applyDates(root: ParentNode = document, now = Date.now()) {
     const word = el.querySelector<HTMLElement>('[data-countdown-word]');
     if (d <= 0) {
       el.hidden = true;
+      return;
+    }
+    if (d === 1 && el.dataset.countdownLast) {
+      el.textContent = el.dataset.countdownLast;
       return;
     }
     if (num) num.textContent = String(d);

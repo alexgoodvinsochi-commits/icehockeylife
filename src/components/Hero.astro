@@ -16,13 +16,13 @@ import { t } from '../lib/typo';
       </p>
 
       <p class="hero__lead">
-        {t('Семь дней: 9 часов на льду и 16 часов вне льда. Группы по 5–6 человек по возрасту и уровню, у каждой группы свой тренер.')}
+        {t('Семь дней: 9 часов на льду и 16 вне льда, группы по 5–6 человек. Ведёт главный тренер Максим Крейдиков.')}
       </p>
 
       <div class="hero__price">
         <p data-until={camp.price.earlyUntil}>
           <b class="num">43&nbsp;680&nbsp;₽</b>
-          <span>{t('для первых 15 участников, кто запишется до 8 ноября включительно. С 9 ноября —')} <span class="nowrap">48&nbsp;860&nbsp;₽</span></span>
+          <span>{t('первым 15 участникам, которые забронируют место до 8 ноября включительно. С 9 ноября —')} <span class="nowrap">48&nbsp;860&nbsp;₽</span></span>
         </p>
         <p data-from={camp.price.earlyUntil} hidden>
           <b class="num">48&nbsp;860&nbsp;₽</b>
@@ -105,5 +105,15 @@ import { t } from '../lib/typo';
     .hero__skater { width: 86%; translate: -40% -56%; z-index: 2; }
     .hero__dates { position: relative; z-index: 1; margin-top: -11%; }
     .hero__hash-b { display: none; } /* would cross the month line below */
+  }
+  /* phones: a flatter art box so the price and the button fit the first screen of Safari (≈714 px) */
+  @media (max-width: 480px) {
+    .hero__art { aspect-ratio: 1.7; margin-top: 10px; }
+    .hero__circle { width: 64%; left: 20%; translate: 0 -52%; }
+    .hero__skater { width: 72%; translate: -36% -55%; }
+    .hero__dates { margin-top: -8%; }
+    .hero__lead { margin-top: 12px; }
+    .hero__price { margin-top: 12px; }
+    .hero__cta { margin-top: 16px; }
   }
 </style>

@@ -74,16 +74,10 @@ ul[role='list'], ol[role='list'] { list-style: none; padding: 0; }
   font-weight: 860;
   line-height: .95; /* Й/Ё need the room in Cyrillic */
 }
-.label {
-  font-family: var(--f-display);
-  font-weight: 700;
-  font-size: var(--fs-label);
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  line-height: 1.2;
-}
 .num { font-variant-numeric: tabular-nums lining-nums; }
 .nowrap { white-space: nowrap; }
+/* phone numbers inside running text: a taller touch area (inline padding does not move the lines) */
+:is(p, li, dd) > a[href^='tel:'] { padding-block: 10px; }
 
 /* buttons */
 .btn {

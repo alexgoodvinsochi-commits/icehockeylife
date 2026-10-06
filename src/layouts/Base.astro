@@ -1,5 +1,4 @@
 ---
-import { Font } from 'astro:assets';
 import displayFont from '../assets/fonts/ihl-sofia-xc.woff2?url';
 import textFont from '../assets/fonts/ihl-golos.woff2?url';
 import '../styles/base.css';
@@ -61,7 +60,6 @@ if (metrikaOn && missing.length && process.env.IHL_TEST_PROD !== "1") throw new 
     </script>
     <link rel="preload" href={displayFont} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={textFont} as="font" type="font/woff2" crossorigin />
-    <Font cssVariable="--font-led" />
 
     {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(eventJsonLd(siteUrl, ogImage))} />}
 

@@ -9,6 +9,12 @@ import tps from '../assets/photos/tps-station.jpg';
 import video from '../assets/photos/video-analysis.jpg';
 
 const hours = [...Array(camp.hoursIce).fill('ice'), ...Array(camp.hoursOffIce).fill('off')];
+const files = import.meta.glob<{ default: ImageMetadata }>('../assets/staff/*.png', { eager: true });
+const face = (slug: string) => files[`../assets/staff/${slug}.png`].default;
+const lists = [
+  { key: 'ice', h: 'часов на льду', n: camp.hoursIce, items: onIce },
+  { key: 'off', h: 'часов вне льда', n: camp.hoursOffIce, items: offIce },
+];
 ---
 
 <section class="prog section" id="programma" aria-labelledby="prog-title">
@@ -18,40 +24,35 @@ const hours = [...Array(camp.hoursIce).fill('ice'), ...Array(camp.hoursOffIce).f
       <div class="prog__bar" role="img" aria-label="9 часов на льду и 16 часов вне льда">
         {hours.map((h) => <span class:list={['prog__hour', `prog__hour--${h}`]} />)}
       </div>
-      <p class="prog__lead">
-        {t('На льду — мини-группы по 5–6 человек, у каждой свой тренер. Вне льда — растяжка и МФР, координация, гимнастика, психолог и видеоразбор, и каждое занятие ведёт свой специалист.')}
-      </p>
     </header>
 
     <div class="prog__cols">
-      <div class="prog__col">
-        <h3 class="prog__h"><b class="num">{camp.hoursIce}</b> {t('часов на льду')}</h3>
-        <ul class="prog__list" role="list">
-          {
-            onIce.map((it) => (
-              <li>
-                <h4>{it.title}</h4>
-                {it.text && <p>{t(it.text)}</p>}
-                {it.who && <p class="prog__who">{t(it.who)}</p>}
-              </li>
-            ))
-          }
-        </ul>
-      </div>
-      <div class="prog__col prog__col--off">
-        <h3 class="prog__h"><b class="num">{camp.hoursOffIce}</b> {t('часов вне льда')}</h3>
-        <ul class="prog__list prog__list--two" role="list">
-          {
-            offIce.map((it) => (
-              <li>
-                <h4>{it.title}</h4>
-                {it.text && <p>{t(it.text)}</p>}
-                {it.who && <p class="prog__who">{t(it.who)}</p>}
-              </li>
-            ))
-          }
-        </ul>
-      </div>
+      {
+        lists.map((l) => (
+          <div class:list={['prog__col', `prog__col--${l.key}`]}>
+            <h3 class="prog__h"><b class="num">{l.n}</b> {t(l.h)}</h3>
+            <ul class:list={['prog__list', l.key === 'off' && 'prog__list--two']} role="list">
+              {l.items.map((it) => (
+                <li>
+                  <h4>{t(it.title)}</h4>
+                  {it.text && <p>{t(it.text)}</p>}
+                  {it.who && (
+                    <div class="prog__who">
+                      {it.who.people.map((p) => (
+                        <button class="who" type="button" data-sheet-open={`trener-${p.slug}`} aria-haspopup="dialog">
+                          <Image src={face(p.slug)} alt="" widths={[40, 80]} sizes="40px" loading="lazy" />
+                          <span>{p.name}</span>
+                        </button>
+                      ))}
+                      <span class="prog__who-note">{t(it.who.note)}</span>
+                    </div>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
     </div>
 
     <ul class="prog__photos" role="list" tabindex="0" aria-label="Фотографии занятий вне льда">
@@ -65,7 +66,7 @@ const hours = [...Array(camp.hoursIce).fill('ice'), ...Array(camp.hoursOffIce).f
       </li>
       <li>
         <Image src={video} alt="Видеоанализ: дети смотрят разбор игры на большом экране" widths={[400, 700]} sizes="(min-width: 900px) 30vw, 80vw" loading="lazy" />
-        <span>Видеоразбор</span>
+        <span>Видеоанализ</span>
       </li>
     </ul>
 
@@ -73,7 +74,7 @@ const hours = [...Array(camp.hoursIce).fill('ice'), ...Array(camp.hoursOffIce).f
       <div class="goal__text">
         <h3 class="goal__title display" id="goal-title">Вратарям — своя программа и&nbsp;скидка</h3>
         <p>
-          {t('С вратарями работают тренеры вратарей Алексей Красильников и Алексей Берестнев. С 2007 по 2021 год Красильников был старшим тренером и тренером вратарей Волгоградской спортивной школы по зимним видам спорта; его воспитанники Богдан Нефёдов и Ростислав Глущенко — члены сборной России.')}
+          {t('С вратарями работают Алексей Красильников и Алексей Берестнев. С 2007 по 2021 год Красильников был старшим тренером и тренером вратарей Волгоградской спортивной школы по зимним видам спорта; его воспитанники Богдан Нефёдов и Ростислав Глущенко — члены сборной России.')}
         </p>
         <p class="goal__note">{t('Размер скидки для вратарей назовёт координатор.')}</p>
       </div>
@@ -87,7 +88,6 @@ const hours = [...Array(camp.hoursIce).fill('ice'), ...Array(camp.hoursOffIce).f
 <style>
   .prog__head { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 20px clamp(24px, 5vw, 80px); align-items: end; }
   .prog__title { font-size: var(--fs-h2); color: var(--c-blue-deep); grid-column: 1; }
-  .prog__lead { grid-column: 2; grid-row: 1 / span 2; align-self: end; color: var(--c-ink-2); font-size: var(--fs-lead); line-height: 1.45; }
 
   /* one cell per hour: 9 ice (blue), 16 off-ice (red) */
   .prog__bar { grid-column: 1; display: grid; grid-template-columns: repeat(25, 1fr); gap: 3px; max-width: 760px; }
@@ -106,7 +106,12 @@ const hours = [...Array(camp.hoursIce).fill('ice'), ...Array(camp.hoursOffIce).f
   .prog__list li { padding: 18px 0; border-bottom: 1px solid var(--c-hair); }
   .prog__list h4 { font-family: var(--f-display); font-weight: 800; font-size: 1.55rem; line-height: 1.05; }
   .prog__list p { margin-top: 6px; color: var(--c-ink-2); }
-  .prog__list .prog__who { margin-top: 8px; color: var(--c-ink); font-size: var(--fs-small); font-weight: 500; padding-left: 14px; border-left: 3px solid var(--c-kick); }
+  /* the people behind an activity: their faces open the same bio sheets as the roster */
+  .prog__who { margin-top: 10px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; font-size: var(--fs-small); color: var(--c-ink-2); }
+  .who { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; border: 0; background: none; padding: 0; font: inherit; font-weight: 600; color: var(--c-ink); text-align: left; cursor: pointer; }
+  .who img { width: 36px; height: 45px; object-fit: cover; object-position: center top; border-radius: 4px; background: var(--c-blue-deep); }
+  .who span { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .2em; }
+  @media (hover: hover) { .who:hover span { color: var(--c-blue-line); text-decoration-thickness: 2px; } }
   .prog__list--two { display: grid; grid-template-columns: 1fr 1fr; column-gap: clamp(20px, 3vw, 48px); }
 
   .prog__photos { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(8px, 1vw, 14px); margin-top: clamp(32px, 4vw, 56px); }
@@ -129,7 +134,6 @@ const hours = [...Array(camp.hoursIce).fill('ice'), ...Array(camp.hoursOffIce).f
 
   @media (max-width: 900px) {
     .prog__head { grid-template-columns: 1fr; }
-    .prog__lead { grid-column: 1; grid-row: auto; }
     .prog__cols { grid-template-columns: 1fr; }
     .prog__photos { grid-template-columns: repeat(3, 72%); overflow-x: auto; scroll-snap-type: x mandatory; margin-inline: calc(-1 * var(--gutter)); padding-inline: var(--gutter); }
     .prog__photos li { scroll-snap-align: start; }
@@ -138,5 +142,6 @@ const hours = [...Array(camp.hoursIce).fill('ice'), ...Array(camp.hoursOffIce).f
   }
   @media (max-width: 560px) {
     .prog__list--two { grid-template-columns: 1fr; }
+    .prog__list li { padding: 14px 0; }
   }
 </style>

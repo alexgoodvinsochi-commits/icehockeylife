@@ -61,6 +61,8 @@ for (const width of widths) {
   page.on('pageerror', (e) => console.log('PAGE ERROR', e.message));
   page.on('console', (m) => m.type() === 'error' && console.log('CONSOLE', m.text()));
   await page.goto(url, { waitUntil: 'networkidle', timeout: 90000 });
+  // draw every section (they use content-visibility: auto), so heights and full-page shots are real
+  await page.evaluate(() => document.documentElement.classList.add('cv-all'));
   const height = await page.evaluate(() => document.documentElement.scrollHeight);
   for (let y = 0; y < height; y += 600) {
     await page.evaluate((yy) => window.scrollTo(0, yy), y);

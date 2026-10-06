@@ -27,7 +27,7 @@ const labels: Record<string, { a: 'start' | 'end'; dy?: number; minor?: boolean 
     <div class="geo__head">
       <h2 class="geo__title display" id="geo-title">{t('От Тарту до Камчатки')}</h2>
       <p class="geo__lead">
-        {t(`На сборах Ice Hockey Life уже были игроки из ${cities.length} городов и ${countries} стран. Дальше всех ехать из Петропавловска-Камчатского: почти ${fmt(Math.round(farthest.km / 100) * 100)} км по прямой до Сириуса.`)}
+        {t(`На сборах Ice Hockey Life уже были игроки из ${cities.length} городов и ${countries} стран. Дальше всех добираться из Петропавловска-Камчатского: больше ${fmt(Math.floor(farthest.km / 100) * 100)} км по прямой до Сириуса.`)}
       </p>
     </div>
 
@@ -62,7 +62,7 @@ const labels: Record<string, { a: 'start' | 'end'; dy?: number; minor?: boolean 
       </svg>
       <figcaption class="geo__inset">
         <span class="geo__dot" aria-hidden="true"></span>
-        <span><b>Дубай, ОАЭ</b> {fmt(dubai.km)}&nbsp;км</span>
+        <span><b>Ещё Дубай (ОАЭ)</b> — {fmt(dubai.km)}&nbsp;км, за&nbsp;пределами карты</span>
       </figcaption>
     </figure>
 
@@ -94,7 +94,7 @@ const labels: Record<string, { a: 'start' | 'end'; dy?: number; minor?: boolean 
 <style>
   .geo { background: var(--c-board); }
   .geo__head { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); gap: 20px clamp(24px, 5vw, 80px); align-items: end; }
-  .geo__title { font-size: var(--fs-h2); color: var(--c-blue-deep); }
+  .geo__title { font-size: var(--fs-h2s); color: var(--c-blue-deep); }
   .geo__lead { font-size: var(--fs-lead); line-height: 1.45; color: var(--c-ink-2); max-width: 40ch; }
 
   .geo__map { position: relative; margin: clamp(24px, 4vw, 48px) 0 0; }
@@ -127,7 +127,7 @@ const labels: Record<string, { a: 'start' | 'end'; dy?: number; minor?: boolean 
     .geo__labels text { font-size: 34px; stroke-width: 8px; }
     .geo__labels .is-minor { display: none; }
     .geo__home text { font-size: 44px; }
-    .geo__inset { position: static; margin-top: 10px; width: max-content; }
+    .geo__inset { position: static; margin: 10px 0 0 calc(var(--gutter) - 4px); width: auto; max-width: calc(100% - 2 * var(--gutter) + 8px); }
     .geo__all { margin-top: 18px; border-top: 1px solid var(--c-hair); }
     .geo__all summary {
       display: block; cursor: pointer; padding: 16px 0; font-weight: 600; color: var(--c-blue-line);

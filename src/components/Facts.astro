@@ -1,19 +1,40 @@
 ---
 import { camp } from '../data/camp';
-import { t } from '../lib/typo';
+import { withPhones } from '../lib/rich';
 
 // one place where a parent can compare the camp with others: the facts, nothing else
 const NB = String.fromCharCode(0xa0); // no-break space
-const rows: { k: string; v: string; href?: string; until?: string; from?: string }[] = [
+type Row = { k: string; v: string; link?: { href: string; label: string }; until?: string; from?: string };
+const rows: Row[] = [
   { k: 'Даты', v: '4–10 января 2027 года, семь дней. Точное расписание пришлём за 2 недели до сборов' },
   { k: 'Где', v: 'Ледовый дворец «Большой», Сириус (Сочи) — хоккейная арена Олимпиады-2014' },
-  { k: 'Тренировки', v: '9 часов на льду и 16 часов вне льда: ОФП и СФП, бросковая зона, растяжка и МФР, гимнастика, координация, психолог, видеоанализ' },
-  { k: 'Группы', v: '5–6 человек по возрасту и уровню, за каждой группой закреплён тренер', href: '#trenery' },
+  {
+    k: 'Формат',
+    v: 'Без проживания: ребёнок живёт с вами. На тренировки его привозят и забирают родители, а между тренировками можно оставить на дневное пребывание с питанием (за доплату)',
+    link: { href: '#roditelyam', label: 'Как устроен день' },
+  },
+  { k: 'Возраст', v: 'Группы по возрасту и уровню. Подойдут ли сборы вашему ребёнку, подскажет главный тренер Максим Сергеевич: +7 938 438-91-63' },
+  {
+    k: 'Тренировки',
+    v: '9 часов на льду и 16 часов вне льда: ОФП и СФП, бросковая зона, растяжка и миофасциальный релиз, гимнастика, координация, занятия с психологом, видеоанализ',
+    link: { href: '#programma', label: 'Программа' },
+  },
+  { k: 'Группы', v: '5–6 человек, за каждой группой закреплён тренер', link: { href: '#trenery', label: 'Тренеры' } },
   { k: 'Вратари', v: 'Отдельная программа с тренерами вратарей и скидка' },
-  { k: 'Стоимость', v: `43${NB}680${NB}₽ для первых 15, кто запишется до 8 ноября включительно, затем 48${NB}860${NB}₽. Только тренировки, можно в рассрочку`, href: '#cena', until: camp.price.earlyUntil },
-  { k: 'Стоимость', v: `48${NB}860${NB}₽ — только тренировки, можно в рассрочку`, href: '#cena', from: camp.price.earlyUntil },
-  { k: 'Каждому', v: 'Форма для ОФП, фирменные джерси, шапки и подарки от IceHockeyLife' },
-  { k: 'Жильё', v: `Не входит в стоимость. Отель-партнёр — «${camp.hotel.name}», цену назовёт координатор`, href: '#roditelyam' },
+  {
+    k: 'Стоимость',
+    v: `43${NB}680${NB}₽ для первых 15 участников, которые забронируют место до 8 ноября включительно, затем 48${NB}860${NB}₽. Только тренировки, можно в рассрочку`,
+    link: { href: '#cena', label: 'Цены и условия' },
+    until: camp.price.earlyUntil,
+  },
+  {
+    k: 'Стоимость',
+    v: `48${NB}860${NB}₽ — только тренировки, можно в рассрочку`,
+    link: { href: '#cena', label: 'Цены и условия' },
+    from: camp.price.earlyUntil,
+  },
+  { k: 'Каждому', v: 'Форма для ОФП, фирменные джерси, шапка и подарки от Ice Hockey Life' },
+  { k: 'Жильё', v: `Проживание и питание не входят в стоимость. В отеле-партнёре «${camp.hotel.name}» для участников специальная цена — её назовёт координатор` },
 ];
 ---
 
@@ -26,11 +47,11 @@ const rows: { k: string; v: string; href?: string; until?: string; from?: string
           <div class="facts__row" data-until={r.until} data-from={r.from} hidden={!!r.from}>
             <dt>{r.k}</dt>
             <dd>
-              {t(r.v)}
-              {r.href && (
+              <Fragment set:html={withPhones(r.v)} />
+              {r.link && (
                 <>
                   {' '}
-                  <a href={r.href} aria-label={`Подробнее: ${r.k.toLowerCase()}`}>Подробнее</a>
+                  <a href={r.link.href}>{r.link.label}</a>
                 </>
               )}
             </dd>
@@ -49,7 +70,8 @@ const rows: { k: string; v: string; href?: string; until?: string; from?: string
   .facts__row { display: grid; grid-template-columns: 7.5em 1fr; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--c-hair-2); }
   .facts__row dt { font-weight: 600; color: var(--c-ink); }
   .facts__row dd { margin: 0; color: var(--c-ink-2); }
-  .facts__row a { color: var(--c-blue-line); font-weight: 600; white-space: nowrap; }
+  .facts__row a { color: var(--c-blue-line); font-weight: 600; }
+  .facts__row dd > a { white-space: nowrap; }
 
   @media (max-width: 900px) {
     .facts__grid { grid-template-columns: 1fr; }

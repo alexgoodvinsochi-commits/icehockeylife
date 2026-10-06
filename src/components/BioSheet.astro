@@ -6,6 +6,15 @@ import { t } from '../lib/typo';
 type Props = { person: Person; portrait: ImageMetadata };
 const { person, portrait } = Astro.props;
 const [surname, ...rest] = person.name.split(' ');
+// what a parent opens the sheet for comes first: pupils and coaching work; the playing career goes last
+const rank = (title: string) =>
+  /^Воспитанники/.test(title) ? 0
+  : /^(Карьера тренера|Тренерск)/.test(title) ? 1
+  : /^(Опыт|О работе|Над чем|Квалификация|Методик)/.test(title) ? 2
+  : /^Достижения/.test(title) ? 3
+  : /образование/i.test(title) ? 4
+  : 5;
+const sections = [...(person.bio ?? [])].sort((a, b) => rank(a.title) - rank(b.title));
 ---
 
 <dialog class="bio" id={`trener-${person.slug}`} data-sheet aria-labelledby={`bio-${person.slug}-name`}>
@@ -16,7 +25,7 @@ const [surname, ...rest] = person.name.split(' ');
         <Image src={portrait} alt="" widths={[240, 480]} sizes="240px" loading="lazy" />
       </div>
       <div class="bio__id">
-        <p class="label bio__role">{t(person.role)}</p>
+        <p class="bio__role">{t(person.role)}</p>
         <h3 class="bio__name" id={`bio-${person.slug}-name`}>
           <span class="display">{surname}</span>
           <span class="bio__given">{rest.join(' ')}</span>
@@ -25,10 +34,11 @@ const [surname, ...rest] = person.name.split(' ');
       </div>
     </header>
     <div class="bio__body">
+      {person.highlight && <p class="bio__lead">{t(person.highlight)}</p>}
       {
-        person.bio?.map((s) => (
+        sections.map((s) => (
           <section class="bio__sec">
-            <h4 class="label">{t(s.title)}</h4>
+            <h4>{t(s.title)}</h4>
             <ul role="list">
               {s.items.map((it) => (
                 <li>{t(it)}</li>
@@ -46,14 +56,13 @@ const [surname, ...rest] = person.name.split(' ');
     border: 0; padding: 0; background: transparent; max-width: none; max-height: none;
     width: min(100% - 32px, 760px); margin: auto;
   }
-  .bio::backdrop { background: rgb(11 30 63 / .55); backdrop-filter: blur(2px); }
+  .bio::backdrop { background: rgb(11 30 63 / .55); }
   .bio[open] .bio__panel { animation: bio-in .35s var(--ease-out); }
   @keyframes bio-in { from { opacity: 0; transform: translateY(24px); } }
   .bio__panel {
     position: relative; background: var(--c-board); color: var(--c-ink);
-    border-radius: var(--r-rink); overflow: hidden; max-height: min(88dvh, 900px); overflow-y: auto;
+    border-radius: var(--r-s); overflow: hidden; max-height: min(88dvh, 900px); overflow-y: auto;
     overscroll-behavior: contain;
-    box-shadow: inset 0 -6px 0 var(--c-kick);
   }
   .bio__close {
     position: sticky; top: 10px; float: right; margin: 10px 10px -54px 0; z-index: 2;
@@ -64,13 +73,14 @@ const [surname, ...rest] = person.name.split(' ');
   .bio__photo { align-self: end; }
   .bio__photo img { width: 100%; height: auto; display: block; }
   .bio__id { padding-bottom: 26px; }
-  .bio__role { color: var(--c-crease); }
+  .bio__role { color: var(--c-crease); font-weight: 600; font-size: .95rem; line-height: 1.3; }
   .bio__name { margin-top: 8px; display: grid; gap: 4px; }
   .bio__name .display { font-size: clamp(2.6rem, 2rem + 3vw, 4.2rem); line-height: .9; }
   .bio__given { font-size: 1.2rem; font-weight: 500; color: rgb(255 255 255 / .85); }
   .bio__born { margin-top: 10px; font-size: var(--fs-small); color: rgb(255 255 255 / .7); }
   .bio__body { padding: 26px 28px 40px; display: grid; gap: 26px; }
-  .bio__sec h4 { color: var(--c-red-line); margin-bottom: 10px; }
+  .bio__lead { font-size: var(--fs-lead); line-height: 1.4; font-weight: 600; color: var(--c-ink); }
+  .bio__sec h4 { font-family: var(--f-display); font-weight: 800; font-size: 1.45rem; line-height: 1; color: var(--c-ink); margin-bottom: 10px; }
   .bio__sec li { padding: 9px 0; border-top: 1px solid var(--c-hair); line-height: 1.45; }
   .bio__sec li:first-child { border-top: 0; padding-top: 0; }
 
