@@ -109,6 +109,7 @@ const sections = [...(person.bio ?? [])].sort((a, b) => rank(a.title) - rank(b.t
     @keyframes bio-up { from { transform: translateY(40%); opacity: .4; } }
     .bio__head { grid-template-columns: 120px 1fr; gap: 16px; padding: 22px 18px 0; }
     .bio__body { padding: 22px 18px 34px; }
-    .bio__id { padding-right: 44px; }
+    /* a surname is one word and cannot wrap: on phones the header text starts below the round close button */
+    .bio__id { padding-top: 40px; padding-right: 0; }
   }
 </style>
